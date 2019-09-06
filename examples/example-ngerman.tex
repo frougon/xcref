@@ -1,0 +1,177 @@
+\documentclass[ngerman]{article}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{amsthm}
+\usepackage{parskip}            % just for presentation
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{xcref}
+
+\newtheorem{problem}{Problem}
+\newtheorem{satz}[problem]{Satz}
+\newtheorem{proposition}[problem]{Proposition}
+
+\crefname{problem}{Problem}{Probleme}
+\crefname{satz}{Satz}{Sätze}
+\crefname{proposition}{Proposition}{Propositionen}
+
+\creflabelformat{satz}{(#2#1#3)} % to see if it's respected by our function
+
+% Convenience wrappers for \xcref that avoid the need to write long options
+% such as ngerman/preposition=aus or ngerman/case=dativ (with these wrappers,
+% the optional argument is processed with a default path of /xcref/french).
+% The options directly in /xcref are thus not accessible via the optional
+% argument, hence the need for two different commands for the
+% capitalized/uncapitalized variants (a command accepting one more argument
+% would also do).
+\AtBeginDocument{%
+  \let\gxcref=\xcrefngermanwrapper
+  \let\gXcref=\xcrefngermanWrapper
+}
+
+% Sample xcref configuration: remove the \iffalse and \fi lines to activate it.
+\iffalse
+\xcrefset{
+  ngerman/.cd,                  % change to “directory” /xcref/ngerman
+  % 'names table' can only be set in the preamble. The prepositions and
+  % articles in this mapping must be written in LICR representation (for
+  % instance, use \"uber but not über nor {\"u}ber). However, in the text,
+  % both \xcref[preposition=\"uber]{...} and \xcref[preposition=über]{...}
+  % would be fine.
+  names table = {
+    problem    = {in}{{das}{Problem}{die}{Probleme}}%
+                   {{das}{Problem}{die}{Probleme}}%
+                   {{dem}{Problem}{den}{Problemen}}%
+                   {{des}{Problems}{der}{Probleme}},
+    proposition= {nach}{{die}{Proposition}{die}{Propositionen}}%
+                   {{die}{Proposition}{die}{Propositionen}}%
+                   {{der}{Proposition}{den}{Propositionen}}%
+                   {{der}{Proposition}{der}{Propositionen}},
+    satz       = {nach}{{der}{Satz}{die}{Sätze}}%S\"atze is fine here too
+                   {{den}{Satz}{die}{Sätze}}%    ditto
+                   {{dem}{Satz}{den}{Sätzen}}%   S\"atzen is okay
+                   {{des}{Satzes}{der}{Sätze}},% S\"atze is fine
+    theorem    = {nach}{{das}{Theorem}{die}{Theoreme}}%
+                   {{das}{Theorem}{die}{Theoreme}}%
+                   {{dem}{Theorem}{den}{Theoremen}}%
+                   {{des}{Theorems}{der}{Theoreme}},
+    lemma      = {nach}{{das}{Lemma}{die}{Lemmata}}%
+                   {{das}{Lemma}{die}{Lemmata}}%
+                   {{dem}{Lemma}{den}{Lemmata}}%
+                   {{des}{Lemmas}{der}{Lemmata}},
+    definition = {nach}{{die}{Definition}{die}{Definitionen}}%
+                   {{die}{Definition}{die}{Definitionen}}%
+                   {{der}{Definition}{den}{Definitionen}}%
+                   {{der}{Definition}{der}{Definitionen}},
+  },
+  % The keys (left side) must be written in LICR representation (see above).
+  composition table for prepositions and articles = {
+    an dem = am,
+    in dem = im,
+    von dem = vom,
+    zu dem = zum,
+    zu der = zur,
+    bei dem = beim,
+  },
+  % The keys (left side) must be written in LICR representation (see above).
+  prepositions always followed by the same case = {
+    bis   = Akkusativ,
+    durch = Akkusativ,
+    f\"ur = Akkusativ,
+    gegen = Akkusativ,
+    ohne  = Akkusativ,
+    um    = Akkusativ,
+    aus  = Dativ,
+    bei  = Dativ,
+    mit  = Dativ,
+    nach = Dativ,
+    seit = Dativ,
+    von  = Dativ,
+    zu   = Dativ,
+  },
+}
+\fi
+
+\begin{document}
+
+\section*{Dummy text with labels}
+
+\begin{problem}\label{prob-a}
+Here, we have \verb|\label{prob-a}|.
+\end{problem}
+\begin{problem}\label{prob-b}
+Here, we have \verb|\label{prob-b}|.
+\end{problem}
+\begin{problem}\label{prob-c}
+Here, we have \verb|\label{prob-c}|.
+\end{problem}
+\begin{problem}\label{prob-d}
+Here, we have \verb|\label{prob-d}|.
+\end{problem}
+\begin{satz}\label{satz-a}
+Here, we have \verb|\label{satz-a}|.
+\end{satz}
+\begin{satz}\label{satz-b}
+Here, we have \verb|\label{satz-b}|.
+\end{satz}
+\begin{satz}\label{satz-c}
+Here, we have \verb|\label{satz-c}|.
+\end{satz}
+\begin{proposition}\label{propo}
+Here, we have \verb|\label{propo}|.
+\end{proposition}
+
+\section*{Important}
+
+Let's use accusative for all of the following, except (this is automatic) when
+a preposition is \emph{always} used in combination with a particular case
+(this happens in particular for “aus”, “bei”, “mit”, “nach”, “seit”, “von” and
+“zu”, which are always followed by Dative). This is done with
+\verb|\xcrefset{ngerman/case=akk}|. If no such command is performed, one has
+to pass \verb|\xcref| the \verb|ngerman/case| option every time for German, as
+in \verb|\xcref[ngerman/case=dat]{...}| or, using a German-specific helper
+command, \verb|\xcrefngermanwrapper[case=dat]{...}| (valid values for
+\texttt{/xcref/ngerman/case} are \verb|nom|, \verb|akk|, \verb|dat|, and
+\verb|gen|).
+
+I know that some of the following phrases sound weird or wrong; these are just
+artifical examples to illustrate how \verb|xcref| can be used.
+
+\section*{Examples}
+
+Basic test with \verb|\cref| and \verb|\Cref|: \cref{satz-a}
+(obtained with \verb|\cref{satz-a}|), \Cref{satz-a} (obtained with
+\verb|\Cref{satz-a}|). Note that we have used:
+\begin{verbatim}
+\creflabelformat{satz}{(#2#1#3)}
+\end{verbatim}
+in order to show (see below) that \verb|xcref| preserves this formatting
+specification. This explains the parentheses around “Satz” numbers in
+references.
+
+% This command respects TeX's grouping rules
+\xcrefset{ngerman/case=akk}% use accusative by default
+%
+\verb|xcref-ngerman.tex| knows that “nach” is always followed by Dative:
+\gxcref[preposition=nach]{prob-a,prob-b}.\\
+\xcref[hyperlinks]{prob-a,prob-b}~\texttt{==}~%
+{% Other way to to the same:
+ \xcrefset{hyperlinks=true}% lasts for the duration of the current group
+ \gxcref{prob-a,prob-b}%
+}\\
+\gXcref{prob-a}\\
+\gxcref[form=article+name]{prob-a,prob-b}\\
+\gxcref[form=name]{prob-a,prob-b}
+
+\gxcref[form=name]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}\\
+\gxcref[form=article+name]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}\\
+\gxcref{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}\\
+% Override the default prepositions for this call
+\gxcref[preposition=in]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}\\
+\gXcref{prob-a,prob-b,prob-c,prob-d,propo,satz-a,satz-b}\\
+\gxcref[preposition=von]{satz-a}, \gxcref[preposition=aus]{satz-b},
+\gxcref[preposition=durch]{satz-a}
+
+\end{document}

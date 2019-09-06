@@ -1,0 +1,1873 @@
+% \iffalse meta-comment
+% -*- coding: utf-8 -*-
+%
+% File: xcref.dtx Copyright (C) 2019  Florent Rougon
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in the file
+%
+%   http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Florent Rougon.
+%
+% This file is part of "xcref" (The Work in LPPL) and all files from
+% this Work must be distributed together.
+%
+% -----------------------------------------------------------------------
+%
+%<*driver>
+% Loading inputenc here to be sure this comes before csquotes (which is loaded
+% by l3doc).
+\RequirePackage[utf8]{inputenc}
+\documentclass{l3doc}
+% The next line is needed so that \GetFileInfo will be able to pick up
+% version data
+\usepackage{xcref}
+\usepackage{xparse}
+\begin{document}
+  % l3doc's \file command currently causes errors (on TL 2019)
+  \RenewExpandableDocumentCommand\file{m}{\texttt{#1}}
+  \NewDocumentCommand\xcrefPGFOpt{m}{\texttt{/xcref/#1}}
+  \NewDocumentCommand\xcrefPGFPath{m}{\texttt{/xcref/#1}}% for PGF “directories”
+  \NewDocumentCommand\xcrefPGFRoot{}{\texttt{/xcref}}
+  \NewDocumentCommand\TikZ{}{{\upshape Ti\textit{k}Z}}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \GetFileInfo{xcref.sty}
+%
+% \title{^^A
+%   \pkg{xcref} -- Extension of \pkg{cleveref} for non-English languages^^A
+%   \thanks{This file describes \pkg{xcref}~\fileversion, last revised
+%           \filedate.}^^A
+% }
+%
+% \author{^^A
+%  Florent Rougon^^A
+%  \thanks{^^A
+%    E-mail: \href{mailto:f.rougon@free.fr}{mailto:f.rougon@free.fr}^^A
+%   }^^A
+% }
+%
+% \date{Released \filedate}
+%
+% \maketitle
+%
+% \begin{abstract}
+%   In non-English languages, words such as prepositions and articles need to
+%   be adapted in function of the noun they are used with, as well as possibly
+%   in function of \enquote{cases} such as nominative, accusative, dative, and
+%   genitive as used in German. As far as I know, these are things that
+%   \pkg{cleveref} does not allow to do in any practical way, short of
+%   programming it. This package works on top of \pkg{cleveref} and, given
+%   language-specific knowledge as well as additional user input (at least to
+%   select a preposition), it makes it possible to produce references that
+%   cope with the various forms of ancillary words such as articles and
+%   prepositions, and don't break when the underlying noun is changed (for
+%   instance, from chapter to section or theorem to proposition).
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \begin{documentation}
+% \vspace{6ex}
+% WARNING: this is an alpha release. Some interfaces may change if they prove
+% to be suboptimal. The documentation isn't finished. The code has received
+% reasonable testing but might still have bugs.
+%
+% \section{Introduction}
+%
+% Generating cross-references to chapters, sections, theorems, lemmas, etc. in
+% English is easy, because it can be done in a very simple and mechanical way
+% (\enquote{see chapter~1}, \enquote{as we saw in section~2}, \enquote{an
+% important consequence of theorems~3 and~4}, etc.). However, it can be more
+% difficult in other languages, especially when you expect that the types of
+% your references may change: a section might become a chapter after some
+% reorganization of your work; a theorem could be downgraded to a proposition,
+% etc.
+%
+% The \pkg{cleveref} package makes it easy to change reference types and have
+% the names adapted, however its approach is too simple to work well with
+% languages such as French and German. For instance, in French, \enquote{la
+% section} would have to become \enquote{le chapitre}, but you can't just use
+% \cs{crefname} to tell \cs{cref} to use |la section|, |le chapitre|, etc. as
+% the \emph{names} associated to the |section| and |chapter| reference types,
+% because depending on the preposition that is used, you need various forms:
+% \enquote{\`a la section}, \enquote{au chapitre}, \enquote{de la section},
+% \enquote{du chapitre}, \enquote{d'apr\`es la section}, \enquote{d'apr\`es le
+% chapitre}, etc. Exactly the same happens with \enquote{th\'eor\`eme} and
+% \enquote{proposition} (these are French words). Fortunately, there is enough
+% regularity in how these various forms are produced to allow writing code
+% that automatically produces correct French with input such as
+% |\xcref[french/preposition=d'après]{some-label}|.
+%
+% Note that convenience wrappers are provided to shorten the previous command
+% (see section~\ref{sec:language-specific-convenience-wrappers} and the
+% example files) and that several labels can be used in the same command, when
+% one wishes \pkg{cleveref} to combine them; this works especially well when
+% all such labels are of the same type.
+%
+% Other languages have rules of the same kind and can also be nicely
+% accomodated. For instance, with the |ngerman| module, one can reference two
+% propositions with the \enquote{nach} preposition using code such as:
+% \begin{verbatim}
+% \xcref[ngerman/preposition=nach]{some-prop,other-prop}
+% \end{verbatim}
+% (again, there are convenience wrappers to make this shorter).
+% \pkg{xcref} knows that \enquote{nach} is always followed by the dative case,
+% so it will produce reference text such as \enquote{nach den Propositionen
+% 3~und~4}. With the \xcrefPGFOpt{ngerman/form} option (which has its
+% counterpart in the \texttt{french} module), one can obtain variant forms: in
+% the same conditions,
+% \begin{verbatim}
+% \xcref[ngerman/form=article+name]{some-prop,other-prop}
+% \end{verbatim}
+% would yield \enquote{den Propositionen 3~und~4} and
+% \begin{verbatim}
+% \xcref[ngerman/form=name]{some-prop,other-prop}
+% \end{verbatim}
+% would produce \enquote{Propositionen 3~und~4} (exactly the same options are
+% available in the \texttt{french} module along with the initial value
+% |prep+article+name|, however this may not fit all languages, hence the use
+% of the \xcrefPGFPath{ngerman} and \xcrefPGFPath{french} namespaces for the
+% |form| option). In German, it is
+% also possible, and very often necessary, to indicate which case to use
+% between nominative, accusative, dative and genitive, since in many cases,
+% understanding the sentence is required to choose the appropriate case. This
+% can be done using the \xcrefPGFOpt{ngerman/case} option which can take the
+% values |nom|, |akk|, |dat|, and |gen|.
+%
+% \section{Installation}
+%
+% \subsection{Code}
+%
+% Installation of \pkg{xcref} can be done with the following steps:
+% \begin{enumerate}
+% \item Go to the directory containing |build.lua| and |xcref.dtx|.
+% \item
+%   \begin{enumerate}
+%   \item If you have |l3build| and agree to install \pkg{xcref} in the
+%     appropriate place under |TEXMFHOME|, run the command |l3build install|.
+%
+%     If you want to use a different base directory, you can pass the
+%     |--texmfhome| option (e.g., |--texmfhome=|\meta{your~choice}) after
+%     |l3build install|. In order to see which files would be installed
+%     without actually installing them, run |l3build install --dry-run|. See
+%     |texdoc l3build| for more details.
+%   \item Otherwise, run |tex xcref.ins| (or |pdftex xcref.ins|, etc.) in
+%     order to extract |xcref.sty| and the |xcref-*.tex| language modules from
+%     |xcref.dtx| to the current directory (unless you have a |docstrip.cfg|
+%     file that says otherwise, of course). Then, install the extracted files
+%     as usual in a place listed in your |TEXINPUTS| and refresh the
+%     \enquote{filename database} of your \TeX{} distribution if needed.
+%   \end{enumerate}
+% \end{enumerate}
+%
+% Once these steps have been performed, you should be able to build this
+% document yourself (see below) and compile the \texttt{*.tex} files in the
+% \texttt{examples} directory.
+%
+% \subsection{Documentation}
+%
+% In order to build the documentation (\texttt{xcref.pdf}), you need to have
+% |xcref.sty| somewhere in your |TEXINPUTS|. How to do so is explained in the
+% previous section. We'll assume you've already done that. There are
+% essentially two ways to build he documentation. In either case, the first
+% thing to do is to go to the directory containing |build.lua| and
+% |xcref.dtx|.
+%
+% \subsubsection*{With \texttt{l3build}}
+%
+% This is the easiest way: simply run |l3build doc|.
+%
+% \subsubsection*{Without \texttt{l3build}}
+%
+% Run a \LaTeX-based engine on |xcref.dtx|. You also need to use |makeindex|
+% to generate the index. For instance, the following command sequence is
+% likely to produce a correct \pkg{xcref} manual:
+% \begin{verbatim}
+% pdflatex xcref.dtx
+% makeindex -s gind.ist -o xcref.ind xcref.idx
+% pdflatex xcref.dtx
+% pdflatex xcref.dtx
+% makeindex -s gind.ist -o xcref.ind xcref.idx
+% pdflatex xcref.dtx
+% \end{verbatim}
+%
+% \subsubsection*{Choosing a different paper size}
+%
+% Note: the following won't work unless your |l3doc.cls| is from 2019-09-18 or
+% later (see
+% \href{https://github.com/latex3/latex3/commit/ef39a40f586f8bec2464b4610e0d99c0f6411b6d}{\LaTeX3 commit ef39a40f586f}).
+%
+% \medskip
+% In case you want the documentation to be produced in A4 format, create a
+% file named |l3doc.cfg| in the directory containing |xcref.dtx|, with the
+% following contents:
+% \begin{verbatim}
+% \PassOptionsToClass{a4paper}{l3doc}
+% \end{verbatim}
+% then run |l3build doc| as usual.
+%
+% \subsubsection*{Removing  generated files}
+%
+% You can remove generated files (not only from the documentation build) with
+% the |l3build clean| command. Note: this will remove |xcref.pdf| too.
+%
+% \section{Usage}
+%
+% XXX This is still incomplete: the package options and PGF keys are not
+% documented yet, except with the comments in
+% section~\ref{sec:implementation}.
+%
+% \subsection{Generic macros}
+%
+% \begin{function}{\xcrefusemodules, \xcref_use_modules:n,
+%                  \xcref_use_module:n, \xcref_use_module:V}
+%   \begin{syntax}
+%     \cs{xcrefusemodules}|{|\meta{language_1},\ldots,\meta{language_n}|}|
+%     \cs{xcref_use_modules:n} |{|\meta{language_1},\ldots,\meta{language_n}|}|
+%     \cs{xcref_use_module:n} \Arg{language}
+%   \end{syntax}
+%   Add the specified languages to the list of requested language-specific
+%   modules. Example values for the language metasyntactic variables are
+%   \texttt{french} and \texttt{ngerman}. These commands can only be used in
+%   the preamble.
+% \end{function}
+%
+% \begin{function}{\xcref, \xcref:nn}
+%   \begin{syntax}
+%     \cs{xcref}\oarg{options}\marg{comma-separated list of references}
+%     \cs{xcref:nn} \Arg{options} \Arg{comma-separated list of references}
+%   \end{syntax}
+%   \pkg{xcref}'s equivalent of \cs{cref}, \cs{Cref} and starred forms of
+%   these.
+%
+%   The \meta{options} are processed with \pkg{pgfkeys} with a default path of
+%   \xcrefPGFRoot. The references are passed as is to \cs{cref} or \cs{Cref},
+%   depending on the value of \xcrefPGFOpt{capitalize} (a starred form is
+%   called if the \xcrefPGFOpt{hyperlinks} option is |false| and
+%   \pkg{hyperref} is loaded).
+%
+%   Spaces around unbraced commas and equal signs are ignored in
+%   \meta{options} because this argument is processed by \pkg{pgfkeys}, but
+%   they are \emph{not} ignored in \meta{comma-separated list of references}
+%   (this is the behavior of \pkg{cleveref}).
+% \end{function}
+%
+% \begin{function}{\xcrefset, \xcref_set:n}
+%   \begin{syntax}
+%     \cs{xcrefset}\marg{key-value assignments}
+%     \cs{xcref_set:n} \Arg{key-value assignments}
+%   \end{syntax}
+%   Set PGF keys related to \pkg{xcref}. For now, these keys only influence
+%   \cs{xcref}. The \meta{key-value assignments} are comma-separated
+%   assignments such as |ngerman/case=akk|. These commands are analogous to
+%   \cs{tikzset} from the \TikZ\ package, \cs{forestset} from \pkg{forest},
+%   \cs{pgfplotsset} from \pkg{pgfplots}, etc. For instance, the command
+% \begin{verbatim}
+% \xcrefset{ngerman/case=akk}
+% \end{verbatim}
+% is equivalent to
+% \begin{verbatim}
+% \pgfkeys{/xcref/ngerman/case=akk}
+% \end{verbatim}
+% and has the effect of calling the \xcrefPGFOpt{ngerman/case} PGF key with
+% the value |akk|.
+% \end{function}
+%
+% \begin{function}{\xcrefNoCaseChange}
+%   \begin{syntax}
+%     \cs{xcrefNoCaseChange}\marg{text}
+%   \end{syntax}
+%   Locally inhibit conversion in the second argument of
+%   \cs{tl_mixed_case:nn}. When references are automatically captitalized,
+%   \cs{tl_mixed_case:nn} is called and can cause various, \emph{a priori}
+%   non-first characters in the texts eventually passed to \cs{Crefname}, to
+%   be changed to lowercase. In some cases, this is undesirable (for instance,
+%   in German, nouns always start with a capital letter; converting a noun to
+%   lowercase would be a mistake). For such situations, \cs{xcrefNoCaseChange},
+%   or any user-specified macro passed to
+%   \xcrefPGFOpt{functions for preventing auto case change},
+%   can be used in the texts that are destined to be passed to \cs{Crefname}:
+%   it \enquote{protects} its argument against any action from
+%   \cs{tl_mixed_case:nn}. For example, \file{xcref-ngeman.tex} uses this
+%   technique to protect everything after the first word of a capitalized
+%   reference.
+%
+%   The macro call isn't removed by \cs{tl_mixed_case:nn}, therefore if you
+%   want such protection macros that do \enquote{funny things} (contrary to
+%   \cs{xcrefNoCaseChange} which returns its argument unchanged), it is
+%   possible by passing your own macro names to
+%   \xcrefPGFOpt{functions for preventing auto case change}.
+% \end{function}
+%
+% \subsection{Language-specific convenience wrappers}
+% \label{sec:language-specific-convenience-wrappers}
+%
+% \subsubsection{\texttt{french} langage module}
+%
+% \begin{function}{\xcreffrenchgenericwrapper}
+%   \begin{syntax}
+%     \cs{xcreffrenchgenericwrapper} \Arg{generic options} \Arg{language-specific options}
+%   \end{syntax}
+%   XXX documentation needed
+% \end{function}
+%
+% \begin{function}{\xcreffrenchwrapper, \xcreffrenchWrapper}
+%   \begin{syntax}
+%     \cs{xcreffrenchwrapper} \Arg{language-specific options}
+%     \cs{xcreffrenchWrapper} \Arg{language-specific options}
+%   \end{syntax}
+%   XXX documentation needed
+% \end{function}
+%
+% \subsubsection{\texttt{ngerman} langage module}
+%
+% \begin{function}{\xcrefngermangenericwrapper}
+%   \begin{syntax}
+%     \cs{xcrefngermangenericwrapper} \Arg{generic options} \Arg{lang-specific options}
+%   \end{syntax}
+%   XXX documentation needed
+% \end{function}
+%
+% \begin{function}{\xcrefngermanwrapper, \xcrefngermanWrapper}
+%   \begin{syntax}
+%     \cs{xcrefngermanwrapper} \Arg{language-specific options}
+%     \cs{xcrefngermanWrapper} \Arg{language-specific options}
+%   \end{syntax}
+%   XXX documentation needed
+% \end{function}
+%
+% \section{Code-level functions}
+%
+% \subsection{Generic}
+%
+% \begin{function}{\xcref_lang_for_tl_mixed_case:n,
+%                  \xcref_lang_for_tl_mixed_case:V}
+%   \begin{syntax}
+%     \cs{xcref_lang_for_tl_mixed_case:n} \Arg{language}
+%   \end{syntax}
+%   When references have to be capitalized (cf.~\xcrefPGFOpt{capitalize}), the
+%   \pkg{expl3} function \cs{tl_mixed_case:nn} is used. This function accepts
+%   a \enquote{language code} argument to adapt to each language, because this
+%   process can vary depending on the language (for instance, I read that in
+%   Dutch, capitalisation of \texttt{ij} at the beginning of mixed cased input
+%   produces \texttt{IJ} rather than \texttt{Ij}). However, the language codes
+%   used by \cs{tl_mixed_case:nn} don't coincide with \pkg{xcref}'s
+%   language-specific module names (which currently are identical to
+%   \pkg{babel} language names). Therefore, we provide a default conversion
+%   function, namely \cs{xcref_lang_for_tl_mixed_case:n}. It accepts as
+%   argument an \pkg{xcref} language module name (e.g., \texttt{ngerman}) and
+%   expands to a language code suitable for use with \cs{tl_mixed_case:nn}.
+%
+%   Should the default mapping be incomplete, you should probably contact
+%   the package author to suggest an update. In the meantime, you may
+%   redefine the function to suit your needs or alternatively use the
+%   \xcrefPGFOpt{lang for capitalization func} option to point to the
+%   expandable command of your choice (the second way should be easier unless
+%   you know how to use \cs{ExplSyntaxOn} and \cs{ExplSyntaxOff}).
+% \end{function}
+%
+% \begin{function}{\xcref_call_crefname:nnn, \xcref_call_crefname:nVV}
+%   \begin{syntax}
+%     \cs{xcref_call_crefname:nnn} \Arg{reference type} \Arg{singular form} \Arg{plural form}
+%   \end{syntax}
+%   Simple \pkg{expl3} wrapper for \cs{crefname}.
+% \end{function}
+%
+% \begin{function}{\xcref_call_Crefname:nnn, \xcref_call_Crefname:nVV}
+%   \begin{syntax}
+%     \cs{xcref_call_Crefname:nnn} \Arg{reference type} \Arg{singular form} \Arg{plural form}
+%   \end{syntax}
+%   Simple \pkg{expl3} wrapper for \cs{Crefname}.
+% \end{function}
+%
+% \subsection{Language-specific}
+%
+% \subsubsection{From the \texttt{french} module}
+%
+% \begin{function}{\xcref_french_assemble_prep_and_article:nnN,
+%                  \xcref_french_assemble_prep_and_article:VnN,
+%                  \xcref_french_assemble_prep_and_article:VVN}
+%   \begin{syntax}
+%     \cs{xcref_french_assemble_prep_and_article:nnN} \Arg{preposition} \Arg{article} \meta{tl~var}
+%   \end{syntax}
+%   Assemble a preposition and a definite article. In some cases,
+%   this means combining them into a single word. Any accented characters in
+%   \meta{preposition} must be in LICR form. \meta{article} has to be
+%   one of |l'|, |le|, |la| and |les|. The result is stored in \meta{tl~var};
+%   in case it is incorrect, it is likely that more exceptions need to be
+%   added to \cs{g__xcref_french_prep_and_article_prop}.
+% \end{function}
+%
+% \subsubsection{From the \texttt{ngerman} module}
+%
+% \begin{function}{\xcref_ngerman_assemble_prep_and_article:nnN,
+%                  \xcref_ngerman_assemble_prep_and_article:VVN}
+%   \begin{syntax}
+%     \cs{xcref_ngerman_assemble_prep_and_article:nnN} \Arg{preposition} \Arg{article} \meta{tl~var}
+%   \end{syntax}
+%   Assemble a preposition and a definite article. In some cases, this means
+%   combining them into a single word. In case
+%   \meta{preposition}\textvisiblespace\meta{article} is a key of
+%   \cs{l_@@_ngerman_article_and_prep_prop} (with eventual accented characters
+%   in LICR form), the result is the corresponding value; otherwise, the
+%   result is \meta{preposition}\textvisiblespace\meta{article}. In any case,
+%   it is stored in \meta{tl~var}.
+% \end{function}
+%
+% \section{Public variables}
+%
+% \begin{variable}{\g_xcref_available_language_modules_seq}
+%   List of the available language-specific modules. Example items are
+%   \texttt{french} and \texttt{ngerman}. Each of these is made of
+%   character tokens with category code~12 only (other).
+% \end{variable}
+%
+% \begin{variable}{\g_xcref_requested_language_modules_seq}
+%   List of the language-specific modules requested either via package options
+%   or using \cs{xcref_use_modules:n} and friends. Each element is a
+%   \pkg{babel} language name, is not allowed to contain any space and
+%   only contains character tokens of category code~12.
+% \end{variable}
+%
+% \end{documentation}
+%
+%
+% \section{Development repository}
+% \label{sec:development-repository}
+%
+% The Git repository containing the \pkg{xcref} source code is located at
+% \url{https://github.com/frougon/xcref}.
+%
+% \begin{implementation}
+%
+% \section{\pkg{xcref} Implementation}
+% \label{sec:implementation}
+%
+% \subsection{\file{xcref.sty}}
+%
+% \pkg{DocStrip} start guard for \file{xcref.sty}.
+%    \begin{macrocode}
+%<*package>
+%    \end{macrocode}
+%
+% Identify the internal prefix (\LaTeX3 \pkg{DocStrip} convention).
+%    \begin{macrocode}
+%<@@=xcref>
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\RequirePackage{expl3}
+\RequirePackage{l3keys2e}
+\RequirePackage{xparse}
+\RequirePackage{iflang}
+\RequirePackage{pgfkeys}
+%    \end{macrocode}
+% \pkg{xcref} is an \pkg{expl3}-based package, declare its metadata.
+%    \begin{macrocode}
+\ProvidesExplPackage{xcref}{2019-09-19}{0.1a}
+                    {Extension of cleveref for non-English languages}
+%    \end{macrocode}
+%
+% \subsubsection{\pkg{expl3} messages}
+%
+% Messages emitted by \file{xcref.sty}:
+%    \begin{macrocode}
+\msg_new:nnn { xcref } { loading-language-module }
+  { Loading~language~module~'\exp_not:n {#1}'. }
+\msg_new:nnn { xcref } { unable-to-determine-language }
+  { Unable~to~determine~the~language. }
+%    \end{macrocode}
+%
+% \subsubsection{Variable declarations}
+%
+% \begin{variable}{\g_xcref_available_language_modules_seq}
+%   List of the available language-specific modules. For consistency with
+%   \cs{g_xcref_requested_language_modules_seq}, each item is obtained with
+%   \cs{tl_to_str:n}.
+%    \begin{macrocode}
+\seq_new:N \g_xcref_available_language_modules_seq
+
+\clist_map_inline:nn { french, ngerman }
+  {
+    \seq_gput_right:Nx \g_xcref_available_language_modules_seq
+      { \tl_to_str:n {#1} }
+  }
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\g_xcref_requested_language_modules_seq}
+%   List of the requested language-specific modules.
+%    \begin{macrocode}
+\seq_new:N \g_xcref_requested_language_modules_seq
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\l_@@_selected_lang_str}
+%   Name of the currently-selected language for \pkg{xcref}. It must be the
+%   name of a language-specific module.
+%    \begin{macrocode}
+\str_new:N \l_@@_selected_lang_str
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\l_@@_use_hyperlinks_bool}
+% Whether to use hyperlinks in references generated by \pkg{xcref} when
+% \pkg{hyperref} is loaded.
+%    \begin{macrocode}
+\bool_new:N \l_@@_use_hyperlinks_bool
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\l_@@_case_change_exclude_tl}
+%   List of commands (control sequence tokens) that indicate contents which
+%   mustn't be affected by an automatic case change (when
+%   \cs{tl_mixed_case:nn} is used to automatically capitalize text, before
+%   passing it to \cs{Crefname}). See the documentation of
+%   \cs{xcrefNoCaseChange}.
+%    \begin{macrocode}
+\tl_new:N \l_@@_case_change_exclude_tl
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\l_@@_capitalize_bool}
+%   Whether to write references in capitalized form (first letter in
+%   uppercase, the rest in lowercase\footnote{Well, this can be subtler than
+%   that depending on the language---see the documentation of
+%   \cs{tl_mixed_case:nn}.}).
+%    \begin{macrocode}
+\bool_new:N \l_@@_capitalize_bool
+%    \end{macrocode}
+% \end{variable}
+% \begin{variable}{\g_@@_hyperref_loaded_bool}
+%   Whether \pkg{hyperref} is loaded.
+%    \begin{macrocode}
+\bool_new:N \g_@@_hyperref_loaded_bool
+%    \end{macrocode}
+% \end{variable}
+%
+% \subsubsection{Interaction with \pkg{hyperref}}
+%
+% Remember if \pkg{hyperref} is loaded: if so and if the
+% \xcrefPGFOpt{hyperlinks} option is false, we'll have to use the starred form
+% of \cs{cref} and \cs{Cref}.
+%    \begin{macrocode}
+\AtBeginDocument
+  {
+    \@ifpackageloaded { hyperref }
+      { \bool_gset_true:N \g_@@_hyperref_loaded_bool }
+      { \bool_gset_false:N \g_@@_hyperref_loaded_bool }
+  }
+%    \end{macrocode}
+%
+% \subsubsection{Registering and loading of langage-specific modules}
+%
+% \begin{macro}{\xcref_use_module:n, \xcref_use_module:V}
+%   \begin{arguments}
+%     \item name of a language-specific module
+%   \end{arguments}
+%   One subtlety here: if a language name such as \texttt{french} is passed as
+%   a \cs{documentclass} option, it arrives here in |#1| with character tokens
+%   of category code~12. However, the same option passed to the \pkg{xcref}
+%   package would cause |#1| to contain character tokens of category code~11.
+%   Thus, we use \cs{tl_to_str:n} on |#1| to normalize this input (the
+%   elements of \cs{g_xcref_requested_language_modules_seq} are therefore made
+%   of character tokens of category code~12, since they can't contain any
+%   space).
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_use_module:n #1
+  {
+    \tl_set:Nx \l_tmpa_tl { \tl_to_str:n {#1} }
+
+    \seq_if_in:NVF \g_xcref_requested_language_modules_seq \l_tmpa_tl
+      { \seq_gput_right:NV \g_xcref_requested_language_modules_seq \l_tmpa_tl }
+  }
+
+\@onlypreamble \xcref_use_module:n
+\cs_generate_variant:Nn \xcref_use_module:n { V }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\xcref_use_modules:n, \xcrefusemodules}
+%   \begin{arguments}
+%     \item comma-separated list of language-specific module names
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_use_modules:n #1
+  {
+    \clist_map_inline:nn {#1} { \xcref_use_module:n {##1} }
+  }
+
+\NewDocumentCommand \xcrefusemodules { m }
+  {
+    \xcref_use_modules:n {#1}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_load_requested_modules:}
+% Simple function used to \tn{input} all requested language-specific
+% modules. Each module is input under the \enquote{traditional} category code
+% régime for \LaTeXe{} packages.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_load_requested_modules:
+  {
+    \makeatletter
+    \seq_map_inline:Nn \g_xcref_requested_language_modules_seq
+      {
+        \msg_info:nnn { xcref } { loading-language-module } {##1}
+        \input { xcref-##1.tex }
+      }
+    \makeatother
+  }
+%    \end{macrocode}
+% \end{macro}
+% \tn{input} the requested language-specific modules.
+%    \begin{macrocode}
+\AtBeginDocument { \@@_load_requested_modules: }
+%    \end{macrocode}
+%
+% \subsubsection{Package options}
+%
+% Define the package options using \pkg{l3keys}.
+%    \begin{macrocode}
+\keys_define:nn { xcref }
+  {
+    languages .code:n = \xcref_use_modules:n {#1},
+  }
+%    \end{macrocode}
+% Explicitly define the name of each supported language module as a package
+% option. This way, if such an option (e.g., \texttt{ngerman}) was given to
+% \cs{documentclass}, \cs{ProcessKeysOptions} will pass it to \pkg{xcref}.
+%    \begin{macrocode}
+\seq_map_inline:Nn \g_xcref_available_language_modules_seq
+  {
+    \keys_define:nn { xcref }
+      { #1 .code:n = \xcref_use_module:V \l_keys_key_tl }
+  }
+%    \end{macrocode}
+%
+% Process \LaTeXe-style package options. This uses \pkg{l3keys2e}, see
+% \url{https://tex.stackexchange.com/a/371754/73317} for explanations.
+%    \begin{macrocode}
+\ProcessKeysOptions { xcref }
+%    \end{macrocode}
+%
+% \subsubsection{Main code}
+%
+% \begin{macro}{\@@_set_to_licr_form:Nn}
+%   Get the LICR form of a token list representing text.
+%   \begin{arguments}
+%     \item token list variable
+%     \item token list representing text
+%   \end{arguments}
+%   Set |#1| to the LICR form of |#2| (the assignment is local). This is very
+%   important when comparing strings using non-ASCII characters, because for
+%   instance, |über| is not the same token list in the |latin1| and |utf8|
+%   encodings (\pkg{inputenc} side). To overcome this difficulty, when we need
+%   to compare pure-text user input that could contain non-ASCII characters to
+%   keys (e.g., of a mapping as implemented in \pkg{l3prop}), we use the LICR
+%   as a normalized form.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_set_to_licr_form:Nn #1#2
+  {
+    \group_begin:
+%    \end{macrocode}
+% Remove the \cs{IeC} \pkg{inputenc} macro (only used to protect control words
+% written to files such as \file{.aux} and \file{.toc}) in order to retrieve
+% the LICR object corresponding to |#2|.
+%    \begin{macrocode}
+    \cs_set_eq:NN \IeC \@firstofone % see the inputenc documentation (or code)
+    \protected@xdef \xcref@tmpa {#2}
+    \group_end:
+%    \end{macrocode}
+% Not using \cs[no-index]{tl_set_eq:NN} here, because that would mean relying
+% on implementation details of token list variables.
+%    \begin{macrocode}
+    \tl_set:No #1 { \xcref@tmpa }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_protect_accent_macros_from_tabbing:N}
+%   Replace \tn{'}, \tn{`} and \tn{=} for safe use inside \env{tabbing}.
+%   \begin{arguments}
+%     \item token list variable
+%   \end{arguments}
+%   Replace \tn{'}, \tn{`} and \tn{=} in |#1| with \cs{@tabacckludge}
+%   followed by |'|, |`| or |=|, respectively. This is necessary in case the
+%   replaced commands were meant to produce accented characters and the
+%   material in |#1| is going to occur inside a \env{tabbing} environment.
+%   Indeed, \env{tabbing} redefines \tn{'}, \tn{`} and \tn{=} to do completely
+%   different things from the corresponding TeX commands (see the
+%   \pkg{inputenc} documentation and the \LaTeX{} book).
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_protect_accent_macros_from_tabbing:N #1
+  {
+    \tl_replace_all:Nnn #1 { \' } { \@tabacckludge ' }
+    \tl_replace_all:Nnn #1 { \` } { \@tabacckludge ` }
+    \tl_replace_all:Nnn #1 { \= } { \@tabacckludge = }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_call_lang_setup_func:n, \@@_call_lang_setup_func:V}
+%   Call the main function of a language-specific module.
+%   \begin{arguments}
+%     \item name of a language-specific module
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_call_lang_setup_func:n #1
+  {
+    \use:c { @@_#1_setup_cref_names: }
+  }
+%    \end{macrocode}
+% Define a variant of this function:
+%    \begin{macrocode}
+\cs_generate_variant:Nn \@@_call_lang_setup_func:n { V }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_autodetect_lang_unless_explicit:}
+%   Use the current language if not explicitly selected for \pkg{xcref}. May
+%   be used to map several \pkg{babel} languages to the same \pkg{xcref}
+%   language-specific (backend) module (note: the mapping is only used when
+%   the language is autodetected; explicit selection with \pkg{xcref} doesn't
+%   use it).
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_autodetect_lang_unless_explicit:
+  {
+    \str_if_empty:NT \l_@@_selected_lang_str
+      {
+        \str_set:Nx \l_@@_selected_lang_str
+          {
+            \IfLanguageName { english } { english } { }
+            \IfLanguageName { french } { french } { }
+            \IfLanguageName { ngerman } { ngerman } { }
+          }
+        \str_if_empty:NT \l_@@_selected_lang_str
+          { \msg_error:nn { xcref } { unable-to-determine-language } }
+      }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\xcref:nn, \xcref}
+%   \pkg{xcref}'s wrapper for \cs{cref}, \cs{Cref}, \cs{cref*} and \cs{Cref*}.
+%   \begin{arguments}
+%   \item options processed with \pkg{pgfkeys} using a default path of
+%     \xcrefPGFRoot
+%   \item comma-separated list of references passed as is to \cs{cref},
+%     \cs{Cref}, \cs{cref*} or \cs{Cref*} depending on the values of the
+%     \xcrefPGFOpt{capitalize} and \xcrefPGFOpt{hyperlinks} options
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref:nn #1#2
+  {
+    \group_begin:
+    \xcref_set:n {#1}
+    \@@_autodetect_lang_unless_explicit:
+    \@@_call_lang_setup_func:V \l_@@_selected_lang_str
+
+    \@@_call_cref:Nxn \l_@@_capitalize_bool
+      {
+        \bool_lazy_and:nnT { \g_@@_hyperref_loaded_bool }
+                           { ! \l_@@_use_hyperlinks_bool }
+                           { * }
+      }
+      {#2}
+    \group_end:
+  }
+
+\NewDocumentCommand \xcref { O{} m }
+  {
+    \xcref:nn {#1} {#2}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_call_cref:Nnn, \@@_call_cref:Nxn}
+%   Call \cs{cref}, \cs{Cref} or their starred forms.
+%   \begin{arguments}
+%   \item boolean variable indicating whether to capitalize
+%   \item star or empty
+%   \item list of references in the format supported by \cs{cref} and friends
+%     (spaces around the comma separators are \emph{not} ignored)
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_call_cref:Nnn #1#2#3
+  {
+    \use:c { \bool_if:NTF #1 { C } { c } ref } #2 {#3}
+  }
+
+\cs_generate_variant:Nn \@@_call_cref:Nnn { Nx }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\xcref_call_crefname:nnn, \xcref_call_crefname:nVV}
+%   Simple \pkg{expl3} wrapper for \cs{crefname}.
+%   \begin{arguments}
+%   \item reference type (e.g., \texttt{chapter}, \texttt{section},
+%     \texttt{theorem}, \texttt{lemma}, etc.)
+%   \item singular form
+%   \item plural form
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_call_crefname:nnn #1#2#3
+  {
+    \crefname {#1} {#2} {#3}
+  }
+
+\cs_generate_variant:Nn \xcref_call_crefname:nnn { nVV }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\xcref_call_Crefname:nnn, \xcref_call_Crefname:nVV}
+%   Simple \pkg{expl3} wrapper for \cs{Crefname}.
+%   \begin{arguments}
+%   \item reference type (see \cs{\xcref_call_crefname:nnn} for examples)
+%   \item singular form
+%   \item plural form
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_call_Crefname:nnn #1#2#3
+  {
+    \Crefname {#1} {#2} {#3}
+  }
+
+\cs_generate_variant:Nn \xcref_call_Crefname:nnn { nVV }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\xcref_set:n, \xcrefset}
+%   Set PGF keys related to \pkg{xcref}.
+%   \begin{arguments}
+%   \item comma-separated list of PGF keys
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_set:n #1
+  {
+     \pgfqkeys { /xcref } {#1}
+  }
+
+\NewDocumentCommand \xcrefset { m }
+  {
+    \xcref_set:n {#1}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Helper macros used with \cs{tl_mixed_case:n}}
+%
+% \begin{macro}{\xcrefNoCaseChange}
+%   Locally inhibit conversion when used in the second argument of
+%   \cs{tl_mixed_case:nn}.
+%   \begin{arguments}
+%   \item a token list (\emph{a priori} representing text) to
+%   \enquote{protect} from changes by \cs{tl_mixed_case:nn}
+%   \end{arguments}
+%   This function (the control sequence token) can be passed to
+%   \xcrefPGFOpt{functions for preventing auto case change} in order to tell
+%   the underlying \cs{tl_mixed_case:nn} operation not to modify some
+%   particular tokens (of a reference name for instance). We set it to the
+%   identity function.
+%    \begin{macrocode}
+\cs_set_eq:NN \xcrefNoCaseChange \use:n
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\xcref_lang_for_tl_mixed_case:n,
+%               \xcref_lang_for_tl_mixed_case:V}
+%   Default mapping from \pkg{xcref} language names to language codes suitable
+%   for use with \cs{tl_mixed_case:nn}. Users may override it in case it is
+%   incomplete.
+%   \begin{arguments}
+%   \item an \pkg{xcref} language name
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_set:Npn \xcref_lang_for_tl_mixed_case:n #1
+  {
+    \str_case:nnF {#1}
+      {
+        { azerbaijani } { az }
+        { dutch } { nl }
+        { lithuanian } { lt }
+        { ngerman } { de-alt }
+        { turkish } { tr }
+      }
+      {#1}                      % pass through for all other cases
+  }
+
+\cs_generate_variant:Nn \xcref_lang_for_tl_mixed_case:n { V }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Factory for convenience \cs{xcref} front-ends}
+%
+% \begin{macro}{\@@_create_language_specific_wrapper:Nn}
+%   Create convenience front-end macros to \cs{xcref} for the specified
+%   language. See the language-specific modules for examples of use.
+%   \begin{arguments}
+%   \item name of the language-specific module used by the created macros---as
+%     specified by the following arguments
+%   \item name of the generic language-specific code-level macro to create
+%   \item name of its document-level counterpart (it can be useful to users
+%     who wish to create custom front-ends \cs{xcref})
+%   \item name of the language-specific document-level front-end macro that
+%     uses |capitalize=false|
+%   \item name of the language-specific document-level front-end macro that
+%     uses |capitalize=true|
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_create_language_specific_wrapper:nNNNN #1#2#3#4#5
+  {
+    \cs_new_protected:Npn #2 ##1##2
+      {
+        \xcref:nn { ##1, lang=#1, #1/.cd, ##2 }
+      }
+
+    \NewDocumentCommand #3 { m m }
+      {
+        #2 {##1} {##2}
+      }
+
+    \NewDocumentCommand #4 { O{} }
+      {
+        #2 {capitalize=false} {##1}
+      }
+
+    \NewDocumentCommand #5 { O{} }
+      {
+        #2 {capitalize=true} {##1}
+      }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{PGF key definitions}
+%
+% The following PGF keys can be set with \cs{xcrefset} as will as in the first
+% argument of \cs{xcref:nn}.
+%    \begin{macrocode}
+\xcref_set:n
+  {
+    capitalize/.is~choice,
+    capitalize/true/.code = { \bool_set_true:N \l_@@_capitalize_bool },
+    capitalize/false/.code = { \bool_set_false:N \l_@@_capitalize_bool },
+    capitalize/.default = true, % when the key is used with no value
+    capitalize = false,         % initial value
+    %
+    hyperlinks/.is~choice,
+    hyperlinks/true/.code = { \bool_set_true:N \l_@@_use_hyperlinks_bool },
+    hyperlinks/false/.code = { \bool_set_false:N \l_@@_use_hyperlinks_bool },
+    hyperlinks/.default = true, % when the key is used with no value
+    hyperlinks = false,         % initial value
+%    \end{macrocode}
+% Used with \cs{tl_mixed_case:nn} which prepares the arguments of \cs{Crefname}
+%    \begin{macrocode}
+    functions~for~preventing~auto~case~change/.value~required,
+    functions~for~preventing~auto~case~change/.code =
+      { \tl_set:Nn \l_@@_case_change_exclude_tl {#1} },
+%    \end{macrocode}
+% The initial setting only contains one macro:
+%    \begin{macrocode}
+    functions~for~preventing~auto~case~change = \xcrefNoCaseChange,
+%    \end{macrocode}
+% The language to use will be autodetected with \pkg{iflang}, unless it is
+% explicitly specified using this option.
+%    \begin{macrocode}
+    lang/.value~required,
+    lang/.code = { \str_set:Nn \l_@@_selected_lang_str {#1} },
+    lang = {},                  % initial value: autodetect
+%    \end{macrocode}
+% Function mapping \pkg{xcref} language module names to language codes used by
+% \cs{tl_mixed_case:nn}.
+%    \begin{macrocode}
+    lang~for~capitalization~func/.value~required,
+    lang~for~capitalization~func/.code = {
+      \cs_set_eq:NN \xcref_lang_for_tl_mixed_case:n #1 },
+%    \end{macrocode}
+% It would be nice to be able to use |.unknown/.code| so that unrecognized
+% options |foo| are interpreted as being |preposition=foo|, however this is
+% not satisfactory because \cs{pgfkeys} appears to expands tokens when looking
+% for key names. There is no such problem with \pkg{l3keys}, but \pkg{pgfkeys}
+% has other advantages...
+%    \begin{macrocode}
+  }
+%    \end{macrocode}
+% This ends the code for \file{xcref.sty}.
+%    \begin{macrocode}
+%</package>
+%    \end{macrocode}
+%
+% \subsection{Module \file{xcref-french.tex}}
+%
+% \pkg{DocStrip} start guard for \file{xcref-french.tex}.
+%    \begin{macrocode}
+%<*french-module>
+%    \end{macrocode}
+% Switch to the category code régime suitable for \pkg{expl3} code.
+%    \begin{macrocode}
+\ExplSyntaxOn
+%    \end{macrocode}
+%
+% \subsubsection{\pkg{expl3} messages}
+%
+%    \begin{macrocode}
+\msg_new:nnn { xcref } { french-requested-use-of-unknown-definite-article }
+  { (french)~Unknown~definite~article:~'\exp_not:n {#1}'. }
+\msg_new:nnn { xcref }
+  { french-definite-article-not-in-c_@@_french_article_prop }
+  { (french)~Bug:~definite~article~not~in~\token_to_str:N
+    \c_@@_french_article_prop \c_colon_str \space '\exp_not:n {#1}'. }
+\msg_new:nnn { xcref } { french-requested-use-of-undefined-type }
+  { (french)~Requested~use~of~undefined~reference~type:~'\exp_not:n {#1}'. }
+\msg_new:nnn { xcref } { french-unknown-prefix-form }
+  { (french)~Unknown~form~for~the~part~preceding~the~
+    \token_to_str:N \namecref \c_colon_str \space '\exp_not:n {#1}'. }
+%    \end{macrocode}
+%
+% \subsubsection{Variable declarations}
+%
+% \begin{variable}{\l_@@_french_selected_form_str}
+%   Specifies how references are to be produced, in grammatical terms. There
+%   are three possible values: |name|, |article+name| and |prep+article+name|,
+%   where |prep| stands for \enquote{preposition}.
+%    \begin{macrocode}
+\str_new:N \l_@@_french_selected_form_str
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\l_@@_french_selected_preposition_tl}
+%   The selected preposition, if any. When non-empty, this variable overrides
+%   the default preposition associated to the reference type.
+%    \begin{macrocode}
+\tl_new:N \l_@@_french_selected_preposition_tl
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\g_@@_french_names_prop}
+%   French language-specific data on reference names: for each name, the
+%   default preposition, definite article to use, singular and plural forms.
+%   The first two \meta{items} of each value of the property list must use the
+%   LICR representation.
+%
+%   Regarding \cs{@tabacckludge}, see the documentation of \pkg{inputenc} and
+%   use it only in \emph{output text} here. It is not really necessary here
+%   anyway, because we are going to do the corresponding replacements
+%   downstream to be on the safe side---but it is safer in case someone uses
+%   data from this variable and forgets to do the replacements.
+%    \begin{macrocode}
+\prop_new:N \g_@@_french_names_prop
+
+\prop_gset_from_keyval:Nn \g_@@_french_names_prop
+  {
+    problem    = {\`a}{le}{probl\@tabacckludge`eme}{probl\@tabacckludge`emes},
+    proposition= {\`a}{la}{proposition}{propositions},
+    assertion  = {d'apr\`es}{l'}{assertion}{assertions},
+    theoreme   = {\`a}{le}{th\@tabacckludge'eor\@tabacckludge`eme}{th\@tabacckludge'eor\@tabacckludge`emes},
+    lemme      = {\`a}{le}{lemme}{lemmes},
+    definition = {dans}{la}{d\@tabacckludge'efinition}{d\@tabacckludge'efinitions},
+  }
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\g_@@_french_types_seq}
+%   \cs{g_@@_french_types_seq} will be set up to contain the list of keys in
+%   \cs{g_@@_french_names_prop} (this will be done from the
+%   \cs{AtBeginDocument} hook).
+%    \begin{macrocode}
+\seq_new:N \g_@@_french_types_seq
+%    \end{macrocode}
+% \end{variable}
+%
+% Change the category code of spaces inside the following group so that they
+% behave as in plain \TeX{} and \LaTeXe{}.
+%    \begin{macrocode}
+\group_begin:
+  \char_set_catcode_space:n {`\ }
+%    \end{macrocode}
+%
+% \begin{variable}{\g_@@_french_prep_and_article_prop}
+%   Mapping describing how prepositions and definite articles combine in
+%   French. The keys must use the LICR representation. \cs{@tabacckludge} is
+%   not really necessary here, because we are going to do the corresponding
+%   replacements downstream to be on the safe side---but it is safer in case
+%   someone uses data from this variable and forgets to do the replacements.
+%    \begin{macrocode}
+  \prop_new:N \g_@@_french_prep_and_article_prop
+  \prop_gset_from_keyval:Nn \g_@@_french_prep_and_article_prop
+    {
+      \`a    = {\@tabacckludge`a l'}{au }{\@tabacckludge`a la }{aux }
+    }
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\c_@@_french_article_prop}
+%   This mapping allows one to always get proper spacing between an article
+%   and the following name---which sometimes is \enquote{no space} (cf.~the
+%   case of |l'|).
+%    \begin{macrocode}
+  \prop_const_from_keyval:Nn \c_@@_french_article_prop
+    { l'  = {l'}, le  = {le }, la  = {la }, les = {les } }
+%    \end{macrocode}
+% \end{variable}
+%    \begin{macrocode}
+\group_end:
+%    \end{macrocode}
+%
+% \subsubsection{PGF keys}
+%
+% Note that the \xcrefPGFOpt{french/names table} key can only be set in the
+% preamble. The initial value of \cs{l_@@_french_selected_preposition_tl} is
+% empty (see above).
+%
+%    \begin{macrocode}
+\pgfqkeys { /xcref/french }
+  {
+    form/.is~choice,
+    form/name/.code = { \str_set:Nn \l_@@_french_selected_form_str {name} },
+    form/article+name/.code =
+             { \str_set:Nn \l_@@_french_selected_form_str {article+name} },
+    form/prep+article+name/.code =
+             { \str_set:Nn \l_@@_french_selected_form_str {prep+article+name} },
+    form = prep+article+name,   % set the initial value
+    %
+    preposition/.value~required,
+    preposition/.code = {
+      \@@_set_to_licr_form:Nn \l_@@_french_selected_preposition_tl {#1} },
+    %
+    names~table/.code = { \@@_french_set_names_table:n {#1} },
+    %
+    composition~table~for~prepositions~and~articles/.code = {
+      \prop_gset_from_keyval:Nn \g_@@_french_prep_and_article_prop {#1} },
+  }
+%    \end{macrocode}
+%
+% \subsubsection{Main code}
+%
+%    \begin{macrocode}
+\int_new:N \l_@@_fapaa_index_int
+\tl_new:N \l_@@_fapaa_prepart_tl
+%    \end{macrocode}
+%
+% \begin{macro}{\xcref_french_assemble_prep_and_article:nnN,
+%               \xcref_french_assemble_prep_and_article:VnN,
+%               \xcref_french_assemble_prep_and_article:VVN}
+%   Assemble a preposition and a definite article.
+%   \begin{arguments}
+%   \item preposition (key of \cs{g_@@_french_prep_and_article_prop})
+%   \item definite article among |l'|, |le|, |la| and |les|
+%   \item token list variable where the result is to be stored
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_french_assemble_prep_and_article:nnN #1#2#3
+  {
+    \prop_get:NnNTF \g_@@_french_prep_and_article_prop {#1}
+                    \l_@@_fapaa_prepart_tl
+      {
+        \seq_set_split:NnV \l_tmpa_seq { } \l_@@_fapaa_prepart_tl
+        \int_set:Nn \l_@@_fapaa_index_int
+          {
+            \str_case:nnF {#2}
+              {
+                { l' } { 1 }
+                { le } { 2 }
+                { la } { 3 }
+                { les } { 4 }
+              }
+              {
+                \msg_error:nnn { xcref }
+                  { french-requested-use-of-unknown-definite-article } {#2}
+              }
+          }
+
+        \tl_set:Nx #3 { \seq_item:Nn \l_tmpa_seq { \l_@@_fapaa_index_int } }
+      }
+      {
+        \prop_get:NnNF \c_@@_french_article_prop {#2} \l_tmpa_tl
+          {
+            \msg_error:nnn { xcref }
+              { french-definite-article-not-in-c_@@_french_article_prop } {#2}
+          }
+
+        \tl_set:Nn #3 { #1~ }
+        \tl_put_right:NV #3 \l_tmpa_tl
+      }
+
+    \@@_protect_accent_macros_from_tabbing:N #3
+    \@@_protect_accent_macros_from_tabbing:N #3
+  }
+
+\cs_generate_variant:Nn \xcref_french_assemble_prep_and_article:nnN { V }
+\cs_generate_variant:Nn \xcref_french_assemble_prep_and_article:nnN { VV }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_french_set_names_table:n}
+%   Set \cs{g_@@_french_names_prop} to the given value.
+%   \begin{arguments}
+%   \item valid value for an \pkg{l3prop} object
+%   \end{arguments}
+%   This function can only be used in the preamble because the list of keys is
+%   computed at |\begin{document}| time and stored in
+%   \cs{g_@@_french_types_seq}.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_french_set_names_table:n #1
+  {
+    \prop_gset_from_keyval:Nn \g_@@_french_names_prop {#1}
+  }
+
+\@onlypreamble \@@_french_set_names_table:n
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_french_setup_cref_names:}
+%   Call \cs{crefname} and \cs{Crefname} for each known reference type. This
+%   is the main entry point of the language-specific module.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_french_setup_cref_names:
+  {
+    \seq_map_function:NN \g_@@_french_types_seq
+                         \@@_french_setup_cref_names_mapfunc:n
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \medskip
+% Prepare the terrain for \cs{@@_french_setup_cref_names_mapfunc:n}.
+%    \begin{macrocode}
+\cs_generate_variant:Nn \tl_mixed_case:nn { VV }
+\cs_generate_variant:Nn \msg_error:nnn { nnV }
+\cs_generate_variant:Nn \str_case:nnF { V }
+%    \end{macrocode}
+% Used to store data extracted from \cs{g_@@_french_names_prop} corresponding
+% to the selected reference type.
+%    \begin{macrocode}
+\tl_new:N \l_@@_fscnm_type_data_tl
+\seq_new:N \l_@@_fscnm_type_data_seq
+%    \end{macrocode}
+% Selected preposition.
+%    \begin{macrocode}
+\tl_new:N \l_@@_fscnm_prep_tl
+%    \end{macrocode}
+% Singular form of the definite article normally used with the selected
+% reference type.
+%    \begin{macrocode}
+\tl_new:N \l_@@_fscnm_article_tl
+%    \end{macrocode}
+% What to insert before a reference name (these contain the whole prefix:
+% empty, article or preposition plus article, depending on the value of
+% \xcrefPGFOpt{french/form}).
+%    \begin{macrocode}
+\tl_new:N \l_@@_fscnm_prefix_sing_tl
+\tl_new:N \l_@@_fscnm_prefix_plur_tl
+%    \end{macrocode}
+% The whole strings passed to \cs{crefname} and \cs{Crefname}.
+%    \begin{macrocode}
+\tl_new:N \l_@@_fscnm_singular_tl
+\tl_new:N \l_@@_fscnm_plural_tl
+%    \end{macrocode}
+% Language code for use with \cs{tl_mixed_case:nn}.
+%    \begin{macrocode}
+\tl_new:N \l_@@_fscnm_lang_tl
+%    \end{macrocode}
+%
+% \begin{macro}{\@@_french_setup_cref_names_mapfunc:n}
+%   Call \cs{crefname} and \cs{Crefname} for the specified reference type.
+%   \begin{arguments}
+%   \item reference type (e.g., |chapter|, |section|, |theorem|, etc.)
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_french_setup_cref_names_mapfunc:n #1
+  {
+    \prop_get:NnNF \g_@@_french_names_prop {#1} \l_@@_fscnm_type_data_tl
+      {
+        \msg_error:nnn { xcref } { french-requested-use-of-undefined-type } {#1}
+      }
+
+    \seq_set_split:NnV \l_@@_fscnm_type_data_seq { }
+                       \l_@@_fscnm_type_data_tl
+    \seq_pop_left:NN \l_@@_fscnm_type_data_seq \l_@@_fscnm_prep_tl
+%    \end{macrocode}
+% Override the default preposition for reference type |#1| if one was
+% explicitly specified.
+%    \begin{macrocode}
+    \tl_if_empty:NF \l_@@_french_selected_preposition_tl
+      {
+        \tl_set_eq:NN \l_@@_fscnm_prep_tl \l_@@_french_selected_preposition_tl
+      }
+    \seq_pop_left:NN \l_@@_fscnm_type_data_seq \l_@@_fscnm_article_tl
+    \seq_pop_left:NN \l_@@_fscnm_type_data_seq \l_@@_fscnm_singular_tl
+    \seq_pop_left:NN \l_@@_fscnm_type_data_seq \l_@@_fscnm_plural_tl
+
+    \str_case:VnF \l_@@_french_selected_form_str
+      {
+        { prep+article+name }
+        {
+          \xcref_french_assemble_prep_and_article:VVN \l_@@_fscnm_prep_tl
+            \l_@@_fscnm_article_tl \l_@@_fscnm_prefix_sing_tl
+          \xcref_french_assemble_prep_and_article:VnN \l_@@_fscnm_prep_tl
+            { les } \l_@@_fscnm_prefix_plur_tl
+        }
+        { article+name }
+        {
+          \prop_get:NVNF \c_@@_french_article_prop \l_@@_fscnm_article_tl
+                         \l_@@_fscnm_prefix_sing_tl
+            {
+              \msg_error:nnV { xcref }
+                { french-definite-article-not-in-c_@@_french_article_prop }
+                \l_@@_fscnm_article_tl
+            }
+          \tl_set:Nn \l_@@_fscnm_prefix_plur_tl { les~ }
+        }
+        { name }
+        {
+          \tl_clear:N \l_@@_fscnm_prefix_sing_tl
+          \tl_clear:N \l_@@_fscnm_prefix_plur_tl
+        }
+      }
+      {
+        \msg_error:nnV { xcref } { french-unknown-prefix-form }
+          \l_@@_french_selected_form_str
+      }
+
+    \tl_put_left:NV \l_@@_fscnm_singular_tl \l_@@_fscnm_prefix_sing_tl
+    \tl_put_left:NV \l_@@_fscnm_plural_tl \l_@@_fscnm_prefix_plur_tl
+%    \end{macrocode}
+% Make sure \cs{@tabacckludge} is used to protect \tn{'}, \tn{`} and \tn{=}
+% from the \env{tabbing} environment, which redefines them (see the
+% \pkg{inputenc} documentation).
+%    \begin{macrocode}
+    \@@_protect_accent_macros_from_tabbing:N \l_@@_fscnm_singular_tl
+    \@@_protect_accent_macros_from_tabbing:N \l_@@_fscnm_plural_tl
+%    \end{macrocode}
+% Set up the non-capitalized forms.
+%    \begin{macrocode}
+    \xcref_call_crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
+%    \end{macrocode}
+% This influences the behavior of \cs{tl_mixed_case:nn}.
+%    \begin{macrocode}
+    \tl_set_eq:NN \l_tl_case_change_exclude_tl \l_@@_case_change_exclude_tl
+%    \end{macrocode}
+% Prepare for the language-specific case conversion.
+%    \begin{macrocode}
+    \tl_set:Nx \l_@@_fscnm_lang_tl
+      { \xcref_lang_for_tl_mixed_case:V \l_@@_selected_lang_str }
+    \tl_set:Nx \l_@@_fscnm_singular_tl
+      { \tl_mixed_case:VV \l_@@_fscnm_lang_tl \l_@@_fscnm_singular_tl }
+    \tl_set:Nx \l_@@_fscnm_plural_tl
+      { \tl_mixed_case:VV \l_@@_fscnm_lang_tl \l_@@_fscnm_plural_tl }
+%    \end{macrocode}
+% Set up the capitalized forms.
+%    \begin{macrocode}
+    \xcref_call_Crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
+  }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\@@_french_generic_wrapper:nn, \xcreffrenchgenericwrapper,
+%               \xcreffrenchwrapper, \xcreffrenchWrapper}
+% Create convenience \cs{xcref} wrappers for \texttt{french}.
+%    \begin{macrocode}
+\@@_create_language_specific_wrapper:nNNNN { french }
+  \@@_french_generic_wrapper:nn \xcreffrenchgenericwrapper
+  \xcreffrenchwrapper \xcreffrenchWrapper
+%    \end{macrocode}
+% \end{macro}
+% Fill the list of known types (\cs{g_@@_french_types_seq}) with the keys of
+% \cs{g_@@_french_names_prop}. Since we only do this here, this implies that
+% \xcrefPGFOpt{french/names table} can only be set in the preamble (otherwise,
+% \cs{g_@@_french_types_seq} and \cs{g_@@_french_names_prop} would become
+% out of sync).
+%    \begin{macrocode}
+\AtBeginDocument
+  {
+    \seq_gclear:N \g_@@_french_types_seq
+    \prop_map_inline:Nn \g_@@_french_names_prop
+      { \seq_gput_right:Nn \g_@@_french_types_seq {#1} }
+  }
+%    \end{macrocode}
+% Switch off the \pkg{expl3} category code régime.
+%    \begin{macrocode}
+\ExplSyntaxOff
+%    \end{macrocode}
+% \pkg{DocStrip} end guard for \file{xcref-french.tex}.
+%    \begin{macrocode}
+%</french-module>
+%    \end{macrocode}
+%
+% \subsection{Module \file{xcref-ngerman.tex}}
+%
+% \pkg{DocStrip} start guard for \file{xcref-ngerman.tex}.
+%    \begin{macrocode}
+%<*ngerman-module>
+%    \end{macrocode}
+% Switch to the category code régime suitable for \pkg{expl3} code.
+%    \begin{macrocode}
+\ExplSyntaxOn
+%    \end{macrocode}
+%
+% \subsubsection{\pkg{expl3} messages}
+%
+%    \begin{macrocode}
+\msg_new:nnn { xcref } { ngerman-requested-use-of-undefined-type }
+  { (ngerman)~Requested~use~of~undefined~reference~type:~'\exp_not:n {#1}'. }
+
+\msg_new:nnn { xcref }
+  { ngerman-unexpected-case-name-when-trying-to-find-index }
+  { (ngerman)~Bug:~unexpected~case~name~when~doing~lookup~in~\token_to_str:N
+    \c_@@_ngerman_case_idx_prop \c_colon_str \space '\exp_not:n {#1}'. }
+
+\msg_new:nnn { xcref } { ngerman-unknown-prefix-form }
+  { (ngerman)~Unknown~form~for~the~part~preceding~the~
+    \token_to_str:N \namecref \c_colon_str \space '\exp_not:n {#1}'. }
+%    \end{macrocode}
+%
+% \subsubsection{Variable declarations}
+%
+% \begin{variable}{\l_@@_ngerman_selected_form_str}
+%   Specifies how references are to be produced, in grammatical terms. There
+%   are three possible values: |name|, |article+name| and |prep+article+name|,
+%   where |prep| stands for \enquote{preposition}.
+%    \begin{macrocode}
+\str_new:N \l_@@_ngerman_selected_form_str
+%    \end{macrocode}
+% \end{variable}
+%
+% \begin{variable}{\l_@@_ngerman_selected_preposition_tl}
+%   The selected preposition, if any. When non-empty, this variable overrides
+%   the default preposition associated to the reference type.
+%    \begin{macrocode}
+\tl_new:N \l_@@_ngerman_selected_preposition_tl
+%    \end{macrocode}
+% \end{variable}
+%
+% Indices corresponding to the order of the cases in
+% \cs{g_@@_ngerman_names_prop}
+%    \begin{macrocode}
+\prop_const_from_keyval:Nn \c_@@_ngerman_case_idx_prop
+  {
+    Nominativ = 1,
+    Akkusativ = 2,
+    Dativ     = 3,
+    Genitiv   = 4
+  }
+%    \end{macrocode}
+% Can be changed by users via \xcrefPGFOpt{ngerman/names table}. This is global
+% because we don't want to compute \cs{g_@@_ngerman_types_seq} (containing the
+% list of keys in \cs{g_@@_ngerman_names_prop}) all the time. The prepositions
+% and articles in this variable must be written in LICR representation (for
+% instance, use |\"uber| but not |über| nor |{\"u}ber|).
+%
+% In case you would need \tn{'}, \tn{`} or \tn{=} in the nouns
+% (\enquote{Problem}, \enquote{Probleme}, etc.), you may want to use
+% \cs{@tabacckludge} followed by |'|, |`| or |=| instead (see
+% \cs{g_@@_french_names_prop} in the \texttt{french} module for examples).
+%    \begin{macrocode}
+\prop_new:N \g_@@_ngerman_names_prop
+\prop_gset_from_keyval:Nn \g_@@_ngerman_names_prop
+  {
+    problem    = {in}{{das}{Problem}{die}{Probleme}}%
+                   {{das}{Problem}{die}{Probleme}}%
+                   {{dem}{Problem}{den}{Problemen}}%
+                   {{des}{Problems}{der}{Probleme}},
+    proposition= {nach}{{die}{Proposition}{die}{Propositionen}}%
+                   {{die}{Proposition}{die}{Propositionen}}%
+                   {{der}{Proposition}{den}{Propositionen}}%
+                   {{der}{Proposition}{der}{Propositionen}},
+    satz       = {nach}{{der}{Satz}{die}{S\"atze}}%
+                   {{den}{Satz}{die}{S\"atze}}%
+                   {{dem}{Satz}{den}{S\"atzen}}%
+                   {{des}{Satzes}{der}{S\"atze}},
+    theorem    = {nach}{{das}{Theorem}{die}{Theoreme}}%
+                   {{das}{Theorem}{die}{Theoreme}}%
+                   {{dem}{Theorem}{den}{Theoremen}}%
+                   {{des}{Theorems}{der}{Theoreme}},
+    lemma      = {nach}{{das}{Lemma}{die}{Lemmata}}%
+                   {{das}{Lemma}{die}{Lemmata}}%
+                   {{dem}{Lemma}{den}{Lemmata}}%
+                   {{des}{Lemmas}{der}{Lemmata}},
+    definition = {nach}{{die}{Definition}{die}{Definitionen}}%
+                   {{die}{Definition}{die}{Definitionen}}%
+                   {{der}{Definition}{den}{Definitionen}}%
+                   {{der}{Definition}{der}{Definitionen}},
+  }
+%    \end{macrocode}
+% Will contain the list of keys in \cs{g_@@_ngerman_names_prop} (computed
+% \cs{AtBeginDocument})
+%    \begin{macrocode}
+\seq_new:N \g_@@_ngerman_types_seq
+%    \end{macrocode}
+% Authorized values: |Nominativ|, |Akkusativ|, |Dativ|, |Genitiv|.
+%    \begin{macrocode}
+\str_new:N \l_@@_ngerman_selected_case_str
+%    \end{macrocode}
+% With some prepositions, the case is perfectly determined. This mapping thus
+% takes precedence over whatever was set via the PGF key \xcrefPGFOpt{ngerman/case}.
+% It can be modified by users via
+% \xcrefPGFOpt{ngerman/prepositions always followed by the same case}. The keys
+% must be written in LICR representation.
+%    \begin{macrocode}
+\prop_new:N \l_@@_ngerman_case_for_prep_prop
+\prop_set_from_keyval:Nn \l_@@_ngerman_case_for_prep_prop
+  {
+    bis   = Akkusativ,
+    durch = Akkusativ,
+    f\"ur = Akkusativ,
+    gegen = Akkusativ,
+    ohne  = Akkusativ,
+    um    = Akkusativ,
+    aus   = Dativ,
+    bei   = Dativ,
+    mit   = Dativ,
+    nach  = Dativ,
+    seit  = Dativ,
+    von   = Dativ,
+    zu    = Dativ,
+%    \end{macrocode}
+% Prepositions normally followed by the genitive case seem to often have
+% exceptions; thus, I prefer letting a native German speaker decide what
+% is correct to include here.
+%    \begin{macrocode}
+  }
+%    \end{macrocode}
+% Some prepositions and articles can merge. This mapping can be modified by
+% users via \xcrefPGFOpt{ngerman/composition table for prepositions and articles}.
+% The keys must be written in LICR representation.
+%    \begin{macrocode}
+\prop_new:N \l_@@_ngerman_article_and_prep_prop
+\prop_set_from_keyval:Nn \l_@@_ngerman_article_and_prep_prop
+  {
+    an~dem = am,
+    in~dem = im,
+    von~dem = vom,
+    zu~dem = zum,
+    zu~der = zur,
+    bei~dem = beim,
+  }
+%    \end{macrocode}
+%
+% \subsubsection{PGF keys}
+%
+% Note that the \xcrefPGFOpt{ngerman/names table} key can only be set in the
+% preamble. The initial value of \cs{l_@@_ngerman_selected_preposition_tl} is
+% empty (see above).
+%
+%    \begin{macrocode}
+\pgfqkeys { /xcref/ngerman }
+  {
+    form/.is~choice,
+    form/name/.code = { \str_set:Nn \l_@@_ngerman_selected_form_str {name} },
+    form/article+name/.code =
+            { \str_set:Nn \l_@@_ngerman_selected_form_str {article+name} },
+    form/prep+article+name/.code =
+            { \str_set:Nn \l_@@_ngerman_selected_form_str {prep+article+name} },
+    form = prep+article+name,   % set the initial value
+    %
+    preposition/.value~required,
+    preposition/.code = {
+      \@@_set_to_licr_form:Nn \l_@@_ngerman_selected_preposition_tl {#1} },
+    case/.is~choice,
+    case/nom/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
+                                   { Nominativ } },
+    case/akk/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
+                                   { Akkusativ } },
+    case/dat/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
+                                   { Dativ } },
+    case/gen/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
+                                   { Genitiv } },
+    names~table/.code = { \@@_ngerman_set_names_table:n {#1} },
+    prepositions~always~followed~by~the~same~case/.code = {
+      \prop_set_from_keyval:Nn \l_@@_ngerman_case_for_prep_prop {#1} },
+    composition~table~for~prepositions~and~articles/.code = {
+      \prop_set_from_keyval:Nn \l_@@_ngerman_article_and_prep_prop {#1} },
+  }
+%    \end{macrocode}
+%
+% \subsubsection{Main code}
+%
+% \begin{macro}{\xcref_ngerman_assemble_prep_and_article:nnN,
+%               \xcref_ngerman_assemble_prep_and_article:VVN}
+%   Assemble a preposition and an article.
+%   \begin{arguments}
+%   \item preposition
+%   \item article
+%   \item token list variable where the result is stored
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_ngerman_assemble_prep_and_article:nnN #1#2#3
+  {
+    \prop_get:NnNF \l_@@_ngerman_article_and_prep_prop { #1~#2 } #3
+      {
+        \tl_set:Nn #3 { #1~#2 }
+      }
+
+    \@@_protect_accent_macros_from_tabbing:N #3
+    \@@_protect_accent_macros_from_tabbing:N #3
+  }
+
+\cs_generate_variant:Nn \xcref_ngerman_assemble_prep_and_article:nnN { VV }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\@@_ngerman_set_names_table:n}
+%   Set the \cs{g_@@_ngerman_names_prop} mapping to the given value.
+%   \begin{arguments}
+%   \item valid value for an \pkg{l3prop} object
+%   \end{arguments}
+%   This function can only be used in the preamble because the list of keys is
+%   computed at |\begin{document}| time and stored in
+%   \cs{g_@@_ngerman_types_seq}.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_ngerman_set_names_table:n #1
+  {
+    \prop_gset_from_keyval:Nn \g_@@_ngerman_names_prop {#1}
+  }
+
+\@onlypreamble \@@_ngerman_set_names_table:n
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\@@_ngerman_setup_cref_names:}
+%   Call \cs{crefname} and \cs{Crefname} for each known reference type. This
+%   is the main entry point of the language-specific module.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_ngerman_setup_cref_names:
+  {
+    \seq_map_function:NN \g_@@_ngerman_types_seq
+                         \@@_ngerman_setup_cref_names_mapfunc:n
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \medskip
+% Prepare the terrain for \cs{@@_ngerman_setup_cref_names_mapfunc:n}.
+%    \begin{macrocode}
+\cs_generate_variant:Nn \tl_mixed_case:nn { VV }
+\cs_generate_variant:Nn \msg_error:nnn { nnV }
+\cs_generate_variant:Nn \str_case:nnF { V }
+%    \end{macrocode}
+% Used to store data extracted from \cs{g_@@_ngerman_names_prop} corresponding
+% to the selected reference type.
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_type_data_tl
+\seq_new:N \l_@@_gscnm_type_data_seq
+%    \end{macrocode}
+% Used to store data for the selected case (one \meta{item} with index 2, 3,
+% 4, or 5 in the values from \cs{g_@@_ngerman_names_prop}).
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_case_data_tl
+\seq_new:N \l_@@_gscnm_case_data_seq
+%    \end{macrocode}
+% Selected preposition.
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_prep_tl
+%    \end{macrocode}
+% Value obtained from \cs{c_@@_ngerman_case_idx_prop}.
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_case_idx_tl
+%    \end{macrocode}
+% Singular and plural forms of the article.
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_article_sing_tl
+\tl_new:N \l_@@_gscnm_article_plur_tl
+%    \end{macrocode}
+% What to insert before a reference name such as Sektion, Theorem, etc. (these
+% contain the whole prefix: empty, article or preposition plus article,
+% depending on the value of \xcrefPGFOpt{ngerman/form}).
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_prefix_sing_tl
+\tl_new:N \l_@@_gscnm_prefix_plur_tl
+%    \end{macrocode}
+% The whole strings passed to \cs{crefname} and \cs{Crefname}.
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_singular_tl
+\tl_new:N \l_@@_gscnm_plural_tl
+%    \end{macrocode}
+% Language for use with \cs{tl_mixed_case:nn}.
+%    \begin{macrocode}
+\tl_new:N \l_@@_gscnm_lang_tl
+%    \end{macrocode}
+% \begin{macro}{\@@_ngerman_setup_cref_names_mapfunc:n}
+%   Call \cs{crefname} and \cs{Crefname} for the specified reference type.
+%   \begin{arguments}
+%   \item reference type (e.g., |chapter|, |section|, |theorem|, etc.)
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_ngerman_setup_cref_names_mapfunc:n #1
+  {
+    \prop_get:NnNF \g_@@_ngerman_names_prop {#1}
+      \l_@@_gscnm_type_data_tl
+      {
+        \msg_error:nnn { xcref } { ngerman-requested-use-of-undefined-type }
+                       {#1}
+      }
+
+    \seq_set_split:NnV \l_@@_gscnm_type_data_seq { }
+                       \l_@@_gscnm_type_data_tl
+    \seq_pop_left:NN \l_@@_gscnm_type_data_seq \l_@@_gscnm_prep_tl
+%    \end{macrocode}
+% Override the default preposition for type |#1| if one was explicitly
+% specified.
+%    \begin{macrocode}
+    \tl_if_empty:NF \l_@@_ngerman_selected_preposition_tl
+      {
+        \tl_set_eq:NN \l_@@_gscnm_prep_tl \l_@@_ngerman_selected_preposition_tl
+      }
+%    \end{macrocode}
+% If the selected form has a preposition and that preposition is always
+% followed by a particular case (e.g., |Dativ|), use it. This may seem strange
+% to store the \enquote{new} case in \cs{l_@@_ngerman_selected_case_str}, but
+% this variable will recover its previous value as soon as the group opened by
+% \cs{xcref:nn} ends.
+%    \begin{macrocode}
+    \str_if_eq:VnT \l_@@_ngerman_selected_form_str { prep+article+name }
+      {
+        \prop_get:NVNT \l_@@_ngerman_case_for_prep_prop
+                       \l_@@_gscnm_prep_tl \l_tmpa_tl
+          { \str_set:Nx \l_@@_ngerman_selected_case_str { \l_tmpa_tl } }
+      }
+
+    \prop_get:NVNF \c_@@_ngerman_case_idx_prop
+      \l_@@_ngerman_selected_case_str \l_@@_gscnm_case_idx_tl
+      {
+        \msg_error:nnV { xcref }
+          { ngerman-unexpected-case-name-when-trying-to-find-index }
+          \l_@@_ngerman_selected_case_str
+      }
+%    \end{macrocode}
+% Get data (initially coming from \cs{g_@@_ngerman_names_prop})
+% corresponding to the selected case (|Nominativ|, |Akkusativ|, etc.).
+%    \begin{macrocode}
+    \tl_set:Nx \l_@@_gscnm_case_data_tl
+      { \seq_item:Nn \l_@@_gscnm_type_data_seq
+          { \l_@@_gscnm_case_idx_tl }
+      }
+
+    \seq_set_split:NnV \l_@@_gscnm_case_data_seq { } \l_@@_gscnm_case_data_tl
+    \seq_pop_left:NN \l_@@_gscnm_case_data_seq \l_@@_gscnm_article_sing_tl
+    \seq_pop_left:NN \l_@@_gscnm_case_data_seq \l_@@_gscnm_singular_tl
+    \seq_pop_left:NN \l_@@_gscnm_case_data_seq \l_@@_gscnm_article_plur_tl
+    \seq_pop_left:NN \l_@@_gscnm_case_data_seq \l_@@_gscnm_plural_tl
+%    \end{macrocode}
+% Compute the \enquote{prefix} token list (what comes before the noun).
+%    \begin{macrocode}
+    \str_case:VnF \l_@@_ngerman_selected_form_str
+      {
+        { prep+article+name }
+        {
+          \xcref_ngerman_assemble_prep_and_article:VVN \l_@@_gscnm_prep_tl
+            \l_@@_gscnm_article_sing_tl \l_@@_gscnm_prefix_sing_tl
+          \xcref_ngerman_assemble_prep_and_article:VVN \l_@@_gscnm_prep_tl
+            \l_@@_gscnm_article_plur_tl \l_@@_gscnm_prefix_plur_tl
+        }
+        { article+name }
+        {
+          \tl_set_eq:NN \l_@@_gscnm_prefix_sing_tl \l_@@_gscnm_article_sing_tl
+          \tl_set_eq:NN \l_@@_gscnm_prefix_plur_tl \l_@@_gscnm_article_plur_tl
+        }
+        { name }
+        {
+          \tl_clear:N \l_@@_gscnm_prefix_sing_tl
+          \tl_clear:N \l_@@_gscnm_prefix_plur_tl
+        }
+      }
+      {
+        \msg_error:nnV { xcref } { ngerman-unknown-prefix-form }
+          \l_@@_ngerman_selected_form_str
+      }
+%    \end{macrocode}
+% Make sure that when we use \cs{tl_mixed_case:nn} to prepare for
+% \cs{Crefname}, the case of the noun won't be affected (we don't want nouns
+% to become all-lowercase in German!).
+%    \begin{macrocode}
+    \tl_set:Nx \l_@@_gscnm_singular_tl
+      { \exp_not:N \xcrefNoCaseChange
+        { \exp_args:No \exp_not:n { \l_@@_gscnm_singular_tl } } }
+    \tl_set:Nx \l_@@_gscnm_plural_tl
+      { \exp_not:N \xcrefNoCaseChange
+        { \exp_args:No \exp_not:n { \l_@@_gscnm_plural_tl } } }
+%    \end{macrocode}
+% Assemble the prefix and the noun.
+%    \begin{macrocode}
+    \tl_if_empty:NF \l_@@_gscnm_prefix_sing_tl
+      {
+        \tl_put_left:Nn \l_@@_gscnm_singular_tl { ~ }
+        \tl_put_left:NV \l_@@_gscnm_singular_tl \l_@@_gscnm_prefix_sing_tl
+      }
+    \tl_if_empty:NF \l_@@_gscnm_prefix_plur_tl
+      {
+        \tl_put_left:Nn \l_@@_gscnm_plural_tl { ~ }
+        \tl_put_left:NV \l_@@_gscnm_plural_tl \l_@@_gscnm_prefix_plur_tl
+      }
+%    \end{macrocode}
+% Make sure \cs{@tabacckludge} is used to protect \tn{'}, \tn{`} and \tn{=}
+% from the \env{tabbing} environment, which redefines them (see the
+% \pkg{inputenc} documentation).
+%    \begin{macrocode}
+    \@@_protect_accent_macros_from_tabbing:N \l_@@_gscnm_singular_tl
+    \@@_protect_accent_macros_from_tabbing:N \l_@@_gscnm_plural_tl
+%    \end{macrocode}
+% Set up the non-capitalized forms.
+%    \begin{macrocode}
+    \xcref_call_crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
+%    \end{macrocode}
+% This influences the behavior of \cs{tl_mixed_case:nn}.
+%    \begin{macrocode}
+    \tl_set_eq:NN \l_tl_case_change_exclude_tl \l_@@_case_change_exclude_tl
+%    \end{macrocode}
+% Prepare for the language-specific case conversion.
+%    \begin{macrocode}
+    \tl_set:Nx \l_@@_gscnm_lang_tl
+      { \xcref_lang_for_tl_mixed_case:V \l_@@_selected_lang_str }
+    \tl_set:Nx \l_@@_gscnm_singular_tl
+      { \tl_mixed_case:VV \l_@@_gscnm_lang_tl \l_@@_gscnm_singular_tl }
+    \tl_set:Nx \l_@@_gscnm_plural_tl
+      { \tl_mixed_case:VV \l_@@_gscnm_lang_tl \l_@@_gscnm_plural_tl }
+%    \end{macrocode}
+% Set up the capitalized forms.
+%    \begin{macrocode}
+    \xcref_call_Crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_ngerman_generic_wrapper:nn, \xcrefngermangenericwrapper,
+%               \xcrefngermanwrapper, \xcrefngermanWrapper}
+% Create convenience \cs{xcref} wrappers for \texttt{ngerman}.
+%    \begin{macrocode}
+\@@_create_language_specific_wrapper:nNNNN { ngerman }
+  \@@_ngerman_generic_wrapper:nn \xcrefngermangenericwrapper
+  \xcrefngermanwrapper \xcrefngermanWrapper
+%    \end{macrocode}
+% \end{macro}
+% Fill the list of known types (\cs{g_@@_ngerman_types_seq}) with the keys of
+% \cs{g_@@_ngerman_names_prop}. Since we only do this here, this implies that
+% \xcrefPGFOpt{ngerman/names table} can only be set in the preamble (otherwise,
+% \cs{g_@@_ngerman_types_seq} and \cs{g_@@_ngerman_names_prop} would become
+% out of sync).
+%    \begin{macrocode}
+\AtBeginDocument
+  {
+    \seq_gclear:N \g_@@_ngerman_types_seq
+    \prop_map_inline:Nn \g_@@_ngerman_names_prop
+      { \seq_gput_right:Nn \g_@@_ngerman_types_seq {#1} }
+  }
+%    \end{macrocode}
+% Switch off the \pkg{expl3} category code régime.
+%    \begin{macrocode}
+\ExplSyntaxOff
+%    \end{macrocode}
+% \pkg{DocStrip} end guard for \file{xcref-ngerman.tex}.
+%    \begin{macrocode}
+%</ngerman-module>
+%    \end{macrocode}
+%
+% \end{implementation}
+%
+% \PrintIndex

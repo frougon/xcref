@@ -1,0 +1,136 @@
+\documentclass[french]{article}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{xcref}
+
+\newtheorem{problem}{Problème}
+\newtheorem{assertion}[problem]{Assertion}
+\newtheorem{proposition}[problem]{Proposition}
+
+\crefname{problem}{problem}{problème}
+\crefname{assertion}{assertion}{assertions}
+\crefname{proposition}{proposition}{propositions}
+
+% Pour montrer que cette directive de formatage est respectée par xcref
+\creflabelformat{assertion}{(#2#1#3)}
+
+\setlength{\parindent}{0pt}
+
+% Wrappers pratiques qui évitent l'utilisation d'options assez longues telles
+% que french/preposition=d'après (avec ces wrappers, l'argument optionnel est
+% interprété par pgfkeys avec le chemin par défaut /xcref/french). Les options
+% situées directement dans /xcref ne sont donc pas accessibles via cet
+% argument optionnel, d'où la nécessité de créer deux commandes différentes
+% pour les variantes avec ou sans capitale initiale (on pourrait également
+% s'en sortir avec une commande acceptant un argument de plus).
+\AtBeginDocument{%
+  \let\fxcref=\xcreffrenchwrapper
+  \let\fXcref=\xcreffrenchWrapper
+}
+
+% Exemple de configuration d'xcref (désactivée) ; ôtez le \iffalse et le \fi
+% pour l'activer.
+\iffalse
+\makeatletter
+
+\xcrefset{
+  french/.cd,                  % va dans le « répertoire » /xcref/french
+  % 'names table' ne peut être utilisée que dans le préambule. Les deux
+  % premiers <item>s de chaque valeur (préposition et article) doivent être
+  % sous forme LICR (par exemple, « \`a » au lieu de « à »).
+  names table = {
+    problem    = {\`a}{le}{problème}{problèmes},
+    proposition= {\`a}{la}{proposition}{propositions},
+    assertion  = {d'apr\`es}{l'}{assertion}{assertions},
+    theoreme   = {\`a}{le}{théorème}{théorèmes},
+    lemme      = {\`a}{le}{lemme}{lemmes},
+    definition = {dans}{la}{définition}{définitions},
+  },
+  composition table for prepositions and articles = {
+    % Seules les prépositions se combinant de manière irrégulière avec les
+    % diverses formes de l'article défini doivent être listées ici. Par
+    % exemple, il n'est pas utile d'inclure une entrée pour la locution
+    % « d'apr\`es » car les composés « d'après l' » (non suivi d'espace),
+    % « d'après le », « d'après la » et « d'après les » (les trois derniers
+    % suivis d'une espace inter-mots) sont parfaitement réguliers.
+    %
+    % Chaque clé (avant le signe « = ») doit être sous forme LICR. Il n'est
+    % pas nécessaire d'utiliser \@tabacckludge dans les valeurs (et surtout
+    % pas dans les clés) car les caractères accentués, qui sont gérés
+    % par inputenc ici, l'utilisent automatiquement (voir la
+    % documentation d'inputenc et xcref-french.tex pour plus d'infos sur
+    % \@tabacckludge).
+    \`a    = {à l'}{au }{à la }{aux },
+  }
+}
+
+\makeatother
+\fi
+
+\begin{document}
+
+\section*{Texte bidon avec des labels}
+
+\begin{problem}\label{prob-a}
+Ici, nous avons indiqué \verb|\label{prob-a}|.
+\end{problem}
+\begin{problem}\label{prob-b}
+Ici, nous avons indiqué \verb|\label{prob-b}|.
+\end{problem}
+\begin{problem}\label{prob-c}
+Ici, nous avons indiqué \verb|\label{prob-c}|.
+\end{problem}
+\begin{problem}\label{prob-d}
+Ici, nous avons indiqué \verb|\label{prob-d}|.
+\end{problem}
+\begin{assertion}\label{assertion-a}
+Ici, nous avons indiqué \verb|\label{assertion-a}|.
+\end{assertion}
+\begin{assertion}\label{assertion-b}
+Ici, nous avons indiqué \verb|\label{assertion-b}|.
+\end{assertion}
+\begin{assertion}\label{assertion-c}
+Ici, nous avons indiqué \verb|\label{assertion-c}|.
+\end{assertion}
+\begin{proposition}\label{propo}
+Ici, nous avons indiqué \verb|\label{propo}|.
+\end{proposition}
+
+\section*{Exemples}
+
+Test avec \verb|\cref| et \verb|\Cref|: \cref{assertion-a} (obtenu avec
+\verb|\cref{assertion-a}|), \Cref{assertion-a} (obtenu avec
+\verb|\Cref{assertion-a}|). Notez que nous avons utilisé :
+\begin{verbatim}
+\creflabelformat{assertion}{(#2#1#3)}
+\end{verbatim}
+afin de montrer qu'\verb|xcref| préserve cette directive de formatage (voir
+ci-dessous). Ceci explique les parenthèses autour des numéros dans les
+références de type \og assertion \fg.
+
+\medskip
+\fxcref{prob-a,prob-b}\\
+\xcref[hyperlinks]{prob-a,prob-b}~\texttt{==}~%
+{% Other way to to the same:
+ \xcrefset{hyperlinks=true}% lasts for the duration of the current group
+ \fxcref{prob-a,prob-b}%
+}\\
+\fXcref{prob-a}\\
+\fxcref[form=article+name]{prob-a,prob-b}\\
+\fxcref[form=name]{prob-a,prob-b}
+
+\medskip
+\fxcref[form=name]{prob-a,prob-b,prob-c,prob-d,assertion-a,assertion-b}\\
+\fxcref[form=article+name]{prob-a,prob-b,prob-c,prob-d,assertion-a,assertion-b}\\
+\fxcref{prob-a,prob-b,prob-c,prob-d,assertion-a,assertion-b}\\
+\fXcref{prob-a,prob-b,prob-c,prob-d,propo,assertion-a,assertion-b}\\
+\fxcref[preposition=à]{assertion-a}, \fxcref[preposition=d'après]{assertion-b},
+\fxcref[preposition=dans]{assertion-b}\\
+\fxcref[preposition=d'après]{propo} et \fxcref[form=article+name]{assertion-a}
+
+\end{document}
