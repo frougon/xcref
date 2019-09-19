@@ -58,6 +58,13 @@ directory, that should be enough to get you started.
 command `l3build install`. For more details, read the corresponding section of
 the `xcref` manual (see above).
 
+## License
+
+`xcref` may be distributed and/or modified under the conditions of the LaTeX
+Project Public License, either version 1.3 of this license or (at your option)
+any later version. See the `LICENSE` file for the complete text of this
+license.
+
 ## History
 
 Writing of this package was triggered by [this TeX.SE question][question],
