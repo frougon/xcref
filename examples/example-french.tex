@@ -28,10 +28,8 @@
 % argument optionnel, d'où la nécessité de créer deux commandes différentes
 % pour les variantes avec ou sans capitale initiale (on pourrait également
 % s'en sortir avec une commande acceptant un argument de plus).
-\AtBeginDocument{%
-  \let\fxcref=\xcreffrenchwrapper
-  \let\fXcref=\xcreffrenchWrapper
-}
+\let\fxcref=\xcreffrenchwrapper
+\let\fXcref=\xcreffrenchWrapper
 
 % Exemple de configuration d'xcref (désactivée) ; ôtez le \iffalse et le \fi
 % pour l'activer.

@@ -26,10 +26,8 @@
 % argument, hence the need for two different commands for the
 % capitalized/uncapitalized variants (a command accepting one more argument
 % would also do).
-\AtBeginDocument{%
-  \let\gxcref=\xcrefngermanwrapper
-  \let\gXcref=\xcrefngermanWrapper
-}
+\let\gxcref=\xcrefngermanwrapper
+\let\gXcref=\xcrefngermanWrapper
 
 % Sample xcref configuration: remove the \iffalse and \fi lines to activate it.
 \iffalse

@@ -31,13 +31,40 @@
 % version data
 \usepackage{xcref}
 \usepackage{xparse}
+
+% Let's define a few commands and environments used in the documentation
+\ExplSyntaxOn
+
+% l3doc's \file command currently causes errors (on TL 2019)
+\RenewExpandableDocumentCommand \file { m }
+  { \texttt{#1} }
+\NewDocumentCommand \xcrefPGFOpt { m }
+  { \texttt{/xcref/#1} }
+\NewDocumentCommand \xcrefPGFPath { m } % for PGF “directories”
+  { \texttt{/xcref/#1} }
+\NewDocumentCommand \xcrefPGFRoot { }
+  { \texttt{/xcref} }
+\NewDocumentCommand \TikZ { }
+  {
+    \group_begin:
+    \upshape Ti\textit{k}Z
+    \group_end:
+  }
+
+% Essentially copied from l3doc's texnote environment
+\NewDocumentEnvironment { codersnote } { }
+  {
+    \endgraf
+    \vspace{3mm}
+    \small\textbf{Coders~note:\space}
+    \ignorespaces
+  }
+  {
+    \vspace{3mm}
+  }
+\ExplSyntaxOff
+
 \begin{document}
-  % l3doc's \file command currently causes errors (on TL 2019)
-  \RenewExpandableDocumentCommand\file{m}{\texttt{#1}}
-  \NewDocumentCommand\xcrefPGFOpt{m}{\texttt{/xcref/#1}}
-  \NewDocumentCommand\xcrefPGFPath{m}{\texttt{/xcref/#1}}% for PGF “directories”
-  \NewDocumentCommand\xcrefPGFRoot{}{\texttt{/xcref}}
-  \NewDocumentCommand\TikZ{}{{\upshape Ti\textit{k}Z}}
   \DocInput{\jobname.dtx}
 \end{document}
 %</driver>
@@ -434,10 +461,9 @@
 %   character tokens with category code~12 only (other).
 % \end{variable}
 %
-% \begin{variable}{\g_xcref_requested_language_modules_seq}
-%   List of the language-specific modules requested either via package options
-%   or using \cs{xcref_use_modules:n} and friends. Each element is a
-%   \pkg{babel} language name, is not allowed to contain any space and
+% \begin{variable}{\g_xcref_loaded_language_modules_seq}
+%   List of the language-specific modules that have been loaded. Each element
+%   is a \pkg{babel} language name, is not allowed to contain any space and
 %   only contains character tokens of category code~12.
 % \end{variable}
 %
@@ -495,7 +521,7 @@
 %
 % \begin{variable}{\g_xcref_available_language_modules_seq}
 %   List of the available language-specific modules. For consistency with
-%   \cs{g_xcref_requested_language_modules_seq}, each item is obtained with
+%   \cs{g_xcref_loaded_language_modules_seq}, each item is obtained with
 %   \cs{tl_to_str:n}.
 %    \begin{macrocode}
 \seq_new:N \g_xcref_available_language_modules_seq
@@ -507,10 +533,10 @@
   }
 %    \end{macrocode}
 % \end{variable}
-% \begin{variable}{\g_xcref_requested_language_modules_seq}
-%   List of the requested language-specific modules.
+% \begin{variable}{\g_xcref_loaded_language_modules_seq}
+%   List of the loaded language-specific modules.
 %    \begin{macrocode}
-\seq_new:N \g_xcref_requested_language_modules_seq
+\seq_new:N \g_xcref_loaded_language_modules_seq
 %    \end{macrocode}
 % \end{variable}
 % \begin{variable}{\l_@@_selected_lang_str}
@@ -567,18 +593,19 @@
   }
 %    \end{macrocode}
 %
-% \subsubsection{Registering and loading of langage-specific modules}
+% \subsubsection{Loading of langage-specific modules}
 %
 % \begin{macro}{\xcref_use_module:n, \xcref_use_module:V}
 %   \begin{arguments}
 %     \item name of a language-specific module
 %   \end{arguments}
+%   Load a langage-specific module unless it is already loaded.
 %   One subtlety here: if a language name such as \texttt{french} is passed as
 %   a \cs{documentclass} option, it arrives here in |#1| with character tokens
 %   of category code~12. However, the same option passed to the \pkg{xcref}
 %   package would cause |#1| to contain character tokens of category code~11.
 %   Thus, we use \cs{tl_to_str:n} on |#1| to normalize this input (the
-%   elements of \cs{g_xcref_requested_language_modules_seq} are therefore made
+%   elements of \cs{g_xcref_loaded_language_modules_seq} are therefore made
 %   of character tokens of category code~12, since they can't contain any
 %   space).
 %    \begin{macrocode}
@@ -586,8 +613,11 @@
   {
     \tl_set:Nx \l_tmpa_tl { \tl_to_str:n {#1} }
 
-    \seq_if_in:NVF \g_xcref_requested_language_modules_seq \l_tmpa_tl
-      { \seq_gput_right:NV \g_xcref_requested_language_modules_seq \l_tmpa_tl }
+    \seq_if_in:NVF \g_xcref_loaded_language_modules_seq \l_tmpa_tl
+      {
+        \@@_load_module:n {#1}
+        \seq_gput_right:NV \g_xcref_loaded_language_modules_seq \l_tmpa_tl
+      }
   }
 
 \@onlypreamble \xcref_use_module:n
@@ -612,53 +642,22 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_load_requested_modules:}
-% Simple function used to \tn{input} all requested language-specific
-% modules. Each module is input under the \enquote{traditional} category code
-% régime for \LaTeXe{} packages.
+% \begin{macro}{\@@_load_module:n}
+% \tn{input} the specified language-specific module. This is done under the
+% \enquote{traditional} category code régime for \LaTeXe{} packages.
+%   \begin{arguments}
+%     \item language name corresponding to the module
+%   \end{arguments}
 %    \begin{macrocode}
-\cs_new_protected:Npn \@@_load_requested_modules:
+\cs_new_protected:Npn \@@_load_module:n #1
   {
     \makeatletter
-    \seq_map_inline:Nn \g_xcref_requested_language_modules_seq
-      {
-        \msg_info:nnn { xcref } { loading-language-module } {##1}
-        \input { xcref-##1.tex }
-      }
+    \msg_info:nnn { xcref } { loading-language-module } {#1}
+    \input { xcref-#1.tex }
     \makeatother
   }
 %    \end{macrocode}
 % \end{macro}
-% \tn{input} the requested language-specific modules.
-%    \begin{macrocode}
-\AtBeginDocument { \@@_load_requested_modules: }
-%    \end{macrocode}
-%
-% \subsubsection{Package options}
-%
-% Define the package options using \pkg{l3keys}.
-%    \begin{macrocode}
-\keys_define:nn { xcref }
-  {
-    languages .code:n = \xcref_use_modules:n {#1},
-  }
-%    \end{macrocode}
-% Explicitly define the name of each supported language module as a package
-% option. This way, if such an option (e.g., \texttt{ngerman}) was given to
-% \cs{documentclass}, \cs{ProcessKeysOptions} will pass it to \pkg{xcref}.
-%    \begin{macrocode}
-\seq_map_inline:Nn \g_xcref_available_language_modules_seq
-  {
-    \keys_define:nn { xcref }
-      { #1 .code:n = \xcref_use_module:V \l_keys_key_tl }
-  }
-%    \end{macrocode}
-%
-% Process \LaTeXe-style package options. This uses \pkg{l3keys2e}, see
-% \url{https://tex.stackexchange.com/a/371754/73317} for explanations.
-%    \begin{macrocode}
-\ProcessKeysOptions { xcref }
-%    \end{macrocode}
 %
 % \subsubsection{Main code}
 %
@@ -1001,6 +1000,32 @@
 % has other advantages...
 %    \begin{macrocode}
   }
+%    \end{macrocode}
+%
+% \subsubsection{Package options}
+%
+% Define the package options using \pkg{l3keys}.
+%    \begin{macrocode}
+\keys_define:nn { xcref }
+  {
+    languages .code:n = \xcref_use_modules:n {#1},
+  }
+%    \end{macrocode}
+% Explicitly define the name of each supported language module as a package
+% option. This way, if such an option (e.g., \texttt{ngerman}) was given to
+% \cs{documentclass}, \cs{ProcessKeysOptions} will pass it to \pkg{xcref}.
+%    \begin{macrocode}
+\seq_map_inline:Nn \g_xcref_available_language_modules_seq
+  {
+    \keys_define:nn { xcref }
+      { #1 .code:n = \xcref_use_module:V \l_keys_key_tl }
+  }
+%    \end{macrocode}
+%
+% Process \LaTeXe-style package options. This uses \pkg{l3keys2e}, see
+% \url{https://tex.stackexchange.com/a/371754/73317} for explanations.
+%    \begin{macrocode}
+\ProcessKeysOptions { xcref }
 %    \end{macrocode}
 % This ends the code for \file{xcref.sty}.
 %    \begin{macrocode}
