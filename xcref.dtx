@@ -31,6 +31,7 @@
 % version data
 \usepackage{xcref}
 \usepackage{xparse}
+\usepackage{amsmath}
 
 % Let's define a few commands and environments used in the documentation
 \ExplSyntaxOn
@@ -375,6 +376,61 @@
 %   XXX documentation needed
 % \end{function}
 %
+% \subsection{Defining how references are to be printed}
+% \label{sec:defining-how-references-are-to-be-printed}
+%
+% The commands in this section can be seen as analogous to \cs{crefname} and
+% \cs{Crefname}; their arguments are usually a bit more complex than those of
+% \cs{crefname} and \cs{Crefname}, though, since they can do more subtle
+% language-specific work than what the \pkg{cleveref} commands allow out of
+% the box. Another important difference with the \pkg{cleveref} commands is
+% that the commands presented in this section can only be used in the
+% preamble.
+%
+% \subsubsection{\texttt{french} langage module}
+%
+% \begin{function}{\xcreffrenchSetNamesTableEntry}
+%   \begin{syntax}
+%     \cs{xcreffrenchSetNamesTableEntry} \Arg{reftype} \Arg{prep} \Arg{article} \Arg{singular} \Arg{plural}
+%   \end{syntax}
+%   Define how to print references of type \meta{reftype}. This function
+%   associates four token lists to reference type \meta{reftype}, which could
+%   be something such as |section|, |chapter| or |theorem|:
+%   \begin{itemize}
+%   \item a default preposition in LICR form, for instance |d'apr\`es|;
+%   \item a definite article for the singular form, among |l'|, |le| and |la|;
+%   \item the singular form of the corresponding noun (e.g., |théorème|);
+%   \item the plural form of the same noun (e.g., |théorèmes|).
+%   \end{itemize}
+%   This function can only be used in the preamble and overrides any previous
+%   setting for the same reference type.
+% \end{function}
+%
+% \subsubsection{\texttt{ngerman} langage module}
+%
+% \begin{function}{\xcrefngermanSetNamesTableEntry}
+%   \begin{syntax}
+%     \cs{xcrefngermanSetNamesTableEntry} \Arg{reftype} \Arg{prep} \Arg{nominative} \Arg{accusative} \Arg{dative} \Arg{genitive}
+%   \end{syntax}
+%   Define how to print references of type \meta{reftype}. This function
+%   associates five token lists to reference type \meta{reftype}, which could
+%   be something such as |section|, |chapter| or |theorem|:
+%   \begin{itemize}
+%   \item a default preposition in LICR form, for instance |f\"ur|;
+%   \item \meta{nominative}, \meta{accusative}, \meta{dative} and
+%     \meta{genitive} forms as specified below.
+%   \end{itemize}
+%   Each of the \meta{nominative}, \meta{accusative}, \meta{dative} and
+%   \meta{genitive} arguments should be of the form
+%   |{|\meta{article-sing}|}{|\meta{noun-sing}|}{|\meta{article-plur}|}{|\meta{noun-plur}|}|,
+%   where the four metasyntactic variables represent the definite article and
+%   noun to use for reference type \meta{reftype} in singular and plural forms,
+%   respectively.
+%
+%   This function can only be used in the preamble and overrides any previous
+%   setting for the same reference type.
+% \end{function}
+%
 % \section{Code-level functions}
 %
 % \subsection{Generic}
@@ -423,6 +479,13 @@
 %
 % \subsubsection{From the \texttt{french} module}
 %
+% \begin{function}{\xcref_french_set_names_table_entry:nnnnn}
+%   \begin{syntax}
+%     \cs{xcref_french_set_names_table_entry:nnnnn} \Arg{reftype} \Arg{prep} \Arg{article} \Arg{singular} \Arg{plural}
+%   \end{syntax}
+%   This is the code-level counterpart of \cs{xcreffrenchSetNamesTableEntry}.
+% \end{function}
+%
 % \begin{function}{\xcref_french_assemble_prep_and_article:nnN,
 %                  \xcref_french_assemble_prep_and_article:VnN,
 %                  \xcref_french_assemble_prep_and_article:VVN}
@@ -438,6 +501,13 @@
 % \end{function}
 %
 % \subsubsection{From the \texttt{ngerman} module}
+%
+% \begin{function}{\xcref_ngerman_set_names_table_entry:nnnnnn}
+%   \begin{syntax}
+%     \cs{xcref_ngerman_set_names_table_entry:nnnnnn} \Arg{reftype} \Arg{prep} \Arg{nominative} \Arg{accusative} \Arg{dative} \Arg{genitive}
+%   \end{syntax}
+%   This is the code-level counterpart of \cs{xcrefngermanSetNamesTableEntry}.
+% \end{function}
 %
 % \begin{function}{\xcref_ngerman_assemble_prep_and_article:nnN,
 %                  \xcref_ngerman_assemble_prep_and_article:VVN}
@@ -1254,6 +1324,34 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\xcref_french_set_names_table_entry:nnnnn,
+%               \xcreffrenchSetNamesTableEntry}
+%   Set one $(\text{key}, \text{value})$ pair in \cs{g_@@_french_names_prop}.
+%   \begin{arguments}
+%   \item reference type
+%   \item default preposition, in LICR form
+%   \item definite article for the singular form, among |l'|, |le| and |la|
+%   \item singular form of the noun corresponding to the reference type
+%   \item plural form of the same noun
+%   \end{arguments}
+%   This function can only be used in the preamble because it modifies
+%   \cs{g_@@_french_names_prop} and the list of keys in this property list is
+%   computed at |\begin{document}| time (stored in \cs{g_@@_french_types_seq}).
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_french_set_names_table_entry:nnnnn #1#2#3#4#5
+  {
+    \prop_gput:Nnn \g_@@_french_names_prop {#1} { {#2} {#3} {#4} {#5} }
+  }
+
+\@onlypreamble \xcref_french_set_names_table_entry:nnnnn
+
+\NewDocumentCommand \xcreffrenchSetNamesTableEntry { m m m m m }
+  {
+    \xcref_french_set_names_table_entry:nnnnn {#1} {#2} {#3} {#4} {#5}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\@@_french_setup_cref_names:}
 %   Call \cs{crefname} and \cs{Crefname} for each known reference type. This
 %   is the main entry point of the language-specific module.
@@ -1658,6 +1756,43 @@
 \@onlypreamble \@@_ngerman_set_names_table:n
 %    \end{macrocode}
 % \end{macro}
+%
+% \begin{macro}{\xcref_ngerman_set_names_table_entry:nnnnnn,
+%               \xcrefngermanSetNamesTableEntry}
+%   Set one $(\text{key}, \text{value})$ pair in \cs{g_@@_ngerman_names_prop}.
+%   \begin{arguments}
+%   \item reference type
+%   \item default preposition, in LICR form
+%   \item \meta{nominative}
+%   \item \meta{accusative}
+%   \item \meta{dative}
+%   \item \meta{genitive}
+%   \end{arguments}
+%   Each of the \meta{nominative}, \meta{accusative}, \meta{dative} and
+%   \meta{genitive} arguments should be of the form
+%   |{|\meta{article-sing}|}{|\meta{noun-sing}|}{|\meta{article-plur}|}{|\meta{noun-plur}|}|,
+%   where the four metasyntactic variables represent the definite article and
+%   noun to use for reference type |#1| in singular and plural forms,
+%   respectively.
+%
+%   This function can only be used in the preamble because it modifies
+%   \cs{g_@@_ngerman_names_prop} and the list of keys in this property list is
+%   computed at |\begin{document}| time (stored in \cs{g_@@_ngerman_types_seq}).
+%    \begin{macrocode}
+\cs_new_protected:Npn \xcref_ngerman_set_names_table_entry:nnnnnn #1#2#3#4#5#6
+  {
+    \prop_gput:Nnn \g_@@_ngerman_names_prop {#1} { {#2} {#3} {#4} {#5} {#6} }
+  }
+
+\@onlypreamble \xcref_ngerman_set_names_table_entry:nnnnnn
+
+\NewDocumentCommand \xcrefngermanSetNamesTableEntry { m m m m m m }
+  {
+    \xcref_ngerman_set_names_table_entry:nnnnnn {#1} {#2} {#3} {#4} {#5} {#6}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\@@_ngerman_setup_cref_names:}
 %   Call \cs{crefname} and \cs{Crefname} for each known reference type. This
 %   is the main entry point of the language-specific module.

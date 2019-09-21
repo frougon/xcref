@@ -70,9 +70,15 @@
 \makeatother
 \fi
 
+% Plutôt que de redéfinir d'un coup toute la '/xcref/french/names table', il
+% est possible de procéder par ajouts successifs de cette manière (ceci remplace
+% l'entrée pour le type de référence « section » si elle existe déjà) :
+\xcreffrenchSetNamesTableEntry{section}{\`a}{la}{section}{sections}
+% \xcreffrenchSetNamesTableEntry{theorem}{\`a}{le}{théorème}{théorèmes}
+
 \begin{document}
 
-\section*{Texte bidon avec des labels}
+\section{Texte bidon avec des labels}
 
 \begin{problem}\label{prob-a}
 Ici, nous avons indiqué \verb|\label{prob-a}|.
@@ -99,7 +105,10 @@ Ici, nous avons indiqué \verb|\label{assertion-c}|.
 Ici, nous avons indiqué \verb|\label{propo}|.
 \end{proposition}
 
-\section*{Exemples}
+Ces énoncés vont être référencés via \textsf{xcref} \fxcref{sec-exemples}.
+
+\section{Exemples}
+\label{sec-exemples}
 
 Test avec \verb|\cref| et \verb|\Cref|: \cref{assertion-a} (obtenu avec
 \verb|\cref{assertion-a}|), \Cref{assertion-a} (obtenu avec
