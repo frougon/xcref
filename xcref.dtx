@@ -157,15 +157,15 @@
 % counterpart in the \texttt{french} module), one can obtain variant forms: in
 % the same conditions,
 % \begin{verbatim}
-% \xcref[ngerman/form=article+name]{some-prop,other-prop}
+% \xcref[ngerman/form=article+noun]{some-prop,other-prop}
 % \end{verbatim}
 % would yield \enquote{den Propositionen 3~und~4} and
 % \begin{verbatim}
-% \xcref[ngerman/form=name]{some-prop,other-prop}
+% \xcref[ngerman/form=noun]{some-prop,other-prop}
 % \end{verbatim}
 % would produce \enquote{Propositionen 3~und~4} (exactly the same options are
 % available in the \texttt{french} module along with the initial value
-% |prep+article+name|, however this may not fit all languages, hence the use
+% |prep+article+noun|, however this may not fit all languages, hence the use
 % of the \xcrefPGFPath{ngerman} and \xcrefPGFPath{french} namespaces for the
 % |form| option). In German, it is
 % also possible, and very often necessary, to indicate which case to use
@@ -1133,7 +1133,7 @@
 %
 % \begin{variable}{\l_@@_french_selected_form_str}
 %   Specifies how references are to be produced, in grammatical terms. There
-%   are three possible values: |name|, |article+name| and |prep+article+name|,
+%   are three possible values: |noun|, |article+noun| and |prep+article+noun|,
 %   where |prep| stands for \enquote{preposition}.
 %    \begin{macrocode}
 \str_new:N \l_@@_french_selected_form_str
@@ -1207,7 +1207,7 @@
 %
 % \begin{variable}{\c_@@_french_article_prop}
 %   This mapping allows one to always get proper spacing between an article
-%   and the following name---which sometimes is \enquote{no space} (cf.~the
+%   and the following noun---which sometimes is \enquote{no space} (cf.~the
 %   case of |l'|).
 %    \begin{macrocode}
   \prop_const_from_keyval:Nn \c_@@_french_article_prop
@@ -1228,12 +1228,12 @@
 \pgfqkeys { /xcref/french }
   {
     form/.is~choice,
-    form/name/.code = { \str_set:Nn \l_@@_french_selected_form_str {name} },
-    form/article+name/.code =
-             { \str_set:Nn \l_@@_french_selected_form_str {article+name} },
-    form/prep+article+name/.code =
-             { \str_set:Nn \l_@@_french_selected_form_str {prep+article+name} },
-    form = prep+article+name,   % set the initial value
+    form/noun/.code = { \str_set:Nn \l_@@_french_selected_form_str {noun} },
+    form/article+noun/.code =
+             { \str_set:Nn \l_@@_french_selected_form_str {article+noun} },
+    form/prep+article+noun/.code =
+             { \str_set:Nn \l_@@_french_selected_form_str {prep+article+noun} },
+    form = prep+article+noun,   % set the initial value
     %
     preposition/.value~required,
     preposition/.code = {
@@ -1433,14 +1433,14 @@
 
     \str_case:VnF \l_@@_french_selected_form_str
       {
-        { prep+article+name }
+        { prep+article+noun }
         {
           \xcref_french_assemble_prep_and_article:VVN \l_@@_fscnm_prep_tl
             \l_@@_fscnm_article_tl \l_@@_fscnm_prefix_sing_tl
           \xcref_french_assemble_prep_and_article:VnN \l_@@_fscnm_prep_tl
             { les } \l_@@_fscnm_prefix_plur_tl
         }
-        { article+name }
+        { article+noun }
         {
           \prop_get:NVNF \c_@@_french_article_prop \l_@@_fscnm_article_tl
                          \l_@@_fscnm_prefix_sing_tl
@@ -1451,7 +1451,7 @@
             }
           \tl_set:Nn \l_@@_fscnm_prefix_plur_tl { les~ }
         }
-        { name }
+        { noun }
         {
           \tl_clear:N \l_@@_fscnm_prefix_sing_tl
           \tl_clear:N \l_@@_fscnm_prefix_plur_tl
@@ -1557,7 +1557,7 @@
 %
 % \begin{variable}{\l_@@_ngerman_selected_form_str}
 %   Specifies how references are to be produced, in grammatical terms. There
-%   are three possible values: |name|, |article+name| and |prep+article+name|,
+%   are three possible values: |noun|, |article+noun| and |prep+article+noun|,
 %   where |prep| stands for \enquote{preposition}.
 %    \begin{macrocode}
 \str_new:N \l_@@_ngerman_selected_form_str
@@ -1687,12 +1687,12 @@
 \pgfqkeys { /xcref/ngerman }
   {
     form/.is~choice,
-    form/name/.code = { \str_set:Nn \l_@@_ngerman_selected_form_str {name} },
-    form/article+name/.code =
-            { \str_set:Nn \l_@@_ngerman_selected_form_str {article+name} },
-    form/prep+article+name/.code =
-            { \str_set:Nn \l_@@_ngerman_selected_form_str {prep+article+name} },
-    form = prep+article+name,   % set the initial value
+    form/noun/.code = { \str_set:Nn \l_@@_ngerman_selected_form_str {noun} },
+    form/article+noun/.code =
+            { \str_set:Nn \l_@@_ngerman_selected_form_str {article+noun} },
+    form/prep+article+noun/.code =
+            { \str_set:Nn \l_@@_ngerman_selected_form_str {prep+article+noun} },
+    form = prep+article+noun,   % set the initial value
     %
     preposition/.value~required,
     preposition/.code = {
@@ -1886,7 +1886,7 @@
 % this variable will recover its previous value as soon as the group opened by
 % \cs{xcref:nn} ends.
 %    \begin{macrocode}
-    \str_if_eq:VnT \l_@@_ngerman_selected_form_str { prep+article+name }
+    \str_if_eq:VnT \l_@@_ngerman_selected_form_str { prep+article+noun }
       {
         \prop_get:NVNT \l_@@_ngerman_case_for_prep_prop
                        \l_@@_gscnm_prep_tl \l_tmpa_tl
@@ -1919,19 +1919,19 @@
 %    \begin{macrocode}
     \str_case:VnF \l_@@_ngerman_selected_form_str
       {
-        { prep+article+name }
+        { prep+article+noun }
         {
           \xcref_ngerman_assemble_prep_and_article:VVN \l_@@_gscnm_prep_tl
             \l_@@_gscnm_article_sing_tl \l_@@_gscnm_prefix_sing_tl
           \xcref_ngerman_assemble_prep_and_article:VVN \l_@@_gscnm_prep_tl
             \l_@@_gscnm_article_plur_tl \l_@@_gscnm_prefix_plur_tl
         }
-        { article+name }
+        { article+noun }
         {
           \tl_set_eq:NN \l_@@_gscnm_prefix_sing_tl \l_@@_gscnm_article_sing_tl
           \tl_set_eq:NN \l_@@_gscnm_prefix_plur_tl \l_@@_gscnm_article_plur_tl
         }
-        { name }
+        { noun }
         {
           \tl_clear:N \l_@@_gscnm_prefix_sing_tl
           \tl_clear:N \l_@@_gscnm_prefix_plur_tl
