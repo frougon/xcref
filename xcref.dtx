@@ -172,7 +172,7 @@
 % between nominative, accusative, dative and genitive, since in many cases,
 % understanding the sentence is required to choose the appropriate case. This
 % can be done using the \xcrefPGFOpt{ngerman/case} option which can take the
-% values |nom|, |akk|, |dat|, and |gen|.
+% values |nom|, |acc|, |dat|, and |gen|.
 %
 % \section{Installation}
 %
@@ -299,18 +299,18 @@
 %   \end{syntax}
 %   Set PGF keys related to \pkg{xcref}. For now, these keys only influence
 %   \cs{xcref}. The \meta{key-value assignments} are comma-separated
-%   assignments such as |ngerman/case=akk|. These commands are analogous to
+%   assignments such as |ngerman/case=acc|. These commands are analogous to
 %   \cs{tikzset} from the \TikZ\ package, \cs{forestset} from \pkg{forest},
 %   \cs{pgfplotsset} from \pkg{pgfplots}, etc. For instance, the command
 % \begin{verbatim}
-% \xcrefset{ngerman/case=akk}
+% \xcrefset{ngerman/case=acc}
 % \end{verbatim}
 % is equivalent to
 % \begin{verbatim}
-% \pgfkeys{/xcref/ngerman/case=akk}
+% \pgfkeys{/xcref/ngerman/case=acc}
 % \end{verbatim}
 % and has the effect of calling the \xcrefPGFOpt{ngerman/case} PGF key with
-% the value |akk|.
+% the value |acc|.
 % \end{function}
 %
 % \begin{function}{\xcrefNoCaseChange}
@@ -1578,10 +1578,10 @@
 %    \begin{macrocode}
 \prop_const_from_keyval:Nn \c_@@_ngerman_case_idx_prop
   {
-    Nominativ = 1,
-    Akkusativ = 2,
-    Dativ     = 3,
-    Genitiv   = 4
+    nominative = 1,
+    accusative = 2,
+    dative     = 3,
+    genitive   = 4
   }
 %    \end{macrocode}
 % Can be changed by users via \xcrefPGFOpt{ngerman/names table}. This is global
@@ -1629,7 +1629,7 @@
 %    \begin{macrocode}
 \seq_new:N \g_@@_ngerman_types_seq
 %    \end{macrocode}
-% Authorized values: |Nominativ|, |Akkusativ|, |Dativ|, |Genitiv|.
+% Authorized values: |nominative|, |accusative|, |dative|, |genitive|.
 %    \begin{macrocode}
 \str_new:N \l_@@_ngerman_selected_case_str
 %    \end{macrocode}
@@ -1642,19 +1642,19 @@
 \prop_new:N \l_@@_ngerman_case_for_prep_prop
 \prop_set_from_keyval:Nn \l_@@_ngerman_case_for_prep_prop
   {
-    bis   = Akkusativ,
-    durch = Akkusativ,
-    f\"ur = Akkusativ,
-    gegen = Akkusativ,
-    ohne  = Akkusativ,
-    um    = Akkusativ,
-    aus   = Dativ,
-    bei   = Dativ,
-    mit   = Dativ,
-    nach  = Dativ,
-    seit  = Dativ,
-    von   = Dativ,
-    zu    = Dativ,
+    bis   = accusative,
+    durch = accusative,
+    f\"ur = accusative,
+    gegen = accusative,
+    ohne  = accusative,
+    um    = accusative,
+    aus   = dative,
+    bei   = dative,
+    mit   = dative,
+    nach  = dative,
+    seit  = dative,
+    von   = dative,
+    zu    = dative,
 %    \end{macrocode}
 % Prepositions normally followed by the genitive case seem to often have
 % exceptions; thus, I prefer letting a native German speaker decide what
@@ -1700,13 +1700,13 @@
       \@@_set_to_licr_form:Nn \l_@@_ngerman_selected_preposition_tl {#1} },
     case/.is~choice,
     case/nom/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
-                                   { Nominativ } },
-    case/akk/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
-                                   { Akkusativ } },
+                                   { nominative } },
+    case/acc/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
+                                   { accusative } },
     case/dat/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
-                                   { Dativ } },
+                                   { dative } },
     case/gen/.code = { \str_set:Nn \l_@@_ngerman_selected_case_str
-                                   { Genitiv } },
+                                   { genitive } },
     names~table/.code = { \@@_ngerman_set_names_table:n {#1} },
     prepositions~always~followed~by~the~same~case/.code = {
       \prop_set_from_keyval:Nn \l_@@_ngerman_case_for_prep_prop {#1} },
@@ -1882,7 +1882,7 @@
       }
 %    \end{macrocode}
 % If the selected form has a preposition and that preposition is always
-% followed by a particular case (e.g., |Dativ|), use it. This may seem strange
+% followed by a particular case (e.g., |dative|), use it. This may seem strange
 % to store the \enquote{new} case in \cs{l_@@_ngerman_selected_case_str}, but
 % this variable will recover its previous value as soon as the group opened by
 % \cs{xcref:nn} ends.
@@ -1903,7 +1903,7 @@
       }
 %    \end{macrocode}
 % Get data (initially coming from \cs{g_@@_ngerman_names_prop})
-% corresponding to the selected case (|Nominativ|, |Akkusativ|, etc.).
+% corresponding to the selected case (|nominative|, |accusative|, etc.).
 %    \begin{macrocode}
     \tl_set:Nx \l_@@_gscnm_case_data_tl
       { \seq_item:Nn \l_@@_gscnm_type_data_seq

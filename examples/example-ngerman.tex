@@ -137,11 +137,11 @@ Let's use accusative for all of the following, except (this is automatic) when
 a preposition is \emph{always} used in combination with a particular case
 (this happens in particular for “aus”, “bei”, “mit”, “nach”, “seit”, “von” and
 “zu”, which are always followed by Dative). This is done with
-\verb|\xcrefset{ngerman/case=akk}|. If no such command is performed, one has
+\verb|\xcrefset{ngerman/case=acc}|. If no such command is performed, one has
 to pass \verb|\xcref| the \verb|ngerman/case| option every time for German, as
 in \verb|\xcref[ngerman/case=dat]{...}| or, using a German-specific helper
 command, \verb|\xcrefngermanwrapper[case=dat]{...}| (valid values for
-\texttt{/xcref/ngerman/case} are \verb|nom|, \verb|akk|, \verb|dat|, and
+\texttt{/xcref/ngerman/case} are \verb|nom|, \verb|acc|, \verb|dat|, and
 \verb|gen|).
 
 \emph{I know that some of the following phrases sound weird or wrong; these
@@ -166,7 +166,7 @@ specification. This explains the parentheses around “Satz” numbers in
 references.
 
 % This command respects TeX's grouping rules
-\xcrefset{ngerman/case=akk}% use accusative by default
+\xcrefset{ngerman/case=acc}% use accusative by default
 %
 \verb|xcref-ngerman.tex| knows that “nach” is always followed by Dative:
 \gxcref[preposition=nach]{prob-a,prob-b}.\\
