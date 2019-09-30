@@ -5,9 +5,13 @@
 \usepackage{babel}
 \usepackage{amsthm}
 \usepackage{parskip}            % just for presentation
+\usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{xcref}
+
+\definecolor{MyBlue}{HTML}{1A36D6}
+\hypersetup{colorlinks=true,linkcolor=MyBlue}
 
 \newtheorem{problem}{Problem}
 \newtheorem{satz}[problem]{Satz}
@@ -17,7 +21,8 @@
 \crefname{satz}{Satz}{Sätze}
 \crefname{proposition}{Proposition}{Propositionen}
 
-\creflabelformat{satz}{(#2#1#3)} % to see if it's respected by our function
+% We'll show that this is respected by xcref
+\creflabelformat{satz}{#2(#1)#3}
 
 % Convenience wrappers for \xcref that avoid the need to write long options
 % such as ngerman/preposition=aus or ngerman/case=dativ (with these wrappers,
@@ -159,7 +164,7 @@ Basic test with \verb|\cref| and \verb|\Cref|: \cref{satz-a}
 (obtained with \verb|\cref{satz-a}|), \Cref{satz-a} (obtained with
 \verb|\Cref{satz-a}|). Note that we have used:
 \begin{verbatim}
-\creflabelformat{satz}{(#2#1#3)}
+\creflabelformat{satz}{#2(#1)#3}
 \end{verbatim}
 in order to show (see below) that \textsf{xcref} preserves this formatting
 specification. This explains the parentheses around “Satz” numbers in
@@ -170,15 +175,17 @@ references.
 %
 \verb|xcref-ngerman.tex| knows that “nach” is always followed by Dative:
 \gxcref[preposition=nach]{prob-a,prob-b}.\\
-\xcref[hyperlinks]{prob-a,prob-b}~\texttt{==}~%
+\xcref[hyperlinks=false]{prob-a,prob-b}~\texttt{==}~%
 {% Other way to to the same:
- \xcrefset{hyperlinks=true}% lasts for the duration of the current group
+ \xcrefset{hyperlinks=false}% lasts for the duration of the current group
  \gxcref{prob-a,prob-b}%
 }\\
 \gXcref{prob-a}\\
 \gxcref[form=article+noun]{prob-a,prob-b}\\
 \gxcref[form=noun]{prob-a,prob-b}
 
+% Turn off hyperlinks from now on
+\xcrefset{hyperlinks=false}
 \gxcref[form=noun]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}\\
 \gxcref[form=article+noun]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}\\
 \gxcref{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}\\
