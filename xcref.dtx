@@ -339,6 +339,24 @@
 %   \xcrefPGFOpt{functions for preventing auto case change}.
 % \end{function}
 %
+% \begin{function}{\xcref@tabacckludge}
+%   \begin{syntax}
+%     \cs{xcref@tabacckludge}\meta{accent}\meta{character token}
+%   \end{syntax}
+%   Variant of \cs{@tabacckludge} that doesn't expand inside \tn{edef},
+%   \cs{tl_mixed_case:nn}, etc. (it is \tn{protected}). Apart from this
+%   aspect, it works like \cs{@tabacckludge} and avoids problems due to the
+%   fact that the \env{tabbing} environment redefines \tn{'}, \tn{`} and
+%   \tn{=} (see the \pkg{inputenc} documentation).
+%
+%   This command is useful in \texttt{xcref.sty} and its language-specific
+%   modules, but in documents, users can use \pkg{inputenc} and for instance
+%   accented characters encoded in \mbox{UTF-8} instead; this works as well
+%   and is usually more readable (the reason why we need
+%   \cs{xcref@tabacckludge} here is that we refrain from loading
+%   \pkg{inputenc} ourselves).
+% \end{function}
+%
 % \subsection{Language-specific convenience wrappers}
 % \label{sec:language-specific-convenience-wrappers}
 %
@@ -568,6 +586,7 @@
 \RequirePackage{expl3}
 \RequirePackage{l3keys2e}
 \RequirePackage{xparse}
+\RequirePackage{etoolbox}
 \RequirePackage{iflang}
 \RequirePackage{pgfkeys}
 \RequirePackage{cleveref}
@@ -766,12 +785,21 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\xcref@tabacckludge}
+%   \tn{protected} variant of \cs{@tabacckludge}. We need this for text that
+%   is going to be transformed by \cs{tl_mixed_case:nn}.
+%    \begin{macrocode}
+\cs_set_eq:NN \xcref@tabacckludge \@tabacckludge
+\robustify { \xcref@tabacckludge }
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\@@_protect_accent_macros_from_tabbing:N}
 %   Replace \tn{'}, \tn{`} and \tn{=} for safe use inside \env{tabbing}.
 %   \begin{arguments}
 %     \item token list variable
 %   \end{arguments}
-%   Replace \tn{'}, \tn{`} and \tn{=} in |#1| with \cs{@tabacckludge}
+%   Replace \tn{'}, \tn{`} and \tn{=} in |#1| with \cs{xcref@tabacckludge}
 %   followed by |'|, |`| or |=|, respectively. This is necessary in case the
 %   replaced commands were meant to produce accented characters and the
 %   material in |#1| is going to occur inside a \env{tabbing} environment.
@@ -781,9 +809,9 @@
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_protect_accent_macros_from_tabbing:N #1
   {
-    \tl_replace_all:Nnn #1 { \' } { \@tabacckludge ' }
-    \tl_replace_all:Nnn #1 { \` } { \@tabacckludge ` }
-    \tl_replace_all:Nnn #1 { \= } { \@tabacckludge = }
+    \tl_replace_all:Nnn #1 { \' } { \xcref@tabacckludge ' }
+    \tl_replace_all:Nnn #1 { \` } { \xcref@tabacckludge ` }
+    \tl_replace_all:Nnn #1 { \= } { \xcref@tabacckludge = }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1155,22 +1183,30 @@
 %   The first two \meta{items} of each value of the property list must use the
 %   LICR representation.
 %
-%   Regarding \cs{@tabacckludge}, see the documentation of \pkg{inputenc} and
-%   use it only in \emph{output text} here. It is not really necessary here
-%   anyway, because we are going to do the corresponding replacements
-%   downstream to be on the safe side---but it is safer in case someone uses
-%   data from this variable and forgets to do the replacements.
+%   We use \cs{xcref@tabacckludge} in \emph{output text} instead of
+%   \cs{@tabacckludge} because things can go wrong when \cs{tl_mixed_case:nn}
+%   expands \cs{@tabacckludge} in its second argument (try with
+%   \verb|\@tabacckludge`a|). Regarding the use of \cs{@tabacckludge} itself,
+%   see the documentation of \pkg{inputenc}. Note that it is not really
+%   necessary here, because we are going to automatically do the corresponding
+%   replacements downstream to be on the safe side, but it will help in case
+%   someone uses data from this variable and forgets to systematically replace
+%   \tn{'}, \tn{`} and \tn{=} by commands that behave as expected inside a
+%   \env{tabbing} environment.
 %    \begin{macrocode}
 \prop_new:N \g_@@_french_names_prop
 
 \prop_gset_from_keyval:Nn \g_@@_french_names_prop
   {
-    problem    = {\`a}{le}{probl\@tabacckludge`eme}{probl\@tabacckludge`emes},
+    problem    = {\`a}{le}{probl\xcref@tabacckludge`eme}
+                 {probl\xcref@tabacckludge`emes},
     proposition= {\`a}{la}{proposition}{propositions},
     assertion  = {d'apr\`es}{l'}{assertion}{assertions},
-    theorem    = {\`a}{le}{th\@tabacckludge'eor\@tabacckludge`eme}{th\@tabacckludge'eor\@tabacckludge`emes},
+    theorem    = {\`a}{le}{th\xcref@tabacckludge'eor\xcref@tabacckludge`eme}
+                 {th\xcref@tabacckludge'eor\xcref@tabacckludge`emes},
     lemma      = {\`a}{le}{lemme}{lemmes},
-    definition = {dans}{la}{d\@tabacckludge'efinition}{d\@tabacckludge'efinitions},
+    definition = {dans}{la}{d\xcref@tabacckludge'efinition}
+                 {d\xcref@tabacckludge'efinitions},
   }
 %    \end{macrocode}
 % \end{variable}
@@ -1193,15 +1229,17 @@
 %
 % \begin{variable}{\g_@@_french_prep_and_article_prop}
 %   Mapping describing how prepositions and definite articles combine in
-%   French. The keys must use the LICR representation. \cs{@tabacckludge} is
-%   not really necessary here, because we are going to do the corresponding
+%   French. The keys must use the LICR representation. \cs{xcref@tabacckludge}
+%   is not really necessary here, because we are going to do the corresponding
 %   replacements downstream to be on the safe side---but it is safer in case
-%   someone uses data from this variable and forgets to do the replacements.
+%   someone uses data from this variable and forgets to systematically replace
+%   \tn{'}, \tn{`} and \tn{=} by commands that behave as expected inside a
+%   \env{tabbing} environment.
 %    \begin{macrocode}
   \prop_new:N \g_@@_french_prep_and_article_prop
   \prop_gset_from_keyval:Nn \g_@@_french_prep_and_article_prop
     {
-      \`a    = {\@tabacckludge`a l'}{au }{\@tabacckludge`a la }{aux }
+      \`a    = {\xcref@tabacckludge`a l'}{au }{\xcref@tabacckludge`a la }{aux }
     }
 %    \end{macrocode}
 % \end{variable}
@@ -1466,8 +1504,8 @@
     \tl_put_left:NV \l_@@_fscnm_singular_tl \l_@@_fscnm_prefix_sing_tl
     \tl_put_left:NV \l_@@_fscnm_plural_tl \l_@@_fscnm_prefix_plur_tl
 %    \end{macrocode}
-% Make sure \cs{@tabacckludge} is used to protect \tn{'}, \tn{`} and \tn{=}
-% from the \env{tabbing} environment, which redefines them (see the
+% Make sure \cs{xcref@tabacckludge} is used to protect \tn{'}, \tn{`} and
+% \tn{=} from the \env{tabbing} environment, which redefines them (see the
 % \pkg{inputenc} documentation).
 %    \begin{macrocode}
     \@@_protect_accent_macros_from_tabbing:N \l_@@_fscnm_singular_tl
@@ -1592,7 +1630,7 @@
 %
 % In case you would need \tn{'}, \tn{`} or \tn{=} in the nouns
 % (\enquote{Problem}, \enquote{Probleme}, etc.), you may want to use
-% \cs{@tabacckludge} followed by |'|, |`| or |=| instead (see
+% \cs{xcref@tabacckludge} followed by |'|, |`| or |=| instead (see
 % \cs{g_@@_french_names_prop} in the \texttt{french} module for examples).
 %    \begin{macrocode}
 \prop_new:N \g_@@_ngerman_names_prop
@@ -1967,8 +2005,8 @@
         \tl_put_left:NV \l_@@_gscnm_plural_tl \l_@@_gscnm_prefix_plur_tl
       }
 %    \end{macrocode}
-% Make sure \cs{@tabacckludge} is used to protect \tn{'}, \tn{`} and \tn{=}
-% from the \env{tabbing} environment, which redefines them (see the
+% Make sure \cs{xcref@tabacckludge} is used to protect \tn{'}, \tn{`} and
+% \tn{=} from the \env{tabbing} environment, which redefines them (see the
 % \pkg{inputenc} documentation).
 %    \begin{macrocode}
     \@@_protect_accent_macros_from_tabbing:N \l_@@_gscnm_singular_tl

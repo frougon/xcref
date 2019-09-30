@@ -57,11 +57,10 @@
     % suivis d'une espace inter-mots) sont parfaitement réguliers.
     %
     % Chaque clé (avant le signe « = ») doit être sous forme LICR. Il n'est
-    % pas nécessaire d'utiliser \@tabacckludge dans les valeurs (et surtout
-    % pas dans les clés) car les caractères accentués, qui sont gérés
-    % par inputenc ici, l'utilisent automatiquement (voir la
-    % documentation d'inputenc et xcref-french.tex pour plus d'infos sur
-    % \@tabacckludge).
+    % pas nécessaire d'utiliser \xcref@tabacckludge dans les valeurs (et
+    % surtout pas dans les clés) car inputenc donne d'office aux caractères
+    % accentués les propriétés désirées lorsqu'ils sont entrés directement,
+    % comme ici en UTF-8.
     \`a    = {à l'}{au }{à la }{aux },
   }
 }
