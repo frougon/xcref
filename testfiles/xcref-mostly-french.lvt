@@ -1,0 +1,401 @@
+\input{regression-test.tex}
+% The language names are seen in this order by babel, cleveref and xcref.
+% Alternatively, one could use \xcrefusemodules for xcref.
+\documentclass[ngerman,french]{report}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{xcolor}
+\usepackage{xparse}
+\usepackage{amsmath}
+\usepackage{cleveref}
+
+\definecolor{NameColor}{HTML}{CA1640}
+
+\newtheorem{theorem}{Théorème}
+\crefname{theorem}{théorème}{théorèmes}
+
+\newtheorem{foobar}{Foobar}
+\crefname{foobar}{fOO bar}{fOO bars}
+\creflabelformat{foobar}{#2(#1)#3}
+
+\START
+\usepackage{xcref}
+
+\let\fxcref=\xcreffrenchwrapper
+\let\fXcref=\xcreffrenchWrapper
+
+% The use of NameColor is there to make sure that the following settings
+% override the defaults.
+\xcreffrenchSetNamesTableEntry{section}{\`a}{la}
+                              {\ptextcolor{NameColor}{section}}
+                              {\ptextcolor{NameColor}{sections}}
+\xcreffrenchSetNamesTableEntry{equation}{dans}{l'}
+                              {\ptextcolor{NameColor}{équation}}
+                              {\ptextcolor{NameColor}{équations}}
+\xcreffrenchSetNamesTableEntry{foobar}{d'apr\`es}{le}
+                              {f\xcrefNoCaseChange{OO} bar}
+                              {f\makeItBlue{OO} bars}
+
+\xcrefngermanSetNamesTableEntry{section}{in}
+  {{der}{Abschnitt}{die}{Abschnitte}}
+  {{den}{Abschnitt}{die}{Abschnitte}}
+  {{dem}{Abschnitt}{den}{Abschnitten}}
+  {{des}{Abschnitts}{der}{Abschnitte}} % “des Abschnittes” is also possible
+
+% We'll take care of \makeItBlue later
+\xcrefset{%
+  functions for preventing auto case change = {\xcrefNoCaseChange\ptextcolor}
+}
+
+\ExplSyntaxOn
+
+\OMIT
+
+% \protected wrapper for \textcolor
+\NewDocumentCommand \ptextcolor { m }
+  {
+    \textcolor {#1}
+  }
+
+\NewDocumentCommand \makeItBlue { }
+  {
+    \ptextcolor { blue }
+  }
+
+\NewDocumentCommand \cs { m }
+  {
+    \texttt
+      {
+        \char_generate:nn { `\\ } { 12 }
+        \tl_to_str:n {#1}
+      }
+  }
+
+\NewDocumentCommand \xcrefPGFOpt { m }
+  { \texttt{/xcref/#1} }
+\NewDocumentCommand \xcrefPGFPath { m } % for PGF “directories”
+  { \texttt{/xcref/#1} }
+\NewDocumentCommand \xcrefPGFRoot { }
+  { \texttt{/xcref} }
+
+\cs_set_protected:Npn \test:n #1
+  {
+    \hbox_set:Nn \l_tmpa_box {#1}
+    \box_show:N \l_tmpa_box
+    \OMIT
+     % Make it easier to validate the saved result by inspecting the PDF output
+    \box_use_drop:N \l_tmpa_box
+    \TIMO
+  }
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\chapter{Material used in the tests}
+
+\section{A first section}
+\label{sec-1}
+
+Equation:\setcounter{equation}{11}%
+\begin{equation}
+  \label{eq-famous-constants}
+  e^{i\pi} = -1
+\end{equation}
+
+\begin{foobar}
+  \label{foobar-1}
+  This result is notoriously foobar.
+\end{foobar}
+
+\section{A second section}
+\label{sec-2}
+
+\begin{foobar}
+  \label{foobar-2}
+  Blah.
+\end{foobar}
+
+\section{A third section}
+\label{sec-3}
+
+\begin{theorem}
+  \label{theorem-1}
+  Some theorem.
+\end{theorem}
+
+\begin{theorem}
+  \label{theorem-2}
+  Other theorem.
+\end{theorem}
+
+\section{A fourth section}
+\label{sec-4}
+
+\begin{theorem}
+  \label{theorem-3}
+  Third theorem.
+\end{theorem}
+
+\begin{theorem}
+  \label{theorem-4}
+  Fourth theorem.
+\end{theorem}
+
+\ExplSyntaxOn
+
+\chapter{The~tests}
+
+\section{Basic~tests~with~\cs{xcref},~\cs{xcreffrenchwrapper}~
+  and~\cs{xcreffrenchWrapper}}
+\TIMO
+
+\TEST { \xcref with~capitalize=false }
+  {
+    \test:n { \xcref[capitalize=false]{sec-1} }
+  }
+
+\TEST { \fxcref with~no~optional~argument }
+  {
+    \test:n { \fxcref{sec-1} }
+  }
+
+\TEST { \xcref with~capitalize=true~(acts~on~a~with~grave~accent) }
+  {
+    \test:n { \xcref[capitalize=true]{sec-1} }
+  }
+
+\TEST { \xcref with~capitalize~(acts~on~a~with~grave~accent) }
+  {
+    \test:n { \xcref[capitalize]{sec-1} }
+  }
+
+\TEST { \fXcref with~no~optional~argument }
+  {
+    \test:n { \fXcref{sec-1} }
+  }
+
+\TEST { \xcref with~no~optional~argument,~two~section~refs }
+  {
+    \test:n { \xcref{sec-1,sec-2} }
+  }
+
+\TEST { \xcref with~no~optional~argument,~three~consecutive~section~refs }
+  {
+    \test:n { \xcref{sec-1,sec-2,sec-3} }
+  }
+
+\TEST { \xcref with~no~optional~argument,~three~non~consecutive~section~refs }
+  {
+    \test:n { \xcref{sec-1,sec-2,sec-4} }
+  }
+
+\TEST { \fxcref with~a~section~and~an~equation~(1) }
+  {
+    \test:n { \fxcref{sec-1,eq-famous-constants} }
+  }
+
+\TEST { \fxcref with~a~section~and~an~equation~(2) }
+  {
+    \test:n { \fxcref{sec-1}~et~
+              \fxcref[preposition=avec]{eq-famous-constants} }
+  }
+
+\OMIT
+\section{Test~of~\xcrefPGFOpt{functions~for~preventing~auto~case~change}}
+\TIMO
+
+\TEST { functions~for~preventing~auto~case~change~(1) }
+  {
+    \group_begin:
+    \xcrefset { functions~for~preventing~auto~case~change = { } }
+    \test:n
+      {
+        \fxcref[preposition=d'après]{foobar-1},~ \fXcref[form=noun]{foobar-1},~
+        \fXcref[form=noun]{foobar-1,foobar-2}
+      }
+    \group_end:
+  }
+
+\TEST { functions~for~preventing~auto~case~change~(2) }
+  {
+    \group_begin:
+    % Use the top-level setting, which is
+    % functions~for~preventing~auto~case~change={\xcrefNoCaseChange\ptextcolor}
+    \test:n
+      {
+        \fxcref[preposition=d'après]{foobar-1},~ \fXcref[form=noun]{foobar-1},~
+        \fXcref[form=noun]{foobar-1,foobar-2}
+      }
+    \group_end:
+  }
+
+\TEST { functions~for~preventing~auto~case~change~(3) }
+  {
+    \group_begin:
+    \xcrefset
+      {
+        functions~for~preventing~auto~case~change = { \xcrefNoCaseChange
+                                                      \makeItBlue }
+      }
+    \test:n
+      {
+        \fxcref[preposition=d'après]{foobar-1},~ \fXcref[form=noun]{foobar-1},~
+        \fXcref[form=noun]{foobar-1,foobar-2}
+      }
+    \group_end:
+  }
+
+\OMIT
+\section{Tests~with~\xcrefPGFOpt{capitalize},~\xcrefPGFOpt{french/form}~and~\xcrefPGFOpt{french/preposition}}
+\TIMO
+
+\TEST { \fxcref with~form=noun~(one~ref)}
+  {
+    \test:n { \fxcref[form=noun]{theorem-1} }
+  }
+
+\TEST { \fxcref with~form=article+noun~(one~ref) }
+  {
+    \test:n { \fxcref[form=article+noun]{theorem-1} }
+  }
+
+\TEST { \fxcref with~form=prep+article+noun~(one~ref) }
+  {
+    \test:n { \fxcref{theorem-1}~---~
+              \fxcref[form=prep+article+noun]{theorem-1} }
+  }
+
+\TEST { \fxcref with~form=noun~(two~refs) }
+  {
+    \test:n { \fxcref[form=noun]{theorem-1,theorem-2} }
+  }
+
+\TEST { \fxcref with~form=article+noun~(two~refs) }
+  {
+    \test:n { \fxcref[form=article+noun]{theorem-1,theorem-2} }
+  }
+
+\TEST { \fxcref with~form=prep+article+noun~(two~refs) }
+  {
+    \test:n { \fxcref{theorem-1,theorem-2}~---~
+              \fxcref[form=prep+article+noun]{theorem-1,theorem-2} }
+  }
+
+\TEST { \fxcref with~form=noun~(three~consecutive~refs) }
+  {
+    \test:n { \fxcref[form=noun]{theorem-1,theorem-2,theorem-3} }
+  }
+
+\TEST { \fxcref with~form=article+noun~(three~consecutive~refs) }
+  {
+    \test:n { \fxcref[form=article+noun]{theorem-1,theorem-2,theorem-3} }
+  }
+
+\TEST { \fxcref with~form=prep+article+noun~(three~consecutive~refs) }
+  {
+    \test:n { \fxcref{theorem-1,theorem-2,theorem-3}~---~
+              \fxcref[form=prep+article+noun]{theorem-1,theorem-2,theorem-3} }
+  }
+
+\TEST { \fxcref with~form=noun~(three~non-consecutive~refs) }
+  {
+    \test:n { \fxcref[form=noun]{theorem-1,theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref with~form=article+noun~(three~non-consecutive~refs) }
+  {
+    \test:n { \fxcref[form=article+noun]{theorem-1,theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref with~form=prep+article+noun~(three~non-consecutive~refs) }
+  {
+    \test:n { \fxcref{theorem-1,theorem-2,theorem-4}~---~
+              \fxcref[form=prep+article+noun]{theorem-1,theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref with~form=noun~(three~refs~of~mixed~types) }
+  {
+    \test:n { \fxcref[form=noun]{sec-3,theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref with~form=article+noun~(three~refs~of~mixed~types) }
+  {
+    \test:n { \fxcref[form=article+noun]{sec-3,theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref with~form=prep+article+noun~(three~refs~of~mixed~types) }
+  {
+    \test:n { \fxcref{sec-3,theorem-2,theorem-4}~---~
+              \fxcref[form=prep+article+noun]{sec-3,theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref with~a~preposition~specified~in~UTF-8,~used~for~mixed~refs }
+  {
+    \test:n { \fxcref[preposition=d'après]{sec-3,theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref with~a~preposition~specified~in~UTF-8~(variant) }
+  {
+    \test:n { \fxcref[preposition=d'après]{sec-3}~et~
+              \fxcref[form=article+noun]{theorem-2,theorem-4} }
+  }
+
+\TEST { \fXcref with~a~preposition~specified~in~UTF-8 }
+  {
+    \test:n { \fXcref[preposition=d'après]{sec-3}~et~
+              \fxcref[form=article+noun]{theorem-2,theorem-4} }
+  }
+
+\TEST { \fxcref in~the~scope~of~\xcrefset {~french/form~=~noun~} }
+  {
+    \xcrefset { french/form = noun }
+    \test:n { voir~\fxcref{sec-3}~et~\fxcref{theorem-2,theorem-4} }
+  }
+
+\OMIT
+\section{Tests~with~\xcrefPGFOpt{lang}}
+\TIMO
+
+\TEST { \xcrefPGFOpt{lang} passed to \xcref }
+  {
+    \OMIT
+    \begin{otherlanguage}{ngerman}
+    \TIMO
+    \test:n
+      {
+        \xcref[lang=ngerman, ngerman/form=article+noun,
+               ngerman/case=nom]{sec-1}~---~
+        \xcref[lang=ngerman, ngerman/form=article+noun,
+               ngerman/case=nom]{sec-1,sec-2,sec-4}
+      }
+    \OMIT
+    \end{otherlanguage}
+    \TIMO
+  }
+
+\TEST {  }
+  {
+    \OMIT
+    \begin{otherlanguage}{ngerman}
+    \TIMO
+      \test:n
+        {
+          \xcrefset{lang=ngerman}
+          \xcref[ngerman/form=prep+article+noun, ngerman/preposition=in,
+                 ngerman/case=dat]{sec-1}~---~
+          \xcref[ngerman/form=prep+article+noun, ngerman/preposition=in,
+                 ngerman/case=dat]{sec-1,sec-2,sec-4}
+        }
+    \OMIT
+    \end{otherlanguage}
+    \TIMO
+
+    % Back to French
+    \test:n { \xcref{sec-1} }
+  }
+
+\OMIT
+\end{document}

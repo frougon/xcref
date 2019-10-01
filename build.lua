@@ -9,6 +9,14 @@ module = "xcref"
 -- Files to install to the tex area of the texmf tree
 installfiles = {"*.sty", "xcref-*.tex"}
 
+-- We need two LaTeX runs for the automated tests
+checkruns = 2
+-- Currently, the LuaTeX and XeTeX engines introduce differences that have
+-- nothing to do with xcref but would cause the tests to fail
+checkengines = {"pdftex"}
+-- Commented out because of <https://github.com/latex3/l3build/issues/90>
+-- recordstatus = true
+
 demofiles = {"examples/example-*.tex"}
 
 -- Add a few patterns to the default, which is "*.log", "*.pdf", "*.zip

@@ -17,8 +17,7 @@ changed (for instance, from chapter to section or theorem to proposition).
 
 This is an alpha release. Some interfaces may change if they prove to be
 suboptimal. The documentation isn't finished. The code has received reasonable
-testing but might still have bugs. I haven't had time to write a formal test
-suite yet, though `l3build` should make this a reasonably easy task.
+testing but might still have bugs.
 
 If you think the interface (API) could be improved, please submit your ideas.
 If you are a native speaker of one of the languages for which a
