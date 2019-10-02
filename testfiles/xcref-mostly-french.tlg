@@ -1669,3 +1669,67 @@ l. ...  }
 <argument> \l_tmpa_box 
 l. ...  }
 ============================================================
+============================================================
+TEST 35: Test for \xcrefPGFOpt {lang for capitalization func}
+============================================================
+> \box...=
+\hbox(6.88875+1.94443)x112.91602
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 j
+.\T1/lmr/m/n/10 k
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 p
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 1
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 I
+.\T1/lmr/m/n/10 J
+.\T1/lmr/m/n/10 k
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 p
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 1
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+> \box...=
+\hbox(6.88875+1.94443)x110.8325
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 j
+.\T1/lmr/m/n/10 k
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 p
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 1
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 I
+.\T1/lmr/m/n/10 j
+.\T1/lmr/m/n/10 k
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 p
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 1
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================

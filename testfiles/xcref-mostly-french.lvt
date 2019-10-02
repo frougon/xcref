@@ -20,6 +20,9 @@
 \crefname{foobar}{fOO bar}{fOO bars}
 \creflabelformat{foobar}{#2(#1)#3}
 
+\newtheorem{langtest}{Language test}
+\crefname{langtest}{ijklmnop}{ijklmnop (plural)}
+
 \START
 \usepackage{xcref}
 
@@ -37,6 +40,9 @@
 \xcreffrenchSetNamesTableEntry{foobar}{d'apr\`es}{le}
                               {f\xcrefNoCaseChange{OO} bar}
                               {f\makeItBlue{OO} bars}
+\xcreffrenchSetNamesTableEntry{langtest}{\`a}{le}
+                              {ijklmnop}
+                              {ijklmnop plural}
 
 \xcrefngermanSetNamesTableEntry{section}{in}
   {{der}{Abschnitt}{die}{Abschnitte}}
@@ -144,6 +150,11 @@ Equation:\setcounter{equation}{11}%
   Fourth theorem.
 \end{theorem}
 
+\begin{langtest}
+  \label{language-test}
+  This is used to test \xcrefPGFOpt{lang for capitalization func}.
+\end{langtest}
+
 \ExplSyntaxOn
 
 \chapter{The~tests}
@@ -204,7 +215,7 @@ Equation:\setcounter{equation}{11}%
   }
 
 \OMIT
-\section{Test~of~\xcrefPGFOpt{functions~for~preventing~auto~case~change}}
+\section{Test~\xcrefPGFOpt{functions~for~preventing~auto~case~change}}
 \TIMO
 
 \TEST { functions~for~preventing~auto~case~change~(1) }
@@ -249,7 +260,7 @@ Equation:\setcounter{equation}{11}%
   }
 
 \OMIT
-\section{Tests~with~\xcrefPGFOpt{capitalize},~\xcrefPGFOpt{french/form}~and~\xcrefPGFOpt{french/preposition}}
+\section{Test~\xcrefPGFOpt{capitalize},~\xcrefPGFOpt{french/form}~and~\xcrefPGFOpt{french/preposition}}
 \TIMO
 
 \TEST { \fxcref with~form=noun~(one~ref)}
@@ -356,7 +367,7 @@ Equation:\setcounter{equation}{11}%
   }
 
 \OMIT
-\section{Tests~with~\xcrefPGFOpt{lang}}
+\section{Test~generic~language-related~options}
 \TIMO
 
 \TEST { \xcrefPGFOpt{lang}~passed~to~\xcref }
@@ -395,6 +406,25 @@ Equation:\setcounter{equation}{11}%
 
     % Back to French
     \test:n { \xcref{sec-1} }
+  }
+
+\TEST { Test~for~\xcrefPGFOpt{lang~for~capitalization~func} }
+  {
+    \cs_new:Npn \xcref_test_map_func:n #1
+      {
+        % When \tl_mixed_case:nn is passed the 'nl' language, “ij” gets
+        % capitalized as “IJ”. So, let's artificially map 'french' to 'nl'
+        % via '/xcref/lang for capitalization func' in order to test it.
+        \str_if_eq:nnTF {#1} { french } { nl } { }
+      }
+
+    \xcrefset { french/form = noun }
+    \group_begin:
+      \xcrefset { lang~for~capitalization~func = \xcref_test_map_func:n }
+      \test:n { \fxcref{language-test}~---~\fXcref{language-test} }
+    \group_end:
+    % The 'french -> nl' mapping is not effective anymore here.
+    \test:n { \fxcref{language-test}~---~\fXcref{language-test} }
   }
 
 \OMIT
