@@ -359,7 +359,7 @@ Equation:\setcounter{equation}{11}%
 \section{Tests~with~\xcrefPGFOpt{lang}}
 \TIMO
 
-\TEST { \xcrefPGFOpt{lang} passed to \xcref }
+\TEST { \xcrefPGFOpt{lang}~passed~to~\xcref }
   {
     \OMIT
     \begin{otherlanguage}{ngerman}
@@ -376,7 +376,7 @@ Equation:\setcounter{equation}{11}%
     \TIMO
   }
 
-\TEST {  }
+\TEST { \xcrefPGFOpt{lang}~passed~to~\xcrefset~and~switch~back~to~main~language }
   {
     \OMIT
     \begin{otherlanguage}{ngerman}

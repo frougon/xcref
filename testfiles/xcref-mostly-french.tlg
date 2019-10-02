@@ -1513,7 +1513,7 @@ TEST 32: \fxcref in the scope of \xcrefset { french/form = noun }
 l. ...  }
 ============================================================
 ============================================================
-TEST 33: \xcrefPGFOpt {lang}passedto\xcref 
+TEST 33: \xcrefPGFOpt {lang} passed to \xcref 
 ============================================================
 > \box...=
 \hbox(6.88875+1.94443)x227.36108
@@ -1578,7 +1578,7 @@ TEST 33: \xcrefPGFOpt {lang}passedto\xcref
 l. ...  }
 ============================================================
 ============================================================
-TEST 34: 
+TEST 34: \xcrefPGFOpt {lang} passed to \xcrefset and switch back to main language
 ============================================================
 > \box...=
 \hbox(6.88875+1.94443)x244.55498
