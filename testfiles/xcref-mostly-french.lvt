@@ -220,32 +220,27 @@ Equation:\setcounter{equation}{11}%
 
 \TEST { functions~for~preventing~auto~case~change~(1) }
   {
-    \group_begin:
     \xcrefset { functions~for~preventing~auto~case~change = { } }
     \test:n
       {
         \fxcref[preposition=d'après]{foobar-1},~ \fXcref[form=noun]{foobar-1},~
         \fXcref[form=noun]{foobar-1,foobar-2}
       }
-    \group_end:
   }
 
 \TEST { functions~for~preventing~auto~case~change~(2) }
   {
-    \group_begin:
-    % Use the top-level setting, which is
+    % Use the setting we did in the preamble, which is
     % functions~for~preventing~auto~case~change={\xcrefNoCaseChange\ptextcolor}
     \test:n
       {
         \fxcref[preposition=d'après]{foobar-1},~ \fXcref[form=noun]{foobar-1},~
         \fXcref[form=noun]{foobar-1,foobar-2}
       }
-    \group_end:
   }
 
 \TEST { functions~for~preventing~auto~case~change~(3) }
   {
-    \group_begin:
     \xcrefset
       {
         functions~for~preventing~auto~case~change = { \xcrefNoCaseChange
@@ -256,7 +251,6 @@ Equation:\setcounter{equation}{11}%
         \fxcref[preposition=d'après]{foobar-1},~ \fXcref[form=noun]{foobar-1},~
         \fXcref[form=noun]{foobar-1,foobar-2}
       }
-    \group_end:
   }
 
 \OMIT
@@ -410,6 +404,7 @@ Equation:\setcounter{equation}{11}%
 
 \TEST { Test~for~\xcrefPGFOpt{lang~for~capitalization~func} }
   {
+    \OMIT
     \cs_new:Npn \xcref_test_map_func:n #1
       {
         % When \tl_mixed_case:nn is passed the 'nl' language, “ij” gets
@@ -417,6 +412,7 @@ Equation:\setcounter{equation}{11}%
         % via '/xcref/lang for capitalization func' in order to test it.
         \str_if_eq:nnTF {#1} { french } { nl } { }
       }
+    \TIMO
 
     \xcrefset { french/form = noun }
     \group_begin:
