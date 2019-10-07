@@ -14,14 +14,11 @@
 \definecolor{NameColor}{HTML}{CA1640}
 
 \newtheorem{theorem}{Théorème}
-\crefname{theorem}{théorème}{théorèmes}
 
 \newtheorem{foobar}{Foobar}
-\crefname{foobar}{fOO bar}{fOO bars}
 \creflabelformat{foobar}{#2(#1)#3}
 
 \newtheorem{langtest}{Language test}
-\crefname{langtest}{ijklmnop}{ijklmnop (plural)}
 
 \START
 \usepackage{xcref}
