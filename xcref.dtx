@@ -479,20 +479,6 @@
 %   you know how to use \cs{ExplSyntaxOn} and \cs{ExplSyntaxOff}).
 % \end{function}
 %
-% \begin{function}{\xcref_call_crefname:nnn, \xcref_call_crefname:nVV}
-%   \begin{syntax}
-%     \cs{xcref_call_crefname:nnn} \Arg{reference type} \Arg{singular form} \Arg{plural form}
-%   \end{syntax}
-%   Simple \pkg{expl3} wrapper for \cs{crefname}.
-% \end{function}
-%
-% \begin{function}{\xcref_call_Crefname:nnn, \xcref_call_Crefname:nVV}
-%   \begin{syntax}
-%     \cs{xcref_call_Crefname:nnn} \Arg{reference type} \Arg{singular form} \Arg{plural form}
-%   \end{syntax}
-%   Simple \pkg{expl3} wrapper for \cs{Crefname}.
-% \end{function}
-%
 % \subsection{Language-specific}
 %
 % \subsubsection{From the \texttt{french} module}
@@ -927,7 +913,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\xcref_call_crefname:nnn, \xcref_call_crefname:nVV}
+% \begin{macro}{\@@_call_crefname:nnn, \@@_call_crefname:nVV}
 %   Simple \pkg{expl3} wrapper for \cs{crefname}.
 %   \begin{arguments}
 %   \item reference type (e.g., \texttt{chapter}, \texttt{section},
@@ -936,16 +922,16 @@
 %   \item plural form
 %   \end{arguments}
 %    \begin{macrocode}
-\cs_new_protected:Npn \xcref_call_crefname:nnn #1#2#3
+\cs_new_protected:Npn \@@_call_crefname:nnn #1#2#3
   {
     \crefname {#1} {#2} {#3}
   }
 
-\cs_generate_variant:Nn \xcref_call_crefname:nnn { nVV }
+\cs_generate_variant:Nn \@@_call_crefname:nnn { nVV }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\xcref_call_Crefname:nnn, \xcref_call_Crefname:nVV}
+% \begin{macro}{\@@_call_Crefname:nnn, \@@_call_Crefname:nVV}
 %   Simple \pkg{expl3} wrapper for \cs{Crefname}.
 %   \begin{arguments}
 %   \item reference type (see \cs{xcref_call_crefname:nnn} for examples)
@@ -953,12 +939,12 @@
 %   \item plural form
 %   \end{arguments}
 %    \begin{macrocode}
-\cs_new_protected:Npn \xcref_call_Crefname:nnn #1#2#3
+\cs_new_protected:Npn \@@_call_Crefname:nnn #1#2#3
   {
     \Crefname {#1} {#2} {#3}
   }
 
-\cs_generate_variant:Nn \xcref_call_Crefname:nnn { nVV }
+\cs_generate_variant:Nn \@@_call_Crefname:nnn { nVV }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1607,7 +1593,7 @@
 %    \end{macrocode}
 % Set up the non-capitalized forms.
 %    \begin{macrocode}
-    \xcref_call_crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
+    \@@_call_crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
 %    \end{macrocode}
 % This influences the behavior of \cs{tl_mixed_case:nn}.
 %    \begin{macrocode}
@@ -1624,7 +1610,7 @@
 %    \end{macrocode}
 % Set up the capitalized forms.
 %    \begin{macrocode}
-    \xcref_call_Crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
+    \@@_call_Crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
 %    \end{macrocode}
 % Call \cs{@crefdefineallformats} to define all things derived from the
 % \cs{crefname} and \cs{Crefname} calls we just did (for instance, this will
@@ -2121,7 +2107,7 @@
 %    \end{macrocode}
 % Set up the non-capitalized forms.
 %    \begin{macrocode}
-    \xcref_call_crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
+    \@@_call_crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
 %    \end{macrocode}
 % This influences the behavior of \cs{tl_mixed_case:nn}.
 %    \begin{macrocode}
@@ -2138,7 +2124,7 @@
 %    \end{macrocode}
 % Set up the capitalized forms.
 %    \begin{macrocode}
-    \xcref_call_Crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
+    \@@_call_Crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
 %    \end{macrocode}
 % Call \cs{@crefdefineallformats} to define all things derived from the
 % \cs{crefname} and \cs{Crefname} calls we just did (for instance, this will
