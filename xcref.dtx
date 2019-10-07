@@ -816,20 +816,21 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_call_lang_setup_func:n, \@@_call_lang_setup_func:V}
+% \begin{macro}{\@@_call_lang_setup_func:nN, \@@_call_lang_setup_func:VN}
 %   Call the main function of a language-specific module.
 %   \begin{arguments}
 %     \item name of a language-specific module
+%     \item sequence variable containing the reference types to configure
 %   \end{arguments}
 %    \begin{macrocode}
-\cs_new_protected:Npn \@@_call_lang_setup_func:n #1
+\cs_new_protected:Npn \@@_call_lang_setup_func:nN #1#2
   {
-    \use:c { @@_#1_setup_cref_names: }
+    \use:c { @@_#1_setup_cref_names:N } #2
   }
 %    \end{macrocode}
 % Define a variant of this function:
 %    \begin{macrocode}
-\cs_generate_variant:Nn \@@_call_lang_setup_func:n { V }
+\cs_generate_variant:Nn \@@_call_lang_setup_func:nN { V }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -857,6 +858,16 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{variable}{\l_@@_xcref_reference_types_seq}
+%   Types of all references in the second argument of \cs{xcref:nn}.
+%   Duplicates are not added; thus, the number of elements stored in this
+%   variable is less than or equal to the number of references in the second
+%   argument of \cs{xcref:nn}.
+%    \begin{macrocode}
+\seq_new:N \l_@@_xcref_reference_types_seq
+%    \end{macrocode}
+% \end{variable}
+%
 % \begin{macro}{\xcref:nn, \xcref}
 %   \pkg{xcref}'s wrapper for \cs{cref}, \cs{Cref}, \cs{cref*} and \cs{Cref*}.
 %   \begin{arguments}
@@ -866,13 +877,20 @@
 %     \cs{Cref}, \cs{cref*} or \cs{Cref*} depending on the values of the
 %     \xcrefPGFOpt{capitalize} and \xcrefPGFOpt{hyperlinks} options
 %   \end{arguments}
+%   Basically, this first calls \cs{crefname}, \cs{Crefname} and
+%   \cs{@crefdefineallformats} for each type pertaining to a reference in
+%   |#2|. Then the appropriate \cs{cref}-like command is called. All this is
+%   done inside a group (\cs{crefname} and friends act locally).
 %    \begin{macrocode}
 \cs_new_protected:Npn \xcref:nn #1#2
   {
     \group_begin:
     \xcref_set:n {#1}
     \@@_autodetect_lang_unless_explicit:
-    \@@_call_lang_setup_func:V \l_@@_selected_lang_str
+
+    \@@_set_to_reference_types:Nn \l_@@_xcref_reference_types_seq {#2}
+    \@@_call_lang_setup_func:VN \l_@@_selected_lang_str
+                                \l_@@_xcref_reference_types_seq
 
     \@@_call_cref:Nxn \l_@@_capitalize_bool
       {
@@ -941,6 +959,78 @@
   }
 
 \cs_generate_variant:Nn \xcref_call_Crefname:nnn { nVV }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_call_crefdefineallformats:n}
+%   Call \cs{@crefdefineallformats} for the specified type.
+%   \begin{arguments}
+%   \item reference type
+%   \end{arguments}
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_call_crefdefineallformats:n #1
+  {
+    \@crefdefineallformats {#1}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}[pTF]{\@@_ref_defined:n}
+%   Test whether the specified reference is defined for \pkg{cleveref}.
+%   \begin{arguments}
+%   \item reference (\emph{i.e.,} a label)
+%   \end{arguments}
+%    \begin{macrocode}
+\prg_new_conditional:Npnn \@@_ref_defined:n #1 { p, T, F, TF }
+  {
+    \exp_after:wN \if_meaning:w \cs:w r@#1@cref \cs_end: \relax
+      \prg_return_false:
+    \else:
+      \prg_return_true:
+    \fi:
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_call_cref_gettype:nN}
+%   Use \cs{cref@gettype} to retrieve the type of a reference.
+%   \begin{arguments}
+%   \item reference (\emph{i.e.,} a label)
+%   \item token list variable (receives the result)
+%   \end{arguments}
+% This can only be used for references that have already been defined by
+% \cs{newlabel} (\emph{i.e.,} they have been read from the \texttt{.aux}
+% file: \cs{r@\meta{reference}@cref} is not \tn{let}-equal to \tn{relax}).
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_call_cref_gettype:nN #1#2
+  {
+    \cref@gettype {#1} {#2}
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@@_set_to_reference_types:Nn}
+%   Extract the list of reference types from a comma list of references.
+%   \begin{arguments}
+%   \item sequence variable
+%   \item comma list of references
+%   \end{arguments}
+%   Store in |#1| the types of all references listed in |#2|, eliminating
+%   duplicates. |#1| is assigned locally.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_set_to_reference_types:Nn #1#2
+  {
+    \seq_clear:N #1
+    \clist_map_inline:nn {#2}
+      {
+        \@@_ref_defined:nT {##1}
+          {
+            \@@_call_cref_gettype:nN {##1} \l_tmpa_tl
+            \seq_if_in:NVF #1 \l_tmpa_tl
+              { \seq_put_right:NV #1 \l_tmpa_tl }
+          }
+      }
+  }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1391,14 +1481,17 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_french_setup_cref_names:}
-%   Call \cs{crefname} and \cs{Crefname} for each known reference type. This
-%   is the main entry point of the language-specific module.
+% \begin{macro}{\@@_french_setup_cref_names:N}
+%   Call \cs{crefname}, \cs{Crefname} and \cs{@crefdefineallformats} for each
+%   reference type in |#1|.
+%   \begin{arguments}
+%   \item sequence variable containing reference types
+%   \end{arguments}
+%   This is the main entry point of the language-specific module.
 %    \begin{macrocode}
-\cs_new_protected:Npn \@@_french_setup_cref_names:
+\cs_new_protected:Npn \@@_french_setup_cref_names:N #1
   {
-    \seq_map_function:NN \g_@@_french_types_seq
-                         \@@_french_setup_cref_names_mapfunc:n
+    \seq_map_function:NN #1 \@@_french_setup_cref_names_mapfunc:n
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1443,7 +1536,8 @@
 %    \end{macrocode}
 %
 % \begin{macro}{\@@_french_setup_cref_names_mapfunc:n}
-%   Call \cs{crefname} and \cs{Crefname} for the specified reference type.
+%   Call \cs{crefname}, \cs{Crefname} and \cs{@crefdefineallformats} for the
+%   specified reference type.
 %   \begin{arguments}
 %   \item reference type (e.g., |chapter|, |section|, |theorem|, etc.)
 %   \end{arguments}
@@ -1531,6 +1625,14 @@
 % Set up the capitalized forms.
 %    \begin{macrocode}
     \xcref_call_Crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
+%    \end{macrocode}
+% Call \cs{@crefdefineallformats} to define all things derived from the
+% \cs{crefname} and \cs{Crefname} calls we just did (for instance, this will
+% call \cs{crefmultiformat}, which in turn will define
+% \cs{cref@\meta{type}@format@first}, among others). This is likely to be
+% slow.
+%    \begin{macrocode}
+    \@@_call_crefdefineallformats:n {#1}
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1833,14 +1935,17 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_ngerman_setup_cref_names:}
-%   Call \cs{crefname} and \cs{Crefname} for each known reference type. This
-%   is the main entry point of the language-specific module.
+% \begin{macro}{\@@_ngerman_setup_cref_names:N}
+%   Call \cs{crefname}, \cs{Crefname} and \cs{@crefdefineallformats} for each
+%   reference type in |#1|.
+%   \begin{arguments}
+%   \item sequence variable containing reference types
+%   \end{arguments}
+%   This is the main entry point of the language-specific module.
 %    \begin{macrocode}
-\cs_new_protected:Npn \@@_ngerman_setup_cref_names:
+\cs_new_protected:Npn \@@_ngerman_setup_cref_names:N #1
   {
-    \seq_map_function:NN \g_@@_ngerman_types_seq
-                         \@@_ngerman_setup_cref_names_mapfunc:n
+    \seq_map_function:NN #1 \@@_ngerman_setup_cref_names_mapfunc:n
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1894,7 +1999,8 @@
 \tl_new:N \l_@@_gscnm_lang_tl
 %    \end{macrocode}
 % \begin{macro}{\@@_ngerman_setup_cref_names_mapfunc:n}
-%   Call \cs{crefname} and \cs{Crefname} for the specified reference type.
+%   Call \cs{crefname}, \cs{Crefname} and \cs{@crefdefineallformats} for the
+%   specified reference type.
 %   \begin{arguments}
 %   \item reference type (e.g., |chapter|, |section|, |theorem|, etc.)
 %   \end{arguments}
@@ -2033,6 +2139,14 @@
 % Set up the capitalized forms.
 %    \begin{macrocode}
     \xcref_call_Crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
+%    \end{macrocode}
+% Call \cs{@crefdefineallformats} to define all things derived from the
+% \cs{crefname} and \cs{Crefname} calls we just did (for instance, this will
+% call \cs{crefmultiformat}, which in turn will define
+% \cs{cref@\meta{type}@format@first}, among others). This is likely to be
+% slow.
+%    \begin{macrocode}
+    \@@_call_crefdefineallformats:n {#1}
   }
 %    \end{macrocode}
 % \end{macro}
