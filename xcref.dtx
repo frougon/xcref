@@ -1706,6 +1706,9 @@
 \msg_new:nnn { xcref } { ngerman-requested-use-of-undefined-type }
   { (ngerman)~Requested~use~of~undefined~reference~type:~'\exp_not:n {#1}'. }
 
+\msg_new:nnn { xcref } { ngerman-unable-to-determine-the-case }
+  { (ngerman)~Unable~to~determine~the~case~to~use~(nominative,~etc.) }
+
 \msg_new:nnn { xcref }
   { ngerman-unexpected-case-name-when-trying-to-find-index }
   { (ngerman)~Bug:~unexpected~case~name~when~doing~lookup~in~\token_to_str:N
@@ -2067,9 +2070,13 @@
     \prop_get:NVNF \c_@@_ngerman_case_idx_prop
       \l_@@_ngerman_selected_case_str \l_@@_gscnm_case_idx_tl
       {
-        \msg_error:nnV { xcref }
-          { ngerman-unexpected-case-name-when-trying-to-find-index }
-          \l_@@_ngerman_selected_case_str
+        \str_if_empty:NTF \l_@@_ngerman_selected_case_str
+          { \msg_error:nn { xcref } { ngerman-unable-to-determine-the-case } }
+          {
+            \msg_error:nnV { xcref }
+              { ngerman-unexpected-case-name-when-trying-to-find-index }
+              \l_@@_ngerman_selected_case_str
+          }
       }
 %    \end{macrocode}
 % Get data (initially coming from \cs{g_@@_ngerman_names_prop})
