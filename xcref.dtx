@@ -2028,15 +2028,13 @@
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_ngerman_setup_cref_names_mapfunc:n #1
   {
-    \prop_get:NnNF \g_@@_ngerman_names_prop {#1}
-      \l_@@_gscnm_type_data_tl
+    \prop_get:NnNF \g_@@_ngerman_names_prop {#1} \l_@@_gscnm_type_data_tl
       {
         \msg_error:nnn { xcref } { ngerman-requested-use-of-undefined-type }
                        {#1}
       }
 
-    \seq_set_split:NnV \l_@@_gscnm_type_data_seq { }
-                       \l_@@_gscnm_type_data_tl
+    \seq_set_split:NnV \l_@@_gscnm_type_data_seq { } \l_@@_gscnm_type_data_tl
     \seq_pop_left:NN \l_@@_gscnm_type_data_seq \l_@@_gscnm_prep_tl
 %    \end{macrocode}
 % Override the default preposition for type |#1| if one was explicitly
@@ -2072,9 +2070,7 @@
 % corresponding to the selected case (|nominative|, |accusative|, etc.).
 %    \begin{macrocode}
     \tl_set:Nx \l_@@_gscnm_case_data_tl
-      { \seq_item:Nn \l_@@_gscnm_type_data_seq
-          { \l_@@_gscnm_case_idx_tl }
-      }
+      { \seq_item:Nn \l_@@_gscnm_type_data_seq { \l_@@_gscnm_case_idx_tl } }
 
     \seq_set_split:NnV \l_@@_gscnm_case_data_seq { } \l_@@_gscnm_case_data_tl
     \seq_pop_left:NN \l_@@_gscnm_case_data_seq \l_@@_gscnm_article_sing_tl
