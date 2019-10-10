@@ -1720,8 +1720,8 @@
 %
 % \begin{variable}{\l_@@_ngerman_selected_form_str}
 %   Specifies how references are to be produced, in grammatical terms. There
-%   are three possible values: |noun|, |article+noun| and |prep+article+noun|,
-%   where |prep| stands for \enquote{preposition}.
+%   are four possible values: |noun|, |article+noun|, |prep+noun| and
+%   |prep+article+noun|, where |prep| stands for \enquote{preposition}.
 %    \begin{macrocode}
 \str_new:N \l_@@_ngerman_selected_form_str
 %    \end{macrocode}
@@ -1853,6 +1853,8 @@
     form/noun/.code = { \str_set:Nn \l_@@_ngerman_selected_form_str {noun} },
     form/article+noun/.code =
             { \str_set:Nn \l_@@_ngerman_selected_form_str {article+noun} },
+    form/prep+noun/.code =
+            { \str_set:Nn \l_@@_ngerman_selected_form_str {prep+noun} },
     form/prep+article+noun/.code =
             { \str_set:Nn \l_@@_ngerman_selected_form_str {prep+article+noun} },
     form = prep+article+noun,   % set the initial value
@@ -2051,7 +2053,11 @@
 % this variable will recover its previous value as soon as the group opened by
 % \cs{xcref:nn} ends.
 %    \begin{macrocode}
-    \str_if_eq:VnT \l_@@_ngerman_selected_form_str { prep+article+noun }
+    \bool_lazy_any:nT
+      {
+        { \str_if_eq_p:Vn \l_@@_ngerman_selected_form_str { prep+noun } }
+        { \str_if_eq_p:Vn \l_@@_ngerman_selected_form_str { prep+article+noun } }
+      }
       {
         \prop_get:NVNT \l_@@_ngerman_case_for_prep_prop
                        \l_@@_gscnm_prep_tl \l_tmpa_tl
@@ -2088,6 +2094,11 @@
             \l_@@_gscnm_article_sing_tl \l_@@_gscnm_prefix_sing_tl
           \xcref_ngerman_assemble_prep_and_article:VVN \l_@@_gscnm_prep_tl
             \l_@@_gscnm_article_plur_tl \l_@@_gscnm_prefix_plur_tl
+        }
+        { prep+noun }
+        {
+          \tl_set_eq:NN \l_@@_gscnm_prefix_sing_tl \l_@@_gscnm_prep_tl
+          \tl_set_eq:NN \l_@@_gscnm_prefix_plur_tl \l_@@_gscnm_prep_tl
         }
         { article+noun }
         {
