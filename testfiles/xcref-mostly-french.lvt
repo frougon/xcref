@@ -8,7 +8,13 @@
 \usepackage{babel}
 \usepackage{xcolor}
 \usepackage{xparse}
-\usepackage{amsmath}
+% amsthm and ntheorem fix a nasty problem with LaTeX's standard \newtheorem
+% command
+% (cf. <https://tex.stackexchange.com/questions/19104/cleveref-with-counters-with-same-name>).
+% In short, with LaTeX's standard \newtheorem command and a setup such as
+% \newtheorem{satz}[problem]{Satz}, labels inside 'satz' environments have the
+% type 'problem', which essentially ruins our efforts.
+\usepackage{amsthm}
 \usepackage{cleveref}
 
 \definecolor{NameColor}{HTML}{CA1640}
@@ -74,6 +80,63 @@
         \char_generate:nn { `\\ } { 12 }
         \tl_to_str:n {#1}
       }
+  }
+
+% Convenience macros to allow using \cs inside sectioning commands without
+% upsetting hyperref.
+%
+% When loaded, hyperref defines this command.
+\ProvideDocumentCommand \texorpdfstring { m m }
+  {
+    #1
+  }
+
+\tl_new:N \g__xcref_test_dumbsectioningcmd_tl
+
+\cs_new_protected:Npn \__xcref_test_dumbsectioningcmd_aux:nnn #1#2#3
+  {
+    \use:c {#1} { \texorpdfstring {#2} {#3} }
+  }
+
+\cs_generate_variant:Nn \__xcref_test_dumbsectioningcmd_aux:nnn { nnV }
+
+% #1: section, chapter, etc.
+% #2: the title; it should be suitable for use inside \edef (expandable)
+%     with the exception of possible \cs or \xcrefPGFOpt calls, which we are
+%     precisely going to take care of.
+%
+% There is no support for the optional argument of the sectioning command
+% nor for the star variant (this command is only for PDF output of test
+% “documents” such as this one, that basically no one will look at).
+\cs_new_protected:Npn \__xcref_test_dumbsectioningcmd:nn #1#2
+  {
+    \group_begin:
+      \def \cs ##1
+        {
+          \exp_not:n { \textbackslash }
+          \tl_to_str:n {##1}
+        }
+      \def \xcrefPGFOpt ##1
+        {
+          \exp_not:n { \texttt { /xcref/##1 } }
+        }
+      \tl_gset:Nx \g__xcref_test_dumbsectioningcmd_tl { #2 }
+    \group_end:
+
+    \__xcref_test_dumbsectioningcmd_aux:nnV {#1} {#2}
+      \g__xcref_test_dumbsectioningcmd_tl
+  }
+
+% Takes two arguments (first: 'section', 'chapter', etc., second: the title)
+\NewDocumentCommand \dumbsectioningcmd { }
+  {
+    \__xcref_test_dumbsectioningcmd:nn
+  }
+
+% Takes one argument: the section title
+\NewDocumentCommand \dumbsection { }
+  {
+    \__xcref_test_dumbsectioningcmd:nn { section }
   }
 
 \NewDocumentCommand \xcrefPGFOpt { m }
@@ -152,12 +215,11 @@ Equation:\setcounter{equation}{11}%
   This is used to test \xcrefPGFOpt{lang for capitalization func}.
 \end{langtest}
 
+\chapter{The tests}
+
+\dumbsection{Basic tests with \cs{xcref}, \cs{xcreffrenchwrapper}
+  and \cs{xcreffrenchWrapper}}
 \ExplSyntaxOn
-
-\chapter{The~tests}
-
-\section{Basic~tests~with~\cs{xcref},~\cs{xcreffrenchwrapper}~
-  and~\cs{xcreffrenchWrapper}}
 \TIMO
 
 \TEST { \xcref with~capitalize=false }
@@ -212,7 +274,9 @@ Equation:\setcounter{equation}{11}%
   }
 
 \OMIT
-\section{Test~\xcrefPGFOpt{functions~for~preventing~auto~case~change}}
+\ExplSyntaxOff
+\dumbsection{Test \xcrefPGFOpt{functions for preventing auto case change}}
+\ExplSyntaxOn
 \TIMO
 
 \TEST { functions~for~preventing~auto~case~change~(1) }
@@ -251,7 +315,10 @@ Equation:\setcounter{equation}{11}%
   }
 
 \OMIT
-\section{Test~\xcrefPGFOpt{capitalize},~\xcrefPGFOpt{french/form}~and~\xcrefPGFOpt{french/preposition}}
+\ExplSyntaxOff
+\dumbsection{Test \xcrefPGFOpt{capitalize}, \xcrefPGFOpt{french/form} and
+  \xcrefPGFOpt{french/preposition}}
+\ExplSyntaxOn
 \TIMO
 
 \TEST { \fxcref with~form=noun~(one~ref)}
@@ -358,7 +425,9 @@ Equation:\setcounter{equation}{11}%
   }
 
 \OMIT
-\section{Test~generic~language-related~options}
+\ExplSyntaxOff
+\section{Test generic language-related options}
+\ExplSyntaxOn
 \TIMO
 
 \TEST { \xcrefPGFOpt{lang}~passed~to~\xcref }
@@ -421,4 +490,8 @@ Equation:\setcounter{equation}{11}%
   }
 
 \OMIT
+% Without \ExplSyntaxOff here, one may get “LaTeX Warning: Label(s) may have
+% changed. Rerun to get cross-references right.” I believe this happens when
+% hyperref is used.
+\ExplSyntaxOff
 \end{document}
