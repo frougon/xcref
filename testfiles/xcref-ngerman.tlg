@@ -1,0 +1,2050 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+(xcref.sty
+(../l3keys2e.sty
+Package: l3keys2e ....-..-.. LaTeX2e option processing using LaTeX3 keys
+)
+(../etoolbox.sty
+Package: etoolbox ....-..-.. v... e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count...
+)
+(../iflang.sty
+Package: iflang ....-..-.. v... Checks for the current language (HO)
+Package iflang Info: Naming convention for patterns: babel.
+)
+(../pgfkeys.sty
+(../pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks...
+\pgfkeys@temptoks=\toks...
+(../pgfkeysfiltered.code.tex
+\pgfkeys@tmptoks=\toks...
+)))
+Package: xcref ....-..-.. v... Extension of cleveref for non-English languages
+Package xcref Info: Loading language module 'ngerman'.
+(xcref-ngerman.tex))
+============================================================
+TEST 1: \xcref with capitalize=false
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x73.38863
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 2: \gxcref with no optional argument
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x73.38863
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 3: \xcref with capitalize=true
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x74.22186
+.\T1/lmr/m/n/10 I
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 4: \xcref with capitalize
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x74.22186
+.\T1/lmr/m/n/10 I
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 5: \gXcref with no optional argument
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x74.22186
+.\T1/lmr/m/n/10 I
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 6: article+noun, nominative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x52.25035
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 7: article+noun, accusative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x53.88918
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 8: article+noun, dative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x56.66667
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 9: article+noun, genitive
+============================================================
+> \box...=
+\hbox(7.5+2.5)x60.66716
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 10: prep+article+noun, nominative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x63.91693
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 11: prep+article+noun, accusative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x65.55576
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 12: prep+article+noun, dative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x49.44443
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 13: prep+article+noun, genitive
+============================================================
+> \box...=
+\hbox(7.5+2.5)x72.33374
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 14: article+noun, nominative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x91.6671
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 15: article+noun, accusative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x91.6671
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 16: article+noun, dative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x100.00034
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 17: article+noun, genitive
+============================================================
+> \box...=
+\hbox(7.5+2.5)x92.80602
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 18: prep+article+noun, nominative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x103.33368
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 19: prep+article+noun, accusative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x103.33368
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 20: prep+article+noun, dative
+============================================================
+> \box...=
+\hbox(7.5+2.5)x111.66692
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 21: prep+article+noun, genitive
+============================================================
+> \box...=
+\hbox(7.5+2.5)x104.4726
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 22: Rely on default prep, singular
+============================================================
+> \box...=
+\hbox(7.5+2.5)x80.27771
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================
+============================================================
+TEST 23: Rely on default prep, plural
+============================================================
+> \box...=
+\hbox(7.5+2.5)x123.61137
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================
+============================================================
+TEST 24: Rely on default prep, singular
+============================================================
+> \box...=
+\hbox(7.5+2.5)x80.27771
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================
+============================================================
+TEST 25: Rely on default prep, plural
+============================================================
+> \box...=
+\hbox(7.5+2.5)x123.61137
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================
+============================================================
+TEST 26: Single reference to section, dative, default prep
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x73.38863
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================
+============================================================
+TEST 27: Single reference to section, prep=durch
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x105.91658
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================
+============================================================
+TEST 28: Multiple references to sections
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x332.99976
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.3}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 3
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 A
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{section.1.3}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\T1/lmr/m/n/10 .
+.\T1/lmr/m/n/10 3
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================
+============================================================
+TEST 29: Nach implies dative
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x371.27565
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.2}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 2
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 1
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 2
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmtt/m/n/10 =
+.\T1/lmtt/m/n/10 =
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 1
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 2
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 30: 'noun' form
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x77.9439
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.2}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 2
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 31: 'article+noun' form
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x94.05498
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.2}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 2
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 32: 'prep+noun' form
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x89.61047
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.2}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 2
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 33: 'prep+article+noun' form
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x228.60974
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.2}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 2
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmtt/m/n/10 =
+.\T1/lmtt/m/n/10 =
+.\kern 0.0
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.2}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 2
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 34: Mixed references, form=noun, default prep
+============================================================
+> \box...=
+\hbox(7.5+2.5)x172.4443
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.4}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 4
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 35: Mixed references, form=article+noun, default prep
+============================================================
+> \box...=
+\hbox(7.5+2.5)x204.66647
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.4}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 4
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 36: Mixedreferences,defaultformandprep
+============================================================
+> \box...=
+\hbox(7.5+2.5)x248.27733
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.4}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 4
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 37: Mixed references, default form, explicit prep
+============================================================
+> \box...=
+\hbox(7.5+2.5)x227.99963
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.4}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 4
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 38: Mixed references, default form and prep, capitalize=true
+============================================================
+> \box...=
+\hbox(7.5+2.5)x354.91597
+.\T1/lmr/m/n/10 I
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 e
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 l
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\T1/lmr/m/n/10 e
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 b
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 s
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.4}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 4
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\T1/lmr/m/n/10 ,
+.\glue 3.33333 plus 1.66832 minus 1.11
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 P
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 p
+.\kern0.27779
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 i
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.8}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 8
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 ^^e4
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 n
+.\T1/lmr/m/n/10 d
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 39: Simple reference with explicit prep (von)
+============================================================
+> \box...=
+\hbox(7.5+2.5)x56.66687
+.\T1/lmr/m/n/10 v
+.\kern-0.27779
+.\T1/lmr/m/n/10 o
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 40: Simple reference with explicit prep (aus)
+============================================================
+> \box...=
+\hbox(7.5+2.5)x74.49998
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 s
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 m
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.6}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 6
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 41: Simple reference with explicit prep (durch)
+============================================================
+> \box...=
+\hbox(7.5+2.5)x81.97238
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 u
+.\T1/lmr/m/n/10 r
+.\T1/lmr/m/n/10 c
+.\kern-0.27779
+.\T1/lmr/m/n/10 h
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 n
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 S
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 t
+.\T1/lmr/m/n/10 z
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{problem.5}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 (
+.\T1/lmr/m/n/10 5
+.\T1/lmr/m/n/10 )
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...    }
+============================================================
+============================================================
+TEST 42: Test for \xcrefPGFOpt {lang for capitalization func}
+============================================================
+> \box...=
+\hbox(6.88875+0.0)x158.49985
+.\T1/lmr/m/n/10 ^^ff
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 b
+.\kern0.27779
+.\T1/lmr/m/n/10 c
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 T
+.\kern-0.83334
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{langtest.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^df
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 b
+.\kern0.27779
+.\T1/lmr/m/n/10 c
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 T
+.\kern-0.83334
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{langtest.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+> \box...=
+\hbox(6.88875+0.0)x158.49985
+.\T1/lmr/m/n/10 ^^ff
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 b
+.\kern0.27779
+.\T1/lmr/m/n/10 c
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 T
+.\kern-0.83334
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{langtest.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^df
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 b
+.\kern0.27779
+.\T1/lmr/m/n/10 c
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 T
+.\kern-0.83334
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{langtest.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+> \box...=
+\hbox(6.88875+0.0)x158.49985
+.\T1/lmr/m/n/10 ^^ff
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 b
+.\kern0.27779
+.\T1/lmr/m/n/10 c
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 T
+.\kern-0.83334
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{langtest.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^V (ligature ---)
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 ^^df
+.\T1/lmr/m/n/10 a
+.\T1/lmr/m/n/10 b
+.\kern0.27779
+.\T1/lmr/m/n/10 c
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 d
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 r
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\T1/lmr/m/n/10 T
+.\kern-0.83334
+.\T1/lmr/m/n/10 e
+.\T1/lmr/m/n/10 s
+.\T1/lmr/m/n/10 t
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\pdfstartlink(*+*)x* attr{/Border[0 0 0]/H/I/C[1 0 0]} action goto name{langtest.1}
+.\pdfcolorstack 0 push {0.10196 0.21176 0.83922 rg 0.10196 0.21176 0.83922 RG}
+.\T1/lmr/m/n/10 1
+.\pdfcolorstack 0 pop
+.\pdfendlink
+! OK.
+<argument> \l_tmpa_box 
+l. ...  }
+============================================================

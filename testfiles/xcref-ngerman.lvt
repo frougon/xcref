@@ -1,0 +1,558 @@
+\input{regression-test.tex}
+% The language name is seen by babel, cleveref and xcref. Alternatively, one
+% could use \xcrefusemodules for xcref.
+\documentclass[ngerman]{report}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{xcolor}
+\usepackage{xparse}
+% amsthm and ntheorem fix a nasty problem with LaTeX's standard \newtheorem
+% command
+% (cf. <https://tex.stackexchange.com/questions/19104/cleveref-with-counters-with-same-name>).
+% In short, with LaTeX's standard \newtheorem command and a setup such as
+% \newtheorem{satz}[problem]{Satz}, labels inside 'satz' environments have the
+% type 'problem', which essentially ruins our efforts.
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\definecolor{MyBlue}{HTML}{1A36D6}
+\hypersetup{colorlinks=true,linkcolor=MyBlue}
+
+\newtheorem{problem}{Problem}
+\newtheorem{proposition}[problem]{Proposition}
+\newtheorem{satz}[problem]{Satz}
+\newtheorem{langtest}{Language test}
+
+\creflabelformat{satz}{#2(#1)#3}
+
+\START
+\usepackage{xcref}
+
+\let\gxcref=\xcrefngermanwrapper
+\let\gXcref=\xcrefngermanWrapper
+
+\xcrefset{
+  ngerman/.cd,
+  names table = {
+    problem     = {in}{{das}{Problem}{die}{Probleme}}%
+                    {{das}{Problem}{die}{Probleme}}%
+                    {{dem}{Problem}{den}{Problemen}}%
+                    {{des}{Problems}{der}{Probleme}},
+    proposition = {nach}{{die}{Proposition}{die}{Propositionen}}%
+                    {{die}{Proposition}{die}{Propositionen}}%
+                    {{der}{Proposition}{den}{Propositionen}}%
+                    {{der}{Proposition}{der}{Propositionen}},
+    satz        = {nach}{{der}{Satz}{die}{Sätze}}%S\"atze is fine here too
+                    {{den}{Satz}{die}{Sätze}}%    ditto
+                    {{dem}{Satz}{den}{Sätzen}}%   S\"atzen is okay
+                    {{des}{Satzes}{der}{Sätze}},% S\"atze is fine
+  },
+}
+
+% This is added to the above setup done with \xcrefset{names table = ... }.
+\xcrefngermanSetNamesTableEntry{section}{in}
+  {{der}{Abschnitt}{die}{Abschnitte}}
+  {{den}{Abschnitt}{die}{Abschnitte}}
+  {{dem}{Abschnitt}{den}{Abschnitten}}
+  {{des}{Abschnitts}{der}{Abschnitte}} % “des Abschnittes” is also possible
+
+\xcrefngermanSetNamesTableEntry{langtest}{\ss abc}
+  {{der}{Test}{die}{Tests}}
+  {{den}{Test}{die}{Tests}}
+  {{dem}{Test}{den}{Testen}}
+  {{des}{Tests}{der}{Tests}}
+
+\ExplSyntaxOn
+
+\OMIT
+
+\NewDocumentCommand \cs { m }
+  {
+    \texttt
+      {
+        \char_generate:nn { `\\ } { 12 }
+        \tl_to_str:n {#1}
+      }
+  }
+
+% Convenience macros to allow using \cs inside sectioning commands without
+% upsetting hyperref.
+\tl_new:N \g__xcref_test_dumbsectioningcmd_tl
+
+\cs_new_protected:Npn \__xcref_test_dumbsectioningcmd_aux:nnn #1#2#3
+  {
+    \use:c {#1} { \texorpdfstring {#2} {#3} }
+  }
+
+\cs_generate_variant:Nn \__xcref_test_dumbsectioningcmd_aux:nnn { nnV }
+
+% #1: section, chapter, etc.
+% #2: the title; it should be suitable for use inside \edef (expandable)
+%     with the exception of possible \cs or \xcrefPGFOpt calls, which we are
+%     precisely going to take care of.
+%
+% There is no support for the optional argument of the sectioning command
+% nor for the star variant (this command is only for PDF output of test
+% “documents” such as this one, that basically no one will look at).
+\cs_new_protected:Npn \__xcref_test_dumbsectioningcmd:nn #1#2
+  {
+    \group_begin:
+      \def \cs ##1
+        {
+          \exp_not:n { \textbackslash }
+          \tl_to_str:n {##1}
+        }
+      \def \xcrefPGFOpt ##1
+        {
+          \exp_not:n { \texttt { /xcref/##1 } }
+        }
+      \tl_gset:Nx \g__xcref_test_dumbsectioningcmd_tl { #2 }
+    \group_end:
+
+    \__xcref_test_dumbsectioningcmd_aux:nnV {#1} {#2}
+      \g__xcref_test_dumbsectioningcmd_tl
+  }
+
+% Takes two arguments (first: 'section', 'chapter', etc., second: the title)
+\NewDocumentCommand \dumbsectioningcmd { }
+  {
+    \__xcref_test_dumbsectioningcmd:nn
+  }
+
+% Takes one argument: the section title
+\NewDocumentCommand \dumbsection { }
+  {
+    \__xcref_test_dumbsectioningcmd:nn { section }
+  }
+
+\NewDocumentCommand \xcrefPGFOpt { m }
+  {
+    \texttt{ /xcref/#1 }
+  }
+
+\cs_set_protected:Npn \test:n #1
+  {
+    \hbox_set:Nn \l_tmpa_box {#1}
+    \box_show:N \l_tmpa_box
+    \OMIT
+     % Make it easier to validate the saved result by inspecting the PDF output
+    \box_use_drop:N \l_tmpa_box
+    \TIMO
+  }
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\chapter{Material used in the tests}
+
+\section{Ein erster Abschnitt}
+\label{sec-1}
+
+\begin{problem}\label{prob-a}
+Here, we have \verb|\label{prob-a}|.
+\end{problem}
+
+\begin{problem}\label{prob-b}
+Here, we have \verb|\label{prob-b}|.
+\end{problem}
+
+\begin{problem}\label{prob-c}
+Here, we have \verb|\label{prob-c}|.
+\end{problem}
+
+\section{Ein zweiter Abschnitt}
+\label{sec-2}
+
+\begin{problem}\label{prob-d}
+Here, we have \verb|\label{prob-d}|.
+\end{problem}
+
+\begin{satz}\label{satz-a}
+Here, we have \verb|\label{satz-a}|.
+\end{satz}
+
+\begin{satz}\label{satz-b}
+Here, we have \verb|\label{satz-b}|.
+\end{satz}
+
+\section{Ein dritter Abschnitt}
+\label{sec-3}
+
+\begin{satz}\label{satz-c}
+Here, we have \verb|\label{satz-c}|.
+\end{satz}
+
+\begin{proposition}\label{propo}
+Here, we have \verb|\label{propo}|.
+\end{proposition}
+
+\section{Ein vierter Abschnitt}
+\label{sec-4}
+
+\begin{langtest}
+  \label{language-test}
+  Nützlich, um \xcrefPGFOpt{lang for capitalization func} zu testen.
+\end{langtest}
+
+\chapter{The tests}
+
+Note: a bunch of examples sound incorrect from a grammatical point of view; we
+are simply verifying here that the code faithfully does what was requested.
+
+\dumbsection{Basic tests with \cs{xcref}, \cs{xcrefngermanwrapper} and
+  \cs{xcrefngermanWrapper}}
+\ExplSyntaxOn
+\TIMO
+
+\group_begin:
+  \xcrefset { ngerman/case=dat } % whatever---we just need to choose a case
+
+  \TEST { \xcref with~capitalize=false }
+    {
+      \test:n { \xcref[capitalize=false]{sec-1} }
+    }
+
+  \TEST { \gxcref with~no~optional~argument }
+    {
+      \test:n { \gxcref{sec-1} }
+    }
+
+  \TEST { \xcref with~capitalize=true }
+    {
+      \test:n { \xcref[capitalize=true]{sec-1} }
+    }
+
+  \TEST { \xcref with~capitalize }
+    {
+      \test:n { \xcref[capitalize]{sec-1} }
+    }
+
+  \TEST { \gXcref with~no~optional~argument }
+    {
+      \test:n { \gXcref{sec-1} }
+    }
+\group_end:
+
+\OMIT
+\ExplSyntaxOff
+\section{Test of all cases (nominative, accusative, etc.)}
+
+\subsection{Singular}
+\ExplSyntaxOn
+\TIMO
+
+\group_begin:
+  \xcrefset { ngerman/form=article+noun }
+
+  \TEST { article+noun,~nominative }
+    {
+      \test:n { \gxcref[case=nom]{satz-a} }
+    }
+
+  \TEST { article+noun,~accusative }
+    {
+      \test:n { \gxcref[case=acc]{satz-a} }
+    }
+
+  \TEST { article+noun,~dative }
+    {
+      \test:n { \gxcref[case=dat]{satz-a} }
+    }
+
+  \TEST { article+noun,~genitive }
+    {
+      \test:n { \gxcref[case=gen]{satz-a} }
+    }
+
+  \xcrefset { ngerman/preposition=in }
+  \xcrefset { ngerman/form=prep+article+noun }
+
+  \TEST { prep+article+noun,~nominative }
+    {
+      \test:n { \gxcref[case=nom]{satz-a} }
+    }
+
+  \TEST { prep+article+noun,~accusative }
+    {
+      \test:n { \gxcref[case=acc]{satz-a} }
+    }
+
+  \TEST { prep+article+noun,~dative }
+    {
+      \test:n { \gxcref[case=dat]{satz-a} }
+    }
+
+  \TEST { prep+article+noun,~genitive }
+    {
+      \test:n { \gxcref[case=gen]{satz-a} }
+    }
+\group_end:
+
+\OMIT
+\ExplSyntaxOff
+\subsection{Plural}
+\ExplSyntaxOn
+\TIMO
+
+\group_begin:
+  \xcrefset { ngerman/form=article+noun }
+
+  \TEST { article+noun,~nominative }
+    {
+      \test:n { \gxcref[case=nom]{satz-a,satz-b} }
+    }
+
+  \TEST { article+noun,~accusative }
+    {
+      \test:n { \gxcref[case=acc]{satz-a,satz-b} }
+    }
+
+  \TEST { article+noun,~dative }
+    {
+      \test:n { \gxcref[case=dat]{satz-a,satz-b} }
+    }
+
+  \TEST { article+noun,~genitive }
+    {
+      \test:n { \gxcref[case=gen]{satz-a,satz-b} }
+    }
+
+  \xcrefset { ngerman/preposition=in }
+  \xcrefset { ngerman/form=prep+article+noun }
+
+  \TEST { prep+article+noun,~nominative }
+    {
+      \test:n { \gxcref[case=nom]{satz-a,satz-b} }
+    }
+
+  \TEST { prep+article+noun,~accusative }
+    {
+      \test:n { \gxcref[case=acc]{satz-a,satz-b} }
+    }
+
+  \TEST { prep+article+noun,~dative }
+    {
+      \test:n { \gxcref[case=dat]{satz-a,satz-b} }
+    }
+
+  \TEST { prep+article+noun,~genitive }
+    {
+      \test:n { \gxcref[case=gen]{satz-a,satz-b} }
+    }
+\group_end:
+
+\OMIT
+\ExplSyntaxOff
+\section{Test of the default preposition}
+\ExplSyntaxOn
+\TIMO
+
+% Here, the default preposition is “nach” and implies dative
+\TEST { Rely~on~default~prep,~singular }
+  {
+    \test:n { \gxcref{satz-a} }
+  }
+
+\TEST { Rely~on~default~prep,~plural }
+  {
+    \test:n { \gxcref{satz-a,satz-b} }
+  }
+
+% The case associated to certain prepositions via
+% \l_@@_ngerman_case_for_prep_prop (which corresponds to
+% '/xcref/ngerman/prepositions always followed by the same case') overrides
+% /xcref/ngerman/case. This may seem strange at first but is intentional. This
+% way, setting a default case with \xcrefset and explicitly passing
+% /xcref/ngerman/case only when needed requires a minimal amount of work, as
+% prepositions mentioned in \l_@@_ngerman_case_for_prep_prop will always use
+% the correct case, regardless of the ambient “default case” that has been set.
+\TEST { Rely~on~default~prep,~singular }
+  {
+    \test:n { \gxcref[case=gen]{satz-a} }
+  }
+
+\TEST { Rely~on~default~prep,~plural }
+  {
+    \test:n { \gxcref[case=gen]{satz-a,satz-b} }
+  }
+
+\OMIT
+\ExplSyntaxOff
+\section{Tests from the \texttt{ngerman} sample file}
+\ExplSyntaxOn
+\TIMO
+
+\TEST { Single~reference~to~section,~dative,~default~prep }
+  {
+    \test:n { \gxcref[case=dat]{sec-1} }
+  }
+
+\TEST { Single~reference~to~section,~prep=durch }
+  {
+    % Case is accusative due to “durch”
+    \test:n { \gxcref[preposition=durch]{sec-1} }
+  }
+
+\TEST { Multiple~references~to~sections }
+  {
+    \test:n
+      {
+        \gxcref[form=prep+noun, case=dat]{sec-1}~---~
+        \gxcref[form=prep+noun, case=dat]{sec-1,sec-3}~---~
+        \gxcref[form=prep+noun, case=dat]{sec-1,sec-3,sec-2}
+      }
+  }
+
+\group_begin:
+  \xcrefset{ngerman/case=acc}   % accusative by default
+
+  \TEST { Nach~implies~dative }
+    {
+      \test:n
+        {
+          \gxcref[preposition=nach]{prob-a,prob-b}~---~
+          \xcref[hyperlinks=false]{prob-a,prob-b}
+          \nobreakspace \texttt{==} \nobreakspace
+          \xcrefset{hyperlinks=false} % affects the current group
+          \gxcref{prob-a,prob-b}
+        }
+    }
+
+  \TEST { 'noun'~form }
+    {
+      \test:n { \gxcref[form=noun]{prob-a,prob-b} }
+    }
+
+  \TEST { 'article+noun'~form }
+    {
+      \test:n { \gxcref[form=article+noun]{prob-a,prob-b} }
+    }
+
+  \TEST { 'prep+noun'~form }
+    {
+      \test:n { \gxcref[form=prep+noun]{prob-a,prob-b} }
+    }
+
+  \TEST { 'prep+article+noun'~form }
+    {
+      \test:n
+        {
+          \gxcref[form=prep+article+noun]{prob-a,prob-b}~\texttt{==}~
+          \gxcref{prob-a,prob-b}
+        }
+    }
+
+  \TEST { Mixed~references,~form=noun,~default~prep }
+    {
+      \test:n { \gxcref[form=noun]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b} }
+    }
+
+  \TEST { Mixed~references,~form=article+noun,~default~prep }
+    {
+      \test:n
+        {
+          \gxcref[form=article+noun]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b}
+        }
+    }
+
+  \TEST { Mixed references, default form and prep }
+    {
+      % Satz uses “nach” by default, which imposes dative. On the other hand,
+      % Problem is used in accusative here because of the above
+      % \xcrefset{ngerman/case=acc} call.
+      \test:n { \gxcref{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b} }
+    }
+
+  \TEST { Mixed~references,~default~form,~explicit~prep }
+    {
+      % This time, the preposition “in” is used for all nouns, including Satz;
+      % therefore, everything is in accusative due to the above
+      % \xcrefset{ngerman/case=acc} call.
+      \test:n
+        { \gxcref[preposition=in]{prob-a,prob-b,prob-c,prob-d,satz-a,satz-b} }
+    }
+
+  \TEST { Mixed~references,~default~form~and~prep,~capitalize=true }
+    {
+      \test:n { \gXcref{prob-a,prob-b,prob-c,prob-d,propo,satz-a,satz-b} }
+    }
+
+  \TEST { Simple~reference~with~explicit~prep~(von) }
+    {
+      \test:n { \gxcref[preposition=von]{satz-a} }
+    }
+
+  \TEST { Simple~reference~with~explicit~prep~(aus) }
+    {
+      \test:n { \gxcref[preposition=aus]{satz-b} }
+    }
+
+  \TEST { Simple~reference~with~explicit~prep~(durch) }
+    {
+      \test:n { \gxcref[preposition=durch]{satz-a} }
+    }
+
+\group_end:
+
+\OMIT
+\ExplSyntaxOff
+\section{Test generic language-related options}
+
+The output would be different with Unicode-based engines (LuaTeX, XeTeX) and a
+font that has ``großes-Eszett'', the capital variant of \verb|\ss| (as can be
+obtained for instance with \verb|\usepackage{libertine}|).
+\medskip
+
+\ExplSyntaxOn
+\TIMO
+
+\TEST { Test~for~\xcrefPGFOpt{lang~for~capitalization~func} }
+  {
+    \OMIT
+    \cs_new:Npn \xcref_test_map_func:n #1
+      {
+        % 'de' is not a special value currently (2019-10-15) for
+        % \tl_mixed_case:nn, so this should have no effect apart from
+        % overriding the default setting built in xcref.
+        \str_if_eq:nnTF {#1} { ngerman } { de } { }
+      }
+
+    \cs_new:Npn \xcref_test_map_func_alt:n #1
+      {
+        % When \tl_mixed_case:nn is passed the 'de-alt' language, the Eszett
+        % gets capitalized as “ein großes Eszett”. Well, I've had this working
+        % with the libertine font package under LuaTeX or XeTeX. With pdfTeX,
+        % capitalizing \ss seems to always yield SS, which is thus what we are
+        % going to test here.
+        \str_if_eq:nnTF {#1} { ngerman } { de-alt } { }
+      }
+
+    \TIMO
+    \xcrefset { ngerman/case=nom } % whatever---we just need to choose a case
+    \xcrefset { ngerman/form = prep+article+noun }
+    \group_begin:
+      \xcrefset { lang~for~capitalization~func = \xcref_test_map_func:n }
+      % \tl_mixed_case:nn uses the 'de' language
+      \test:n { \gxcref{language-test}~---~\gXcref{language-test} }
+    \group_end:
+
+    \group_begin:
+      \xcrefset { lang~for~capitalization~func = \xcref_test_map_func_alt:n }
+      % \tl_mixed_case:nn uses the 'de-alt' language
+      \test:n { \gxcref{language-test}~---~\gXcref{language-test} }
+    \group_end:
+
+    % \tl_mixed_case:nn uses the language mapped to ngerman according
+    % to the xcref defaults.
+    \test:n { \gxcref{language-test}~---~\gXcref{language-test} }
+  }
+
+\OMIT
+% Without \ExplSyntaxOff here, one gets “LaTeX Warning: Label(s) may have
+% changed. Rerun to get cross-references right.”.
+\ExplSyntaxOff
+\end{document}
