@@ -51,6 +51,8 @@
     \upshape Ti\textit{k}Z
     \group_end:
   }
+\NewDocumentCommand \pkgOpt { m }
+  { \texttt{#1} }
 
 % Essentially copied from l3doc's texnote environment
 \NewDocumentEnvironment { codersnote } { }
@@ -282,9 +284,48 @@
 %
 % \section{Usage}
 %
-% XXX This is still incomplete: the package options and PGF keys are not
-% documented yet, except with the comments in
-% section~\ref{sec:implementation}.
+% XXX This is still incomplete: the PGF keys are not documented yet, except
+% with the comments in section~\ref{sec:implementation}.
+%
+% \subsection{Package options}
+% \label{sec:package-options}
+%
+% The \pkg{xcref} package accepts only one fixed option, namely
+% \pkgOpt{languages}. The other options are names of language modules, such as
+% |french| and |ngerman|. The \pkgOpt{languages} option accepts a
+% comma-separated list of languages, therefore the following are equivalent:
+% \begin{itemize}
+% \item
+% \begin{verbatim}
+% \usepackage[french, ngerman]{xcref}
+% \end{verbatim}
+% \item
+% \begin{verbatim}
+% \usepackage[languages={french, ngerman}]{xcref}
+% \end{verbatim}
+% \item
+% \begin{verbatim}
+% \usepackage{xcref}
+% \xcrefusemodules{french, ngerman}
+% \end{verbatim}
+% \end{itemize}
+%
+% Language modules are loaded in the specified order in each of these three
+% examples, but no module is loaded twice. Therefore,
+% \begin{verbatim}
+% \usepackage[ngerman,french,ngerman]{xcref}
+% \end{verbatim}
+% will load the \texttt{ngerman} module followed by the \texttt{french} module
+% and stop there.
+%
+% Unless you intend to write \pkg{xcref}-managed cross-references in several
+% languages, you only need to load one language module, and its name can very
+% well be picked from the \tn[no-index]{documentclass} options. The language
+% in which cross-references are written in the document is not determined by
+% the load order of language modules, but by the current \pkg{babel} language
+% at that point in the document or by the \xcrefPGFOpt{lang} PGF key if
+% specified (which then takes precedence over the current \pkg{babel}
+% language).
 %
 % \subsection{Generic macros}
 %
