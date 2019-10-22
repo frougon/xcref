@@ -78,59 +78,24 @@
       }
   }
 
-% Convenience macros to allow using \cs inside sectioning commands without
-% upsetting hyperref.
-\tl_new:N \g__xcref_test_dumbsectioningcmd_tl
-
-\cs_new_protected:Npn \__xcref_test_dumbsectioningcmd_aux:nnn #1#2#3
-  {
-    \use:c {#1} { \texorpdfstring {#2} {#3} }
-  }
-
-\cs_generate_variant:Nn \__xcref_test_dumbsectioningcmd_aux:nnn { nnV }
-
-% #1: section, chapter, etc.
-% #2: the title; it should be suitable for use inside \edef (expandable)
-%     with the exception of possible \cs or \xcrefPGFOpt calls, which we are
-%     precisely going to take care of.
-%
-% There is no support for the optional argument of the sectioning command
-% nor for the star variant (this command is only for PDF output of test
-% “documents” such as this one, that basically no one will look at).
-\cs_new_protected:Npn \__xcref_test_dumbsectioningcmd:nn #1#2
-  {
-    \group_begin:
-      \def \cs ##1
-        {
-          \exp_not:n { \textbackslash }
-          \tl_to_str:n {##1}
-        }
-      \def \xcrefPGFOpt ##1
-        {
-          \exp_not:n { /xcref/##1 }
-        }
-      \tl_gset:Nx \g__xcref_test_dumbsectioningcmd_tl { #2 }
-    \group_end:
-
-    \__xcref_test_dumbsectioningcmd_aux:nnV {#1} {#2}
-      \g__xcref_test_dumbsectioningcmd_tl
-  }
-
-% Takes two arguments (first: 'section', 'chapter', etc., second: the title)
-\NewDocumentCommand \dumbsectioningcmd { }
-  {
-    \__xcref_test_dumbsectioningcmd:nn
-  }
-
-% Takes one argument: the section title
-\NewDocumentCommand \dumbsection { }
-  {
-    \__xcref_test_dumbsectioningcmd:nn { section }
-  }
-
 \NewDocumentCommand \xcrefPGFOpt { m }
   {
-    \texttt{ /xcref/#1 }
+    \texttt { /xcref/#1 }
+  }
+
+% Allow using \cs and other commands inside the arguments of sectioning
+% commands without upsetting hyperref.
+\pdfstringdefDisableCommands
+  {
+    \RenewExpandableDocumentCommand \cs { m }
+      {
+        \textbackslash \tl_to_str:n {#1}
+      }
+
+    \RenewExpandableDocumentCommand \xcrefPGFOpt { m }
+      {
+        /xcref/#1
+      }
   }
 
 \cs_set_protected:Npn \test:n #1
@@ -203,7 +168,7 @@ Here, we have \verb|\label{propo}|.
 Note: a bunch of examples sound incorrect from a grammatical point of view; we
 are simply verifying here that the code faithfully does what was requested.
 
-\dumbsection{Basic tests with \cs{xcref}, \cs{xcrefngermanwrapper} and
+\section{Basic tests with \cs{xcref}, \cs{xcrefngermanwrapper} and
   \cs{xcrefngermanWrapper}}
 \ExplSyntaxOn
 \TIMO
