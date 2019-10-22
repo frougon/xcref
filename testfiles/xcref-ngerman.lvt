@@ -107,7 +107,7 @@
         }
       \def \xcrefPGFOpt ##1
         {
-          \exp_not:n { \texttt { /xcref/##1 } }
+          \exp_not:n { /xcref/##1 }
         }
       \tl_gset:Nx \g__xcref_test_dumbsectioningcmd_tl { #2 }
     \group_end:
