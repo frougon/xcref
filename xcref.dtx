@@ -32,9 +32,11 @@
 \usepackage{xcref}
 \usepackage{xparse}
 \usepackage{amsmath}
+\usepackage{xcolor}
 
 % Let's define a few commands and environments used in the documentation
 \ExplSyntaxOn
+\makeatletter
 
 % l3doc's \file command currently causes errors (on TL 2019)
 \RenewExpandableDocumentCommand \file { m }
@@ -65,6 +67,363 @@
   {
     \vspace{3mm}
   }
+
+% ****************************************************************************
+% *                         The 'pgfkey' environment                         *
+% ****************************************************************************
+\definecolor { xcrefdoc-keyname-in-def } { HTML } { 9400d3 }
+\definecolor { xcrefdoc-keyname-in-ref } { HTML } { 48467c }
+\colorlet { xcrefdoc-keyvalue } { black }
+
+% Wrap a few TeX primitives we need
+\cs_new_protected:Npn \__xcrefdoc_penalty:n #1
+  {
+    \tex_penalty:D #1 \scan_stop:
+  }
+
+\cs_new_protected:Npn \__xcrefdoc_nobreak:
+  {
+    \__xcrefdoc_penalty:n { 10000 }
+  }
+
+\cs_new_protected:Npn \__xcrefdoc_set_interlinepenalty:n #1
+  {
+    \tex_interlinepenalty:D = #1 \scan_stop:
+  }
+
+\cs_new_protected:Npn \__xcrefdoc_set_endlinechar:n #1
+  {
+    \tex_endlinechar:D = #1 \scan_stop:
+  }
+
+\cs_new_protected:Npn \__xcrefdoc_append_to_everypar:n #1
+  {
+    \tex_everypar:D = \exp_after:wN
+      {
+        \__xcrefdoc_the:w \tex_everypar:D
+        #1
+      }
+  }
+
+\cs_set_eq:NN \__xcrefdoc_par: \tex_par:D
+\cs_set_eq:NN \__xcrefdoc_parfillskip_skip \tex_parfillskip:D
+\cs_set_eq:NN \__xcrefdoc_parindent_dim \tex_parindent:D
+\cs_set_eq:NN \__xcrefdoc_ignorespaces: \tex_ignorespaces:D
+\cs_set_eq:NN \__xcrefdoc_scantokens:n \tex_scantokens:D
+\cs_set_eq:NN \__xcrefdoc_the:w \tex_the:D
+\cs_set_eq:NN \__xcrefdoc_unpenalty: \tex_unpenalty:D
+
+% Options for use in the second argument of the 'pgfkey' environment
+\keys_define:nn { xcrefdoc/pgfkey }
+  {
+    annotation~format .code:n =
+      {
+         \cs_set:Npn \__xcrefdoc_pgfkey_format_annotation:n ##1 {#1}
+      },
+    annotation~format .value_required:n = true,
+  }
+
+% How to format the annotation for a key. What we call “annotation” here is
+% a phrase such as “no default, initially empty”.
+\cs_new_protected:Npn \__xcrefdoc_pgfkey_format_annotation:n #1
+  { ( {#1} ) }
+
+% This 'pgfkey' environment supports a syntax similar to the tcolorbox
+% 'docKey' environment (from the tcolorbox 'documentation' library), however
+% the options handled in the third argument of \xcrefdoc_pgfkey_start:Nnnnnnn
+% are completely different, and so is the implementation. The star form means
+% “don't add this key to the index”. See \xcrefdoc_pgfkey_start:Nnnnnnn for a
+% description of the arguments.
+\NewDocumentEnvironment { pgfkey } { }
+  {
+    % We want to be able to use | to describe alternatives in the arguments of
+    % \xcrefdoc_pgfkey_start_env, which *appear* as the arguments of this
+    % environment.
+    \DeleteShortVerb \"
+    \DeleteShortVerb \|
+    \xcrefdoc_pgfkey_start_env
+  }
+  { \xcrefdoc_pgfkey_end: }
+
+\NewDocumentEnvironment { pgfkey* } { }
+  {
+    \DeleteShortVerb \"
+    \DeleteShortVerb \|
+    \xcrefdoc_pgfkey_start_env *
+  }
+  { \xcrefdoc_pgfkey_end: }
+
+\NewDocumentCommand \xcrefdoc_pgfkey_start_env { s O{} O{} O{} m m +m }
+  {
+    \xcrefdoc_pgfkey_start:Nnnnnnn #1 {#2} {#3} {#5} {#6} {#7} {#4}
+  }
+
+% #1: anchor name
+% #2: text
+\cs_new_protected:Npn \__xcrefdoc_hypertarget:nn #1#2
+  {
+    \hypertarget {#1} {#2}
+  }
+
+% #1: anchor name
+% #2: text
+\cs_new_protected:Npn \__xcrefdoc_hyperlink:nn #1#2
+  {
+    \hyperlink {#1} {#2}
+  }
+
+\cs_generate_variant:Nn \__xcrefdoc_hypertarget:nn { x }
+\cs_generate_variant:Nn \__xcrefdoc_hyperlink:nn { x }
+
+% Start a \list item; print a key name/path and the value syntax, if any
+% #1: key name or path
+% #2: key value
+% #3: disambigution string (only useful if #1 is not a full path)
+\cs_new_protected:Npn \xcrefdoc_pgfkey_start_item:nnn #1#2#3
+  {
+    \item []
+    % Remove the \penalty 0 added (via \everypar) by \@item after \box\@labels
+    \__xcrefdoc_append_to_everypar:n { \__xcrefdoc_unpenalty: }
+    \group_begin:              % group ended in \xcrefdoc_pgfkey_start:Nnnnnnn
+    \mode_leave_vertical:
+    \__xcrefdoc_set_interlinepenalty:n { 10000 }
+    \skip_zero:N \__xcrefdoc_parfillskip_skip
+    \raisebox { 0.9\baselineskip } [ 0pt ] [ 0pt ]
+      {
+        \__xcrefdoc_hypertarget:xn { \tl_to_str:n { xcrefdoc@pgfkey@#1@#3 } }
+          { }
+      }
+    \xcrefdoc_pgfkey_format_key:n {#1}
+    \xcrefdoc_pgfkey_format_value:n {#2}
+  }
+
+\cs_new_protected:Npn \__xcrefdoc_pgfkey_verb_like:n #1
+  {
+    \cs_set_eq:Nc \do { @makeother }
+    \dospecials
+    % Make spaces behave normally, not like the “visible space”
+    \char_set_catcode_space:n { `~ }
+    \use:c { @noligs }
+    % Neutralize the final end-of-line of the pseudo-file internally read by
+    % \scantokens (of course, we assume that #1 consists of only one line).
+    \__xcrefdoc_set_endlinechar:n { -1 }
+    \__xcrefdoc_scantokens:n {#1}
+  }
+
+\cs_new_protected:Npn \xcrefdoc_pgfkey_format_key:n #1
+  {
+    \textcolor { xcrefdoc-keyname-in-def }
+      {
+        \ttfamily \bfseries
+        \__xcrefdoc_pgfkey_verb_like:n {#1}
+      }
+  }
+
+\cs_new_protected:Npn \xcrefdoc_pgfkey_format_value:n #1
+  {
+    \textcolor { xcrefdoc-keyvalue } { \ttfamily #1 }
+  }
+
+\cs_generate_variant:Nn \xcrefdoc_pgfkey_start_item:nnn { V }
+
+% Assembled key path
+\str_new:N \l__xcrefdoc_pgfkey_start_key_str
+
+% Start macro for the 'pgfkey' environment.
+%
+% The technique used for the paragraph containing the key name/path, value and
+% annotation is inspired by the \signed macro described in the TeXbook p. 106.
+%
+% #1: boolean variable (\c_true_bool or \c_false_bool). True means “don't
+%     index” and corresponds to the star form of the 'pgfkey' environment.
+% #2: key base path (a slash is automatically prepended if this is non-empty)
+% #3: options (only 'annotation format' is supported for now)
+% #4: key leaf name, relative to the base path
+% #5: =\marg{value} or something like that (printed right after the key name)
+% #6: annotation for the key (printed flush right to the margin)
+% #7: disambiguation string used in the anchor name. This is useful in case the
+%     key is not given by full path and might have the same name as another key.
+\cs_new_protected:Npn \xcrefdoc_pgfkey_start:Nnnnnnn #1#2#3#4#5#6#7
+  {
+    \group_begin:
+    \keys_set:nn { xcrefdoc/pgfkey } {#3}
+    \list { }
+      {
+        \dim_set:Nn { \leftmargin } { 2.5em } % or leave this to the class?
+        \dim_zero:N \rightmargin
+        \dim_zero:N \labelwidth
+        \dim_zero:N \labelsep
+        \dim_set:Nn { \itemindent } { -\leftmargin }
+        \dim_zero:N \listparindent
+      }
+
+    \str_set:Nx \l__xcrefdoc_pgfkey_start_key_str
+      {
+        \tl_if_blank:nTF {#2}
+          { \tl_to_str:n {#4} }
+          { \tl_to_str:n {/#2/#4} }
+      }
+    % Print the key and value syntax, if any
+    \xcrefdoc_pgfkey_start_item:Vnn \l__xcrefdoc_pgfkey_start_key_str {#5} {#7}
+
+    \bool_if:NF #1 { \xcrefdoc_pgfkey_add_to_index: }
+
+    \__xcrefdoc_nobreak:
+    \skip_horizontal:n { 0pt plus 1fil }
+    % We prefer having the annotation on the same line as the key, but if the
+    % key is extremely long, the annotation may be postponed to the next line.
+    \__xcrefdoc_penalty:n { 50 }
+    % Ensure some minimal horizontal space between the key and its annotation.
+    \skip_horizontal:n { 2em }
+    \hbox:n {}   % make sure the following \penalty and glue won't be discarded
+    \__xcrefdoc_nobreak:
+    \skip_horizontal:n { 0pt plus 1fil }
+    \__xcrefdoc_pgfkey_format_annotation:n {#6}
+    \__xcrefdoc_par:
+    % End the group started in \xcrefdoc_pgfkey_start_item:n. This restores
+    % \interlinepenalty and \parfillskip.
+    \group_end:
+    \__xcrefdoc_nobreak:
+    \skip_vertical:n { 0.5ex plus .05ex }
+    % This can be used to make sure the key description starts with no
+    % paragraph indentation, in case one has chosen a non-zero \listparindent.
+    % \group_begin:
+    %   \dim_zero:N \__xcrefdoc_parindent_dim
+    %   \mode_leave_vertical:
+    % \group_end:
+    % Reinstate the shortverb chars we disabled when starting the environment
+    \MakeShortVerb \"
+    \MakeShortVerb \|
+    \__xcrefdoc_ignorespaces:
+  }
+
+\cs_new_protected:Npn \xcrefdoc_pgfkey_end:
+  {
+    \endlist
+    \group_end:
+  }
+
+\prg_generate_conditional_variant:Nnn \tl_if_head_eq_meaning:nN { V } { T }
+\cs_generate_variant:Nn \__codedoc_special_index_set:Nn { NV }
+
+\str_new:N \l__xcrefdoc_pati_escaped_for_sorting_str
+\tl_new:N \l__xcrefdoc_pati_escaped_for_typesetting_tl
+
+% XXX We use two private macros of l3doc here (those named \__codedoc_*). This
+% has been tested with l3doc released on 2019-10-24.
+\cs_new_protected:Npn \xcrefdoc_pgfkey_add_to_index:
+  {
+    \str_set_eq:NN \l__xcrefdoc_pati_escaped_for_sorting_str
+      \l__xcrefdoc_pgfkey_start_key_str
+    % Escape special characters in the sort key used for indexing purposes
+    \__codedoc_quote_special_char:N \l__xcrefdoc_pati_escaped_for_sorting_str
+    % We'll do the same for the token list used for typesetting the entry, but
+    % let's first replace space tokens by control spaces. As a consequence,
+    % “visible spaces” won't be used for the PGF key in the index and long
+    % keys may be broken across lines.
+    \tl_set_eq:NN \l__xcrefdoc_pati_escaped_for_typesetting_tl
+      \l__xcrefdoc_pgfkey_start_key_str
+    \tl_replace_all:Nnn \l__xcrefdoc_pati_escaped_for_typesetting_tl { ~ }
+      { \use:c { ~ } }
+    % Now escape the special characters
+    \__codedoc_special_index_set:NV \l__xcrefdoc_pati_escaped_for_typesetting_tl
+      \l__xcrefdoc_pati_escaped_for_typesetting_tl
+
+    % Drop a 'hypdoc' anchor (hyperlink target)
+    \use:c { HD@target }
+    % Add an index entry that contains a hyperlink pointing to the anchor.
+    % This entry is sorted under the letter P, as stipulated by the first
+    % argument. The PGF key is added as a sub-entry of the top-level entry
+    % “PGF keys”.
+    \xcrefdoc_add_to_index_aux:n
+      {
+        % Sort key for the top-level entry
+        PGF~keys
+        \actualchar
+        % Markup for the top-level entry. Get a ':' with catcode 12 to be
+        % super clean (it would still work without the call to \tl_to_str:n).
+        PGF~keys \tl_to_str:n { : }
+        \levelchar
+      }
+
+    % Prepare to add a second index entry for the same PGF key
+    \str_set_eq:NN \l__xcrefdoc_pati_escaped_for_sorting_str
+      \l__xcrefdoc_pgfkey_start_key_str
+    % If the first token of \l__xcrefdoc_pati_escaped_for_sorting_str is a
+    % slash character, remove it.
+    \tl_if_head_eq_meaning:VNT \l__xcrefdoc_pati_escaped_for_sorting_str /
+      {
+        \str_set:Nx \l__xcrefdoc_pati_escaped_for_sorting_str
+          { \str_tail:N \l__xcrefdoc_pati_escaped_for_sorting_str }
+      }
+    \__codedoc_quote_special_char:N \l__xcrefdoc_pati_escaped_for_sorting_str
+
+    % Add an index entry sorted according to the “PGF key with its leading
+    % slash removed” (e.g., sorted as xcref/capitalize if the PGF key is
+    % /xcref/capitalize). There is no sub-entry this time.
+    \xcrefdoc_add_to_index_aux:n { }
+  }
+
+% Add an index entry for a PGF key (\l__xcrefdoc_pati_escaped_for_sorting_str
+% and \l__xcrefdoc_pati_escaped_for_typesetting_tl are used). The argument of
+% \index, and thus also the argument of \xcrefdoc_add_to_index_aux:n, are
+% subject to recursive expansion as in \protected@write \@indexfile {} {...}
+% (this is done by \@wrindex).
+%
+% #1: tokens inserted at the beginning of the argument of \index
+\cs_new_protected:Npn \xcrefdoc_add_to_index_aux:n #1
+  {
+    \index
+      {
+        #1
+        \l__xcrefdoc_pati_escaped_for_sorting_str % sort key
+        \actualchar
+          { % LaTeX markup
+            \token_to_str:N \verbatim@font \c_space_tl
+            \l__xcrefdoc_pati_escaped_for_typesetting_tl
+          }
+        \encapchar
+        % Produce the page number in 'main' style (underlined), with hyperlink.
+        hdclindex { \__xcrefdoc_the:w \use:c { c@HD@hypercount } } { main }
+      }
+  }
+
+% How to format references to PGF keys produced by \xcrefdoc_pgfkeyref:nn
+%
+% #1: key name or path
+\cs_new_protected:Npn \xcrefdoc_format_pgfkeyref:n #1
+  {
+    \group_begin:
+      \ttfamily \__xcrefdoc_pgfkey_verb_like:n {#1}
+    \group_end:
+  }
+
+% Write a hyperref-based reference (link) to key #2. #1 is a disambiguation
+% string for the anchor name.
+\cs_new_protected:Npn \xcrefdoc_pgfkeyref:nn #1#2
+  {
+    \group_begin:
+      \hypersetup { linkcolor = xcrefdoc-keyname-in-ref }
+      \__xcrefdoc_hyperlink:xn { \tl_to_str:n { xcrefdoc@pgfkey@#2@#1 } }
+        { \xcrefdoc_format_pgfkeyref:n {#2} }
+    \group_end:
+  }
+
+% Reference a PGF key defined somewhere with the 'pgfkey' environment or its
+% starred form. Since the full path to a key should be enough to identify it,
+% specifying a non-empty optional argument should only be useful for keys that
+% have been presented without the full path (which is probably a bad idea,
+% except maybe with deep hierarchies in the pgfkeys namespace...).
+%
+% #1: disambiguation string for the anchor name
+% #2: key name or path
+\NewDocumentCommand \pgfkeyRef { O{} m }
+  {
+    \xcrefdoc_pgfkeyref:nn {#1} {#2}
+  }
+% End of the code for the 'pgfkey' environment and related commands
+
+\makeatother
 \ExplSyntaxOff
 
 \DoNotIndex{\ , \bool_gset_false:N, \bool_gset_true:N, \bool_set_false:N,
