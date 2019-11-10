@@ -1141,7 +1141,7 @@
 %   \item an \pkg{xcref} language name
 %   \end{arguments}
 %    \begin{macrocode}
-\cs_set:Npn \xcref_lang_for_tl_mixed_case:n #1
+\cs_new:Npn \xcref_lang_for_tl_mixed_case:n #1
   {
     \str_case:nnF {#1}
       {
@@ -1376,7 +1376,7 @@
 % behave as in plain \TeX{} and \LaTeXe{}.
 %    \begin{macrocode}
 \group_begin:
-  \char_set_catcode_space:n {`\ }
+  \char_set_catcode_space:n { `~ }
 %    \end{macrocode}
 %
 % \begin{variable}{\g_@@_french_prep_and_article_prop}
