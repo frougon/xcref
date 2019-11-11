@@ -42,7 +42,7 @@
 \RenewExpandableDocumentCommand \file { m }
   { \texttt{#1} }
 \NewDocumentCommand \xcrefPGFOpt { m }
-  { \texttt{/xcref/#1} }
+  { \pgfkeyRef{/xcref/#1} }
 \NewDocumentCommand \xcrefPGFPath { m } % for PGF “directories”
   { \texttt{/xcref/#1} }
 \NewDocumentCommand \xcrefPGFRoot { }
