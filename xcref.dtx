@@ -525,30 +525,39 @@
 % \subsection{Generic}
 %
 % \begin{function}{\xcref_lang_for_tl_mixed_case:n,
-%                  \xcref_lang_for_tl_mixed_case:V}
+%                  \xcref_lang_for_tl_mixed_case:V,
+%                  \xcref_lang_for_tl_mixed_case_default:n,
+%                  \xcrefDefaultMappingForTlMixedCase}
 %   \begin{syntax}
 %     \cs{xcref_lang_for_tl_mixed_case:n} \Arg{language}
+%     \cs{xcref_lang_for_tl_mixed_case_default:n} \Arg{language}
+%     \cs{xcrefDefaultMappingForTlMixedCase} \marg{language}
 %   \end{syntax}
 %   When references have to be capitalized (cf.~\xcrefPGFOpt{capitalize}), the
 %   \pkg{expl3} function \cs{tl_mixed_case:nn} is used. This function accepts
 %   a \enquote{language code} argument to adapt to each language, because this
-%   process can vary depending on the language (for instance, I read that in
-%   Dutch, capitalisation of \texttt{ij} at the beginning of mixed cased input
-%   produces \texttt{IJ} rather than \texttt{Ij}). However, the language codes
-%   used by \cs{tl_mixed_case:nn} don't coincide with \pkg{xcref}'s
-%   language-specific module names (which currently are identical to
-%   \pkg{babel} language names). Therefore, we provide a default conversion
-%   function, namely \cs{xcref_lang_for_tl_mixed_case:n}. It accepts as
-%   argument an \pkg{xcref} language module name (e.g., \texttt{ngerman}) and
-%   expands to a language code suitable for use with \cs{tl_mixed_case:nn}.
+%   process can vary depending on the language (for instance, it appears that
+%   in Dutch, capitalisation of \texttt{ij} at the beginning of mixed cased
+%   text produces \texttt{IJ} rather than \texttt{Ij}). However, the language
+%   codes used by \cs{tl_mixed_case:nn} don't coincide with \pkg{xcref}'s
+%   language-specific module names---which currently are identical to
+%   \pkg{babel} language names. Therefore, \pkg{xcref} uses a function, namely
+%   \cs{xcref_lang_for_tl_mixed_case:n}, to map \pkg{xcref} language module
+%   names to suitable language codes for use with \cs{tl_mixed_case:nn}. By
+%   default, this function is \tn{let}-equal to
+%   \cs{xcref_lang_for_tl_mixed_case_default:n}, or
+%   \cs{xcrefDefaultMappingForTlMixedCase} in the \LaTeXe{} naming style. It
+%   accepts one argument which must be an \pkg{xcref} language module name
+%   (e.g., \texttt{ngerman}) and expands (as in \tn{edef}) to a language code
+%   suitable for use with \cs{tl_mixed_case:nn}.
 %
-%   Should the default mapping be incomplete, you should probably contact
-%   the package author to suggest an update. In the meantime, you may
-%   redefine the function to suit your needs or alternatively use the
+%   Should the mapping provided by \cs{xcref_lang_for_tl_mixed_case_default:n}
+%   be incomplete, you should probably contact the package maintainer and
+%   suggest an update. However, it is also possible to change the meaning of
+%   \cs{xcref_lang_for_tl_mixed_case:n} (\emph{i.e.,} redefine it) in order to
+%   use the mapping function of your choice. For this, simply use the
 %   \xcrefPGFOpt{lang for capitalization func} option to point to the
-%   expandable command of your choice (the second way should be easier unless
-%   you know how to use \cs[no-index]{ExplSyntaxOn} and
-%   \cs[no-index]{ExplSyntaxOff}).
+%   expandable macro of your choice.
 % \end{function}
 %
 % \subsection{Language-specific}
@@ -1133,15 +1142,26 @@
 % \end{macro}
 %
 % \begin{macro}{\xcref_lang_for_tl_mixed_case:n,
-%               \xcref_lang_for_tl_mixed_case:V}
-%   Default mapping from \pkg{xcref} language names to language codes suitable
-%   for use with \cs{tl_mixed_case:nn}. Users may override it in case it is
-%   incomplete.
+%               \xcref_lang_for_tl_mixed_case:V,
+%               \xcref_lang_for_tl_mixed_case_default:n,
+%               \xcrefDefaultMappingForTlMixedCase}
+%   \cs{xcref_lang_for_tl_mixed_case_default:n} is the default mapping from
+%   \pkg{xcref} language names to language codes suitable for use with
+%   \cs{tl_mixed_case:nn}. Users may use \xcrefPGFOpt{lang for capitalization
+%   func} in order to point to a different mapping function in case
+%   \cs{xcref_lang_for_tl_mixed_case_default:n} doesn't do what they want.
+%   Calling this key simply redefines \cs{xcref_lang_for_tl_mixed_case:n} to
+%   point to the specified macro. At any time, the current mapping is given by
+%   \cs{xcref_lang_for_tl_mixed_case:n}.
+%   \cs{xcref_lang_for_tl_mixed_case_default:n} is the initial
+%   (\enquote{default}) mapping function.
+%   \cs{xcrefDefaultMappingForTlMixedCase} is just another name for this
+%   function that complies with the \LaTeXe{} naming conventions.
 %   \begin{arguments}
 %   \item an \pkg{xcref} language name
 %   \end{arguments}
 %    \begin{macrocode}
-\cs_new:Npn \xcref_lang_for_tl_mixed_case:n #1
+\cs_new:Npn \xcref_lang_for_tl_mixed_case_default:n #1
   {
     \str_case:nnF {#1}
       {
@@ -1153,6 +1173,11 @@
       }
       {#1}                      % pass through for all other cases
   }
+
+\cs_new_eq:NN \xcref_lang_for_tl_mixed_case:n
+              \xcref_lang_for_tl_mixed_case_default:n
+\cs_new_eq:NN \xcrefDefaultMappingForTlMixedCase
+              \xcref_lang_for_tl_mixed_case_default:n
 
 \cs_generate_variant:Nn \xcref_lang_for_tl_mixed_case:n { V }
 %    \end{macrocode}
