@@ -16,8 +16,8 @@ changed (for instance, from chapter to section or theorem to proposition).
 ## Release notes
 
 This is an alpha release. Some interfaces may change if they prove to be
-suboptimal. The documentation isn't finished. The code has received reasonable
-testing but might still have bugs.
+suboptimal. The documentation isn't quite finished. The code has received
+reasonable testing but might still have bugs.
 
 If you think the interface (API) could be improved, please submit your ideas.
 If you are a native speaker of one of the languages for which a
@@ -46,10 +46,11 @@ a similar structure, but the former is probably a bit simpler.
 
 ## Documentation
 
-The `xcref` manual can be produced by running `l3build doc` from the directory
-containing `build.lua` and `xcref.dtx`. The result is an `xcref.pdf` file. It
-is not complete yet, but along with the `.tex` files present in the `examples`
-directory, that should be enough to get you started.
+The [xcref manual](https://github.com/frougon/xcref/wiki/files/xcref.pdf) is
+not quite complete yet, but along with the `.tex` files present in the
+`examples` directory, that should be enough to get you started. It can be
+built from source by running `l3build doc` from the directory containing
+`build.lua` and `xcref.dtx`.
 
 ## Installation
 
