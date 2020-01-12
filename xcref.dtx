@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 % -*- coding: utf-8 -*-
 %
-% File: xcref.dtx Copyright (C) 2019  Florent Rougon
+% File: xcref.dtx Copyright (C) 2019, 2020  Florent Rougon
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -643,9 +643,6 @@
 %
 % \section{Usage}
 %
-% XXX This is still incomplete: the PGF keys are not documented yet, except
-% with the comments in section~\ref{sec:implementation}.
-%
 % \subsection{Package options}
 % \label{sec:package-options}
 %
@@ -685,6 +682,292 @@
 % at that point in the document or by the \xcrefPGFOpt{lang} PGF key if
 % specified (which then takes precedence over the current \pkg{babel}
 % language).
+%
+% \subsection{PGF keys}
+%
+% The options defined in this section are managed by \pkg{pgfkeys}. In what
+% follows, they will be referred to as \emph{PGF keys}, or simply \emph{keys}.
+% These options can be used in:
+% \begin{itemize}
+% \item the optional argument of \cs{xcref} (first argument of \cs{xcref:nn});
+% \item the argument of \cs{xcrefset} (and thus of \cs{xcref_set:n}).
+% \end{itemize}
+%
+% \subsubsection{Generic}
+%
+% \begin{pgfkey}[xcref]{capitalize}{=true|false}{default \texttt{true},
+%                                                initially \texttt{false}}
+%   When set to |true|, causes references to start with a capital letter.
+%   Capitalization can be inhibited for specific parts of a reference text
+%   by means of macros listed via \pgfkeyRef{/xcref/functions for preventing
+%   auto case change}.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref]{hyperlinks}{=true|false}{default \texttt{true},
+%                                                initially \texttt{true}}
+%   When \pkg{hyperref} is loaded, the value |true| causes \pkg{xcref} to use
+%   hyperlinks in references.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref]{lang}{=\meta{language}}{no default, initially empty}
+%   Determine the language in which references are to be typeset. This doesn't
+%   cause \pkg{xcref} to change the current \pkg{babel} or \pkg{polyglossia}
+%   language---this aspect is entirely up to you. \meta{language} should be
+%   either empty or the name of an \pkg{xcref} language module, such as
+%   |french| or |ngerman| (so far, these are \pkg{babel} language names and
+%   this will remain so unless there is a good reason to depart from this
+%   naming scheme). If \meta{language} is empty, the language to use is
+%   autodetected whenever \pkg{xcref} is asked to typeset a reference. This is
+%   done with the \pkg{iflang} package and uses the language that is current
+%   at the point where the reference is typeset.
+%
+%   Except for the empty value, only languages corresponding to an existing
+%   \pkg{xcref} language module can be used as \meta{language}. Language
+%   modules are stored in files named \texttt{xcref-\meta{language}.tex} next
+%   to \file{xcref.sty} in
+%   |$TEXMF/tex/latex/xcref|. Their source code can be found by looking for
+%   markers such as |%<*french-module>| and |%<*ngerman-module>| in
+%   \file{xcref.dtx}. When \pkg{xcref} is loaded, the \texttt{seq} variable
+%   \cs{g_xcref_available_language_modules_seq} contains all available
+%   language modules, and \cs{g_xcref_loaded_language_modules_seq} contains
+%   all those that have been loaded so far (see \pkg{l3seq} in
+%   \href{http://mirrors.ctan.org/macros/latex/contrib/l3kernel/interface3.pdf}{\file{interface3.pdf}}).
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref]{functions for preventing auto case change}
+%               {=\meta{macros}}{no default, initially \cs{xcrefNoCaseChange}}
+%   List of macros that prevent automatic case change on particular pieces of
+%   text when references are capitalized (see~\pgfkeyRef{/xcref/capitalize}).
+%   \meta{macros} should be one or more control sequence tokens. Each of these
+%   tokens should be the name of a macro that accepts one argument. When
+%   \cs{tl_mixed_case:nn} is called to capitalize a reference, each such macro
+%   present in the reference text protects its argument from changes by
+%   \cs{tl_mixed_case:nn}.
+%
+%   Note that \cs{tl_mixed_case:nn} doesn't expand the macros listed in
+%   \meta{macros}; it only uses them to detect which parts of a reference text
+%   mustn't be modified. The macro calls will be left as is in the reference
+%   text; thus, a reasonable behavior for a macro listed in \meta{macros} is
+%   to simply expand to its only argument. This is precisely what
+%   \cs{xcrefNoCaseChange} does, which is defined to behave exactly like
+%   \cs{use:n}. That said, you are free to define and use macros that do
+%   something else with their argument: you might want them to typeset it in a
+%   special font, use a particular color, etc.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref]{lang for capitalization func}{=\meta{macro}}
+%               {no default, initially \cs{xcrefDefaultMappingForTlMixedCase}}
+%   Change the function used by \pkg{xcref} to map language module names to
+%   language codes suitable for use with \cs{tl_mixed_case:nn}. The function
+%   in question is called when producing a capitalized reference. See the
+%   documentation of \cs{xcref_lang_for_tl_mixed_case:n} for the requirements
+%   that apply to such a function.
+% \end{pgfkey}
+%
+% \subsubsection{\texttt{french} langage module}
+%
+% \begin{pgfkey}[xcref/french]{form}{=\meta{form}}
+%               {no default, initially \texttt{prep+article+noun}}
+%   Specifies which grammatical form to use for references. The available
+%   choices are |noun|, |article+noun| and |prep+article+noun|, where |prep|
+%   stands for \enquote{preposition}.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref/french]{preposition}{=\meta{prep}}
+%               {no default, initially empty}
+%   Preposition to use in references. When non-empty, \meta{prep} overrides
+%   the default preposition associated to the reference type.
+% \end{pgfkey}
+%
+% ^^A The initial value is intentionally not specified. What would be a really
+% ^^A good initial value? This seems difficult to answer.
+% \begin{pgfkey}[xcref/french]{names table}{=\meta{data}}{no default}
+%   Define how to write each reference type in French. \meta{data} must be a
+%   comma-separated list of (key, value) pairs, where each pair has the form
+%   \texttt{\meta{reftype}=\meta{value}}. Each \meta{reftype} must be a
+%   reference type and the corresponding \meta{value} should consist in four
+%   items (see below), the first two of which must be in LICR
+%   form.\footnote{This implies that in the first two items of each
+%   \meta{value}, you should use syntax such as \texttt{\textbackslash `e} or
+%   \texttt{\textbackslash 'e} instead of \texttt{é} or \texttt{è}.} In each
+%   \meta{value}, the first item is the \emph{default preposition} for
+%   reference type \meta{reftype}. Here is an example where, for instance, the
+%   default preposition for reference type |assertion| is defined to be
+%   |d'apr\`es| (which is typeset as \enquote{d'après}):
+% \begin{verbatim}
+% \xcrefset{
+%   french/.cd,
+%   names table = {
+%     problem     = {\`a}{le}{problème}{problèmes},
+%     proposition = {\`a}{la}{proposition}{propositions},
+%     assertion   = {d'apr\`es}{l'}{assertion}{assertions},
+%     theorem     = {\`a}{le}{théorème}{théorèmes},
+%     lemma       = {\`a}{le}{lemme}{lemmes},
+%     definition  = {dans}{la}{définition}{définitions},
+%   }
+% }
+% \end{verbatim}
+% Note: \pkg{xcref} knows that in French,
+% $\texttt{\textbackslash `a} + \texttt{le}$ results in
+% \enquote{au} in singular form and in \enquote{aux} in plural form, that the
+% plural form of definite article |l'| is |les|, etc.
+% \end{pgfkey}
+%
+% ^^A Is the current initial value (not documented here) the definitive one?
+% \begin{pgfkey}[xcref/french]{composition table for prepositions and articles}
+%               {=\meta{data}}{no default}
+%   Define how a given preposition combines with the definite articles |l'|,
+%   |le| , |la| and |les|. \meta{data} must be a comma-separated list of (key,
+%   value) pairs, where each pair has the form
+%   \texttt{\meta{prep}=\meta{value}}. Each \meta{prep} must be a preposition in
+%   LICR form (see above) and the corresponding \meta{value} should consist in
+%   four items. These items respectively indicate how to combine preposition
+%   \meta{prep} with the definite articles |l'|, |le| , |la| and |les|.
+%   Example:
+% \begin{verbatim}
+% \xcrefset{
+%   french/.cd,
+%   composition table for prepositions and articles = {
+%     \`a    = {à l'}{au }{à la }{aux },
+%     de     = {de l'}{du }{de la }{des },
+%   }
+% }
+% \end{verbatim}
+% \end{pgfkey}
+%
+% \subsubsection{\texttt{ngerman} langage module}
+%
+% \begin{pgfkey}[xcref/ngerman]{form}{=\meta{form}}
+%               {no default, initially \texttt{prep+article+noun}}
+%   Specifies which grammatical form to use for references. The available
+%   choices are |noun|, |article+noun|, |prep+noun| and |prep+article+noun|,
+%   where |prep| stands for \enquote{preposition}.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref/ngerman]{preposition}{=\meta{prep}}
+%               {no default, initially empty}
+%   Preposition to use in references. When non-empty, \meta{prep} overrides
+%   the default preposition associated to the reference type.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref/ngerman]{case}{=\meta{case}}
+%               {no default, no initial value}
+%   Specify which case to use among nominative, accusative, dative and
+%   genitive. The corresponding values for \meta{case} are respectively |nom|,
+%   |acc|, |dat| and |gen|. Since there is no initial value, you must set this
+%   key one way or another when typesetting references with \pkg{xcref}'s
+%   \texttt{ngerman} module. An easy way to do that is to decide on a default
+%   case for some part or all of your document (say, dative) and declare it
+%   like this (\cs{xcrefset} respects \TeX's grouping rules):
+% \begin{verbatim}
+% \xcrefset{ngerman/case=dat}
+% \end{verbatim}
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref/ngerman]{names table}{=\meta{data}}{no default}
+%   Define how to write each reference type in German. \meta{data} must be a
+%   comma-separated list of (key, value) pairs, where each pair has the form
+%   \texttt{\meta{reftype}=\meta{value}}. Each \meta{reftype} must be a
+%   reference type and the corresponding \meta{value} should consist in five
+%   items. More precisely, each \meta{value} should be of the form:
+%   \begin{quote}^^A One could use \Arg, but that wouldn't be really correct...
+%     |{|\meta{default-prep}|}{|^^A
+%        \meta{nominative}|}{|^^A
+%        \meta{accusative}|}{|^^A
+%        \meta{dative}|}{|^^A
+%        \meta{genitive}|}|
+%   \end{quote}
+%   where \meta{default-prep} defines the default preposition\footnote{In LICR
+%   form: for instance, \texttt{f\textbackslash \textquotedbl ur}.} for
+%   reference type \meta{reftype} and each of the \meta{nominative},
+%   \meta{accusative}, \meta{dative} and \meta{genitive} placeholders should
+%   be of the form
+%   |{|\meta{article-sing}|}{|\meta{noun-sing}|}{|\meta{article-plur}|}{|\meta{noun-plur}|}|,
+%   where the four metasyntactic variables represent the definite article and
+%   noun to use for reference type \meta{reftype} in singular and plural
+%   forms, respectively. Like the default preposition \meta{default-prep},
+%   each of the eight definite articles must be in LICR form. Here
+%   is an example where, for instance, the default preposition for reference
+%   type |proposition| is defined to be |nach|:
+% \begin{verbatim}
+% \xcrefset{
+%   ngerman/.cd,
+%   names table = {
+%     problem    = {in}{{das}{Problem}{die}{Probleme}}%
+%                    {{das}{Problem}{die}{Probleme}}%
+%                    {{dem}{Problem}{den}{Problemen}}%
+%                    {{des}{Problems}{der}{Probleme}},
+%     proposition= {nach}{{die}{Proposition}{die}{Propositionen}}%
+%                    {{die}{Proposition}{die}{Propositionen}}%
+%                    {{der}{Proposition}{den}{Propositionen}}%
+%                    {{der}{Proposition}{der}{Propositionen}},
+%     satz       = {nach}{{der}{Satz}{die}{Sätze}}%
+%                    {{den}{Satz}{die}{Sätze}}%
+%                    {{dem}{Satz}{den}{Sätzen}}%
+%                    {{des}{Satzes}{der}{Sätze}},
+%   }
+% }
+% \end{verbatim}
+%   Note: \pkg{xcref} knows that in German, $\texttt{in} + \texttt{dem}$
+%   results in \texttt{im}, etc. (if something like this has been forgotten by
+%   the package author, it just needs to be added to
+%   \cs{l_xcref_ngerman_article_and_prep_prop}).
+%
+%   There is an \emph{initial} value, but I'm not sure it is a great idea to
+%   set it in stone now by documenting it here.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref/ngerman]{prepositions always followed by the same case}
+%               {=\meta{data}}{no default}
+%   \meta{data} must be a comma-separated list of (key, value) pairs, where
+%   each pair has the form \texttt{\meta{prep}=\meta{case}}. Each such pair
+%   declares that preposition \meta{prep} is always followed by \meta{case}
+%   (this overrides \xcrefPGFOpt{ngerman/case}). Each \meta{prep} must be
+%   given in LICR form and each \meta{case} must be one of
+%   \texttt{nominative}, \texttt{accusative}, \texttt{dative} and
+%   \texttt{genitive}.
+%
+%   There is an \emph{initial} value, but I'm not sure it is a great idea to
+%   set it in stone now by documenting it here.
+% \end{pgfkey}
+%
+% \begin{pgfkey}[xcref/ngerman]{composition table for prepositions and articles}
+%               {=\meta{data}}{no default}
+%   Define how a given preposition combines with the definite article, in the
+%   cases where simple concatenation with a space doesn't give the correct
+%   result. For instance, |in dem = im| must be declared here if one wants to
+%   have this contraction instead of \texttt{in dem}; on the other hand, since
+%   \texttt{in der} can be obtained by simple concatenation, it doesn't need
+%   to (and should not) be specified here.
+%
+%   \meta{data} must be a comma-separated list of (key, value) pairs, where
+%   each pair has the form \texttt{\meta{key}=\meta{value}}. Each \meta{key}
+%   must be written in LICR form.\footnote{For instance, should you want to
+%   use the preposition \enquote{für} inside a \meta{key}, it would have to be
+%   written as \texttt{f\textbackslash \textquotedbl ur}, not \texttt{für}.}
+%   As an example, the initial value of \xcrefPGFOpt{ngerman/composition table
+%   for prepositions and articles} at the time of this writing is equivalent
+%   to the following setting:
+% \begin{verbatim}
+% \xcrefset{
+%   ngerman/.cd,
+%   composition table for prepositions and articles = {
+%     an dem = am,
+%     in dem = im,
+%     von dem = vom,
+%     zu dem = zum,
+%     zu der = zur,
+%     bei dem = beim,
+%   }
+% }
+% \end{verbatim}
+%   While this is currently the initial value, it may be unwise to expect it
+%   to always remain the same---I wrote this initial setting and am not a
+%   native German speaker, thus the initial setting might receive improvements
+%   in the future. If you want to be preserved from future changes, specify
+%   the desired value yourself in your documents (possibly in a personal style
+%   file) using an |\xcrefset| call as shown above.
+% \end{pgfkey}
 %
 % \subsection{Generic macros}
 %
