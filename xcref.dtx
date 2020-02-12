@@ -743,11 +743,11 @@
 %   text when references are capitalized (see~\pgfkeyRef{/xcref/capitalize}).
 %   \meta{macros} should be one or more control sequence tokens. Each of these
 %   tokens should be the name of a macro that accepts one argument. When
-%   \cs{tl_mixed_case:nn} is called to capitalize a reference, each such macro
+%   \cs{text_titlecase:nn} is called to capitalize a reference, each such macro
 %   present in the reference text protects its argument from changes by
-%   \cs{tl_mixed_case:nn}.
+%   \cs{text_titlecase:nn}.
 %
-%   Note that \cs{tl_mixed_case:nn} doesn't expand the macros listed in
+%   Note that \cs{text_titlecase:nn} doesn't expand the macros listed in
 %   \meta{macros}; it only uses them to detect which parts of a reference text
 %   mustn't be modified. The macro calls will be left as is in the reference
 %   text; thus, a reasonable behavior for a macro listed in \meta{macros} is
@@ -759,11 +759,11 @@
 % \end{pgfkey}
 %
 % \begin{pgfkey}[xcref]{lang for capitalization func}{=\meta{macro}}
-%               {no default, initially \cs{xcrefDefaultMappingForTlMixedCase}}
+%               {no default, initially \cs{xcrefDefaultMappingForTextTitleCase}}
 %   Change the function used by \pkg{xcref} to map language module names to
-%   language codes suitable for use with \cs{tl_mixed_case:nn}. The function
+%   language codes suitable for use with \cs{text_titlecase:nn}. The function
 %   in question is called when producing a capitalized reference. See the
-%   documentation of \cs{xcref_lang_for_tl_mixed_case:n} for the requirements
+%   documentation of \cs{xcref_lang_for_text_titlecase:n} for the requirements
 %   that apply to such a function.
 % \end{pgfkey}
 %
@@ -1034,8 +1034,8 @@
 %     \cs{xcrefNoCaseChange}\marg{text}
 %   \end{syntax}
 %   Locally inhibit conversion in the second argument of
-%   \cs{tl_mixed_case:nn}. When references are automatically captitalized,
-%   \cs{tl_mixed_case:nn} is called and can cause various, \emph{a priori}
+%   \cs{text_titlecase:nn}. When references are automatically captitalized,
+%   \cs{text_titlecase:nn} is called and can cause various, \emph{a priori}
 %   non-first characters in the texts eventually passed to \cs{Crefname}, to
 %   be changed to lowercase. In some cases, this is undesirable (for instance,
 %   in German, nouns always start with a capital letter; converting a noun to
@@ -1044,11 +1044,11 @@
 %   \xcrefPGFOpt{functions for preventing auto case change},
 %   can be used in the texts that are destined to be passed to \cs{Crefname}:
 %   it \enquote{protects} its argument against any action from
-%   \cs{tl_mixed_case:nn}. For example, \file{xcref-ngeman.tex} uses this
+%   \cs{text_titlecase:nn}. For example, \file{xcref-ngeman.tex} uses this
 %   technique to protect everything after the first word of a capitalized
 %   reference.
 %
-%   The macro call isn't removed by \cs{tl_mixed_case:nn}, therefore if you
+%   The macro call isn't removed by \cs{text_titlecase:nn}, therefore if you
 %   want such protection macros that do \enquote{funny things} (contrary to
 %   \cs{xcrefNoCaseChange} which returns its argument unchanged), it is
 %   possible by passing your own macro names to
@@ -1060,7 +1060,7 @@
 %     \cs{xcref@tabacckludge}\meta{accent}\meta{character token}
 %   \end{syntax}
 %   Variant of \cs{@tabacckludge} that doesn't expand inside \tn{edef},
-%   \cs{tl_mixed_case:nn}, etc. (it is \tn{protected}). Apart from this
+%   \cs{text_titlecase:nn}, etc. (it is \tn{protected}). Apart from this
 %   aspect, it works like \cs{@tabacckludge} and avoids problems due to the
 %   fact that the \env{tabbing} environment redefines \tn{'}, \tn{`} and
 %   \tn{=} (see the \pkg{inputenc} documentation).
@@ -1169,37 +1169,37 @@
 %
 % \subsection{Generic}
 %
-% \begin{function}{\xcref_lang_for_tl_mixed_case:n,
-%                  \xcref_lang_for_tl_mixed_case:V,
-%                  \xcref_lang_for_tl_mixed_case_default:n,
-%                  \xcrefDefaultMappingForTlMixedCase}
+% \begin{function}{\xcref_lang_for_text_titlecase:n,
+%                  \xcref_lang_for_text_titlecase:V,
+%                  \xcref_lang_for_text_titlecase_default:n,
+%                  \xcrefDefaultMappingForTextTitleCase}
 %   \begin{syntax}
-%     \cs{xcref_lang_for_tl_mixed_case:n} \Arg{language}
-%     \cs{xcref_lang_for_tl_mixed_case_default:n} \Arg{language}
-%     \cs{xcrefDefaultMappingForTlMixedCase} \marg{language}
+%     \cs{xcref_lang_for_text_titlecase:n} \Arg{language}
+%     \cs{xcref_lang_for_text_titlecase_default:n} \Arg{language}
+%     \cs{xcrefDefaultMappingForTextTitleCase} \marg{language}
 %   \end{syntax}
 %   When references have to be capitalized (cf.~\xcrefPGFOpt{capitalize}), the
-%   \pkg{expl3} function \cs{tl_mixed_case:nn} is used. This function accepts
+%   \pkg{expl3} function \cs{text_titlecase:nn} is used. This function accepts
 %   a \enquote{language code} argument to adapt to each language, because this
 %   process can vary depending on the language (for instance, it appears that
 %   in Dutch, capitalisation of \texttt{ij} at the beginning of mixed cased
 %   text produces \texttt{IJ} rather than \texttt{Ij}). However, the language
-%   codes used by \cs{tl_mixed_case:nn} don't coincide with \pkg{xcref}'s
+%   codes used by \cs{text_titlecase:nn} don't coincide with \pkg{xcref}'s
 %   language-specific module names---which currently are identical to
 %   \pkg{babel} language names. Therefore, \pkg{xcref} uses a function, namely
-%   \cs{xcref_lang_for_tl_mixed_case:n}, to map \pkg{xcref} language module
-%   names to suitable language codes for use with \cs{tl_mixed_case:nn}. By
+%   \cs{xcref_lang_for_text_titlecase:n}, to map \pkg{xcref} language module
+%   names to suitable language codes for use with \cs{text_titlecase:nn}. By
 %   default, this function is \tn{let}-equal to
-%   \cs{xcref_lang_for_tl_mixed_case_default:n}, or
-%   \cs{xcrefDefaultMappingForTlMixedCase} in the \LaTeXe{} naming style. It
+%   \cs{xcref_lang_for_text_titlecase_default:n}, or
+%   \cs{xcrefDefaultMappingForTextTitleCase} in the \LaTeXe{} naming style. It
 %   accepts one argument which must be an \pkg{xcref} language module name
 %   (e.g., \texttt{ngerman}) and expands (as in \tn{edef}) to a language code
-%   suitable for use with \cs{tl_mixed_case:nn}.
+%   suitable for use with \cs{text_titlecase:nn}.
 %
-%   Should the mapping provided by \cs{xcref_lang_for_tl_mixed_case_default:n}
+%   Should the mapping provided by \cs{xcref_lang_for_text_titlecase_default:n}
 %   be incomplete, you should probably contact the package maintainer and
 %   suggest an update. However, it is also possible to change the meaning of
-%   \cs{xcref_lang_for_tl_mixed_case:n} (\emph{i.e.,} redefine it) in order to
+%   \cs{xcref_lang_for_text_titlecase:n} (\emph{i.e.,} redefine it) in order to
 %   use the mapping function of your choice. For this, simply use the
 %   \xcrefPGFOpt{lang for capitalization func} option to point to the
 %   expandable macro of your choice.
@@ -1359,7 +1359,7 @@
 % \begin{variable}{\l_@@_case_change_exclude_tl}
 %   List of commands (control sequence tokens) that indicate contents which
 %   mustn't be affected by an automatic case change (when
-%   \cs{tl_mixed_case:nn} is used to automatically capitalize text, before
+%   \cs{text_titlecase:nn} is used to automatically capitalize text, before
 %   passing it to \cs{Crefname}). See the documentation of
 %   \cs{xcrefNoCaseChange}.
 %    \begin{macrocode}
@@ -1370,7 +1370,7 @@
 %   Whether to write references in capitalized form (first letter in
 %   uppercase, the rest in lowercase\footnote{Well, this can be subtler than
 %   that depending on the language---see the documentation of
-%   \cs[no-index]{tl_mixed_case:nn}.}).
+%   \cs[no-index]{text_titlecase:nn}.}).
 %    \begin{macrocode}
 \bool_new:N \l_@@_capitalize_bool
 %    \end{macrocode}
@@ -1501,7 +1501,7 @@
 %
 % \begin{macro}{\xcref@tabacckludge}
 %   \tn{protected} variant of \cs{@tabacckludge}. We need this for text that
-%   is going to be transformed by \cs{tl_mixed_case:nn}.
+%   is going to be transformed by \cs{text_titlecase:nn}.
 %    \begin{macrocode}
 \cs_set_eq:NN \xcref@tabacckludge \@tabacckludge
 \robustify { \xcref@tabacckludge }
@@ -1767,46 +1767,51 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \subsubsection{Helper macros used with \cs{tl_mixed_case:nn}}
+% \subsubsection{Helper macros used with \cs{text_titlecase:nn}}
 %
 % \begin{macro}{\xcrefNoCaseChange}
 %   Locally inhibit conversion when used in the second argument of
-%   \cs{tl_mixed_case:nn}.
+%   \cs{text_titlecase:nn}.
 %   \begin{arguments}
 %   \item a token list (\emph{a priori} representing text) to
-%   \enquote{protect} from changes by \cs{tl_mixed_case:nn}
+%   \enquote{protect} from changes by \cs{text_titlecase:nn}
 %   \end{arguments}
 %   This function (the control sequence token) can be passed to
 %   \xcrefPGFOpt{functions for preventing auto case change} in order to tell
-%   the underlying \cs{tl_mixed_case:nn} operation not to modify some
+%   the underlying \cs{text_titlecase:nn} operation not to modify some
 %   particular tokens (of a reference name for instance). We set it to the
 %   identity function.
 %    \begin{macrocode}
-\cs_set_eq:NN \xcrefNoCaseChange \use:n
+\cs_new_protected:Npn \xcref_no_case_change:n #1
+  {
+    #1
+  }
+
+\cs_new_eq:NN \xcrefNoCaseChange \xcref_no_case_change:n
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\xcref_lang_for_tl_mixed_case:n,
-%               \xcref_lang_for_tl_mixed_case:V,
-%               \xcref_lang_for_tl_mixed_case_default:n,
-%               \xcrefDefaultMappingForTlMixedCase}
-%   \cs{xcref_lang_for_tl_mixed_case_default:n} is the default mapping from
+% \begin{macro}{\xcref_lang_for_text_titlecase:n,
+%               \xcref_lang_for_text_titlecase:V,
+%               \xcref_lang_for_text_titlecase_default:n,
+%               \xcrefDefaultMappingForTextTitleCase}
+%   \cs{xcref_lang_for_text_titlecase_default:n} is the default mapping from
 %   \pkg{xcref} language names to language codes suitable for use with
-%   \cs{tl_mixed_case:nn}. Users may use \xcrefPGFOpt{lang for capitalization
+%   \cs{text_titlecase:nn}. Users may use \xcrefPGFOpt{lang for capitalization
 %   func} in order to point to a different mapping function in case
-%   \cs{xcref_lang_for_tl_mixed_case_default:n} doesn't do what they want.
-%   Calling this key simply redefines \cs{xcref_lang_for_tl_mixed_case:n} to
+%   \cs{xcref_lang_for_text_titlecase_default:n} doesn't do what they want.
+%   Calling this key simply redefines \cs{xcref_lang_for_text_titlecase:n} to
 %   point to the specified macro. At any time, the current mapping is given by
-%   \cs{xcref_lang_for_tl_mixed_case:n}.
-%   \cs{xcref_lang_for_tl_mixed_case_default:n} is the initial
+%   \cs{xcref_lang_for_text_titlecase:n}.
+%   \cs{xcref_lang_for_text_titlecase_default:n} is the initial
 %   (\enquote{default}) mapping function.
-%   \cs{xcrefDefaultMappingForTlMixedCase} is just another name for this
+%   \cs{xcrefDefaultMappingForTextTitleCase} is just another name for this
 %   function that complies with the \LaTeXe{} naming conventions.
 %   \begin{arguments}
 %   \item an \pkg{xcref} language name
 %   \end{arguments}
 %    \begin{macrocode}
-\cs_new:Npn \xcref_lang_for_tl_mixed_case_default:n #1
+\cs_new:Npn \xcref_lang_for_text_titlecase_default:n #1
   {
     \str_case:nnF {#1}
       {
@@ -1819,12 +1824,12 @@
       {#1}                      % pass through for all other cases
   }
 
-\cs_new_eq:NN \xcref_lang_for_tl_mixed_case:n
-              \xcref_lang_for_tl_mixed_case_default:n
-\cs_new_eq:NN \xcrefDefaultMappingForTlMixedCase
-              \xcref_lang_for_tl_mixed_case_default:n
+\cs_new_eq:NN \xcref_lang_for_text_titlecase:n
+              \xcref_lang_for_text_titlecase_default:n
+\cs_new_eq:NN \xcrefDefaultMappingForTextTitleCase
+              \xcref_lang_for_text_titlecase_default:n
 
-\cs_generate_variant:Nn \xcref_lang_for_tl_mixed_case:n { V }
+\cs_generate_variant:Nn \xcref_lang_for_text_titlecase:n { V }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1889,7 +1894,7 @@
     hyperlinks/.default = true, % when the key is used with no value
     hyperlinks = true,          % initial value
 %    \end{macrocode}
-% Used with \cs{tl_mixed_case:nn} which prepares the arguments of \cs{Crefname}
+% Used with \cs{text_titlecase:nn} which prepares the arguments of \cs{Crefname}
 %    \begin{macrocode}
     functions~for~preventing~auto~case~change/.value~required,
     functions~for~preventing~auto~case~change/.code =
@@ -1907,11 +1912,11 @@
     lang = {},                  % initial value: autodetect
 %    \end{macrocode}
 % Function mapping \pkg{xcref} language module names to language codes used by
-% \cs{tl_mixed_case:nn}.
+% \cs{text_titlecase:nn}.
 %    \begin{macrocode}
     lang~for~capitalization~func/.value~required,
     lang~for~capitalization~func/.code = {
-      \cs_set_eq:NN \xcref_lang_for_tl_mixed_case:n #1 },
+      \cs_set_eq:NN \xcref_lang_for_text_titlecase:n #1 },
 %    \end{macrocode}
 % It would be nice to be able to use |.unknown/.code| so that unrecognized
 % options |foo| are interpreted as being |preposition=foo|, however this is
@@ -2006,7 +2011,7 @@
 %   LICR representation.
 %
 %   We use \cs{xcref@tabacckludge} in \emph{output text} instead of
-%   \cs{@tabacckludge} because things can go wrong when \cs{tl_mixed_case:nn}
+%   \cs{@tabacckludge} because things can go wrong when \cs{text_titlecase:nn}
 %   expands \cs{@tabacckludge} in its second argument (try with
 %   \verb|\@tabacckludge`a|). Regarding the use of \cs{@tabacckludge} itself,
 %   see the documentation of \pkg{inputenc}. Note that it is not really
@@ -2231,7 +2236,7 @@
 % \medskip
 % Prepare the terrain for \cs{@@_french_setup_cref_names_mapfunc:n}.
 %    \begin{macrocode}
-\cs_generate_variant:Nn \tl_mixed_case:nn { VV }
+\cs_generate_variant:Nn \text_titlecase:nn { VV }
 \cs_generate_variant:Nn \msg_error:nnn { nnV }
 \cs_generate_variant:Nn \str_case:nnF { V }
 %    \end{macrocode}
@@ -2262,7 +2267,7 @@
 \tl_new:N \l_@@_fscnm_singular_tl
 \tl_new:N \l_@@_fscnm_plural_tl
 %    \end{macrocode}
-% Language code for use with \cs{tl_mixed_case:nn}.
+% Language code for use with \cs{text_titlecase:nn}.
 %    \begin{macrocode}
 \tl_new:N \l_@@_fscnm_lang_tl
 %    \end{macrocode}
@@ -2341,18 +2346,18 @@
 %    \begin{macrocode}
     \@@_call_crefname:nVV {#1} \l_@@_fscnm_singular_tl \l_@@_fscnm_plural_tl
 %    \end{macrocode}
-% This influences the behavior of \cs{tl_mixed_case:nn}.
+% This influences the behavior of \cs{text_titlecase:nn}.
 %    \begin{macrocode}
-    \tl_set_eq:NN \l_tl_case_change_exclude_tl \l_@@_case_change_exclude_tl
+    \tl_set_eq:NN \l_text_case_exclude_arg_tl \l_@@_case_change_exclude_tl
 %    \end{macrocode}
 % Prepare for the language-specific case conversion.
 %    \begin{macrocode}
     \tl_set:Nx \l_@@_fscnm_lang_tl
-      { \xcref_lang_for_tl_mixed_case:V \l_@@_selected_lang_str }
+      { \xcref_lang_for_text_titlecase:V \l_@@_selected_lang_str }
     \tl_set:Nx \l_@@_fscnm_singular_tl
-      { \tl_mixed_case:VV \l_@@_fscnm_lang_tl \l_@@_fscnm_singular_tl }
+      { \text_titlecase:VV \l_@@_fscnm_lang_tl \l_@@_fscnm_singular_tl }
     \tl_set:Nx \l_@@_fscnm_plural_tl
-      { \tl_mixed_case:VV \l_@@_fscnm_lang_tl \l_@@_fscnm_plural_tl }
+      { \text_titlecase:VV \l_@@_fscnm_lang_tl \l_@@_fscnm_plural_tl }
 %    \end{macrocode}
 % Set up the capitalized forms.
 %    \begin{macrocode}
@@ -2690,7 +2695,7 @@
 % \medskip
 % Prepare the terrain for \cs{@@_ngerman_setup_cref_names_mapfunc:n}.
 %    \begin{macrocode}
-\cs_generate_variant:Nn \tl_mixed_case:nn { VV }
+\cs_generate_variant:Nn \text_titlecase:nn { VV }
 \cs_generate_variant:Nn \msg_error:nnn { nnV }
 \cs_generate_variant:Nn \str_case:nnF { V }
 %    \end{macrocode}
@@ -2731,7 +2736,7 @@
 \tl_new:N \l_@@_gscnm_singular_tl
 \tl_new:N \l_@@_gscnm_plural_tl
 %    \end{macrocode}
-% Language for use with \cs{tl_mixed_case:nn}.
+% Language for use with \cs{text_titlecase:nn}.
 %    \begin{macrocode}
 \tl_new:N \l_@@_gscnm_lang_tl
 %    \end{macrocode}
@@ -2834,7 +2839,7 @@
           \l_@@_ngerman_selected_form_str
       }
 %    \end{macrocode}
-% Make sure that when we use \cs{tl_mixed_case:nn} to prepare for
+% Make sure that when we use \cs{text_titlecase:nn} to prepare for
 % \cs{Crefname}, the case of the noun won't be affected (we don't want nouns
 % to become all-lowercase in German!).
 %    \begin{macrocode}
@@ -2869,18 +2874,18 @@
 %    \begin{macrocode}
     \@@_call_crefname:nVV {#1} \l_@@_gscnm_singular_tl \l_@@_gscnm_plural_tl
 %    \end{macrocode}
-% This influences the behavior of \cs{tl_mixed_case:nn}.
+% This influences the behavior of \cs{text_titlecase:nn}.
 %    \begin{macrocode}
-    \tl_set_eq:NN \l_tl_case_change_exclude_tl \l_@@_case_change_exclude_tl
+    \tl_set_eq:NN \l_text_case_exclude_arg_tl \l_@@_case_change_exclude_tl
 %    \end{macrocode}
 % Prepare for the language-specific case conversion.
 %    \begin{macrocode}
     \tl_set:Nx \l_@@_gscnm_lang_tl
-      { \xcref_lang_for_tl_mixed_case:V \l_@@_selected_lang_str }
+      { \xcref_lang_for_text_titlecase:V \l_@@_selected_lang_str }
     \tl_set:Nx \l_@@_gscnm_singular_tl
-      { \tl_mixed_case:VV \l_@@_gscnm_lang_tl \l_@@_gscnm_singular_tl }
+      { \text_titlecase:VV \l_@@_gscnm_lang_tl \l_@@_gscnm_singular_tl }
     \tl_set:Nx \l_@@_gscnm_plural_tl
-      { \tl_mixed_case:VV \l_@@_gscnm_lang_tl \l_@@_gscnm_plural_tl }
+      { \text_titlecase:VV \l_@@_gscnm_lang_tl \l_@@_gscnm_plural_tl }
 %    \end{macrocode}
 % Set up the capitalized forms.
 %    \begin{macrocode}
